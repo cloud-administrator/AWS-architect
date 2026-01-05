@@ -1080,3 +1080,4539 @@
 
 **解答例 ・"tag-A": "value-A"**
 
+
+
+
+
+
+**問題 78. Azure サブスクリプションに、RG1 という名前のリソース グループが含まれています。RG1 には、日次レポートを実行する仮 想マシンが含まれています。リソース グループのコストが割り当て られた予算の 75% を超えた場合に、仮想マシンを自動的にシャット ダウンする必要があります。実行すべきアクションはどれですか。(二つ選択)**
+
+・Cost Management + Billing から、予算の設定を変更する
+・Cost Management + Billing から、新しいコスト分析を作成する
+・Runbook タイプのアクショングループを作成し、アクションとして Stop VM を選択する
+・Automation Account を作成し、仮想マシンのタグにシャットダウンスケジュールを設定する
+
+
+
+
+
+**解答例**
+**・Cost Management + Billing から、予算の設定を変更する**
+**・Runbook タイプのアクショングループを作成し、アクションとして Stop VM を選択する**
+
+
+**問題 79. Recovery Services コンテナーを使用してバックアップのテ ストを実施しています。このテストバックアップには 2 台の保護さ れた仮想マシンが含まれています。Recovery Services コンテナーを 削除する必要があります。最初に実行すべき操作はどれですか。(一 つ選択)**
+
+・Recovery Services コンテナーから各バックアップアイテムのバックアップを停止する
+・各仮想マシンのリソースロックを変更する
+・Recovery Services コンテナーから保護されたアイテムの登録を解除する
+・各仮想マシンのディザスターリカバリー設定を変更する
+
+
+
+
+
+**解答例**
+**・Recovery Services コンテナーから各バックアップアイテムのバックアップを停止する**
+
+
+**問題 80. Azure Stream Analytics ジョブ「Job1」を含む Azure サブス クリプションがあります。Job1 の入力イベントを監視し、処理され なかったイベントの数を特定します。どのメトリックを使用します か。(一つ選択)**
+
+・Out-of-Order Events
+・Deserialization Errors
+・Late Input Events
+・Backlogged Input Events
+
+
+
+
+
+**解答例**
+**・Deserialization Errors**
+
+
+**問題 81. Azure Kubernetes Service (AKS) クラスター Cluster1 をデプ ロイしました。このクラスターは以下の IP アドレスを使用していま す。インターネットユーザーが Cluster1 で実行されているアプリ ケーションにアクセスできるようにします。Cluster1 の DNS レコー ドに含めるべき IP アドレスはどれですか。(一つ選択)**
+
+| コンポーネント | IP アドレス |
+| :--- | :--- |
+| Pod | 10.0.10.11 |
+| Cluster | 192.168.10.2 |
+| Load Balancer | 131.107.2.1 |
+| Virtual Network | 172.17.7.1 |
+
+・192.168.10.2
+・10.0.10.11
+・172.17.7.1
+・131.107.2.1
+
+
+
+
+
+**解答例**
+**・131.107.2.1**
+
+
+**問題 82. あなたの会社では、オフィス外のユーザーに対して Multi-Factor Authentication を使用しています。使用モデルとして認証ご と課金が構成されています。小規模企業を買収し、新しいスタッフ を Microsoft Entra ID に追加した後、これらの従業員も Multi-Factor Authentication を使用する必要があると通知されました。これを実 現するには、使用モデルを有効化ユーザーごと課金に設定する必 要 があります。解決策として、既存の Multi-Factor Authentication provider のデータからバックアップを使用して新しい Multi-Factor Authentication provider を作成します。この解決策は要件を満たして いますか。(一つ選択)**
+
+・いいえ、Multi-Factor Authentication provider は 2018 年 9 月 1 日以降作成できず、既存の provider も使用モデルの変更はサポートされていない
+・はい、新しい provider を作成してバックアップから復元すれば利用モデルを変更できる
+・いいえ、使用モデルの変更には Microsoft Entra ID Premium P1 ライセンスへの移行が必要である
+・はい、既存の provider のバックアップを使用すれば課金モデルを柔軟に変更できる
+
+
+
+
+
+**解答例**
+**・いいえ、Multi-Factor Authentication provider は 2018 年 9 月 1 日以降作成できず、既存の provider も使用モデルの変更はサポートされていない**
+
+
+**問題 83. Azure サブスクリプション上で、管理ワークステーションに て App-A という名前のコンテナーイメージを作成しました。このイ メージを Azure Kubernetes Service (AKS) クラスターである Cluster-A にデプロイする予定です。Registry-A という Azure Container Registry インスタンスは既に作成済みで、Cluster-A という AKS ク ラスターも既に構成されています。App-A を Cluster-A にデプロイ するために、最初に実行すべき操作を選択してください。(一つ選 択)**
+
+・az acr create コマンドを実行してコンテナーレジストリを新規作成する
+・docker push コマンドを実行してイメージを Registry-A にアップロードする
+・az aks install-cli コマンドを実行して Kubernetes クライアントツールをインストールする
+・az acr login コマンドを実行して Registry-A に認証する
+
+
+
+
+
+**解答例**
+**・az acr login コマンドを実行して Registry-A に認証する**
+
+
+**問題 84. Azure サブスクリプションに複数の仮想マシンが含まれてい ます。内部ロードバランサー LB1 を次の構成でデプロイしました。名前は LB1、タイプは内部、SKU は Standard、仮想ネットワーク は VNET1 です。VM1 と VM2 を LB1 のバックエンドプールに追加 できるようにする必要があります。解決策として、Basic SKU のパ ブリック IP アドレスを作成し、そのアドレスを VM1 のネットワー クインターフェイスに関連付けてから、VM1 を起動します。この解 決策は要件を満たしていますか。(一つ選択)**
+
+・いいえ、この解決策では要件を満たしません
+・はい、この解決策で要件を満たします
+・VM1 のみ追加可能ですが、VM2 は追加できません
+・パブリック IP アドレスを Standard SKU に変更すれば要件を満たします
+
+
+
+
+
+**解答例**
+**・いいえ、この解決策では要件を満たしません**
+
+
+**問題 85. 金融機関がインフラ強化のために Azure を導入します。規 制要件により厳格なアクセス制御を維持する必要があります。財務 チームがリソースを変更する権限を持たずに、Azure サービスのコ ストを表示し予算を管理できるようにします。サブスクリプション スコープで財務チームに割り当てるべきロールはどれですか。(一 つ選択)**
+
+・Cost Management Reader
+・Contributor
+・Cost Management Contributor
+・Reader
+
+
+
+
+
+**解答例**
+**・Cost Management Contributor**
+
+
+**問題 86. あなたの組織では、hogehoge.example.com という Microsoft Entra テナントを運用しており、複数のユーザーアカウントが登録 されています。Windows 10 を搭載した Device-X というコンピュー ターがあり、UserA がこのデバイスを hogehoge.example.com テナント に Microsoft Entra 参加させました。現在のテナント設定では「ユー ザーがデバイスを Microsoft Entra ID に参加させることができる」 の設定が「UserA のみ」に構成されており、「Microsoft Entra 参加デ バイス上の追加のローカル管理者」は「なし」に設定されています。この Device-X のローカル管理者グループに含まれるメンバーを特定 します。(一つ選択)**
+
+| ユーザー名 | 割り当てられているロール |
+| :--- | :--- |
+| UserA | なし |
+| UserB | グローバル管理者 |
+| UserC | クラウドデバイス管理者 |
+| UserD | セキュリティ管理者 |
+| UserE | グローバル閲覧者 |
+
+・UserA、UserB、UserC
+・UserA
+・UserB
+・UserA、UserB
+・UserA、UserB、UserC、UserD
+・UserA、UserB、UserC、UserD、UserE
+
+
+
+
+
+**解答例**
+**・UserA、UserB**
+
+
+**問題 87. Azure Storage アカウント storage1 があります。このアカウ ントで長期バックアップデータを保存する予定です。コストを最小 限に抑える必要があります。バックアップに使用すべきストレージ 層はどれですか。(一つ選択)**
+
+・Archive
+・Hot
+・Cool
+・Premium
+
+
+
+
+
+**解答例**
+**・Archive**
+
+
+**問題 88. Azure 上で Windows Server 2019 を実行する仮想マシンを運 用しています。パブリック Azure DNS ゾーン「hogehoge.com」とプ ライベート Azure DNS ゾーン「foobar.com」を作成しました。foobar.com には仮想ネットワークリンク「link1」を構成し、自動登 録を有効にしています。VM1 は foobar.com 内の名前は解決できま すが、hogehoge.com 内の名前を解決できません。ただし、VM1 は インターネット上の他のホストは解決できます。VM1 が hogehoge.com のホスト名を解決できるようにする必要があります。どうすればよいですか。(一つ選択)**
+
+・VM1 の DNS サフィックスを hogehoge.com に更新する
+・foobar.com ゾーンに CNAME レコードを作成する
+・hogehoge.com のネームサーバーをドメインレジストラで構成する
+・link1 のアクセス制御 (IAM) 設定を変更する
+
+
+
+
+
+**解答例**
+**・hogehoge.com のネームサーバーをドメインレジストラで構成する**
+
+
+**問題 89. Azure サブスクリプションを所有しています。オンプレミス に VM1 という名前の仮想マシンがあります。VM1 のディスクを Azure 仮想マシンのテンプレートとして使用できるようにします。VM1 で変更する必要がある設定を選択してください。(一つ選択)**
+
+・プロセッサの設定
+・ネットワークアダプターの設定
+・ハードドライブの設定
+・メモリの設定
+
+
+
+
+
+**解答例**
+**・ハードドライブの設定**
+
+
+**問題 90. Kubernetes クラスターにサービスをデプロイしています。別のアプリケーションが Pod のプライベート IP アドレスを使用し てこのサービスにアクセスする必要があります。この要件を満たす ために、クラスターのネットワークタイプとして定義すべきものは どれですか。(一つ選択)**
+
+・Azure CNI (Container Network Interface)
+・Kubenet
+・Azure Private Link
+・Network Security Group
+
+
+
+
+
+**解答例**
+**・Azure CNI (Container Network Interface)**
+
+
+**問題 91. Azure Kubernetes Service (AKS) クラスター「hogehoge-cluster」を運用しています。YAML マニフェストファイルをこのク ラスターにデプロイします。Azure CLI から az aks コマンドを実行 することで、この要件を満たすことができますか。(一つ選択)**
+
+・いいえ、kubectl apply コマンドを使用する必要がある
+・はい、az aks コマンドで YAML ファイルをデプロイできる
+・いいえ、Azure Portal からのみデプロイ可能である
+・はい、ただし az aks install-cli を事前に実行する必要がある
+
+
+
+
+
+**解答例**
+**・いいえ、kubectl apply コマンドを使用する必要がある**
+
+
+**問題 92. Azure サブスクリプションに、RG1 という名前のリソース グループがあります。RG1 には、App1 という名前のアプリケー ションと containerapp1 という名前のコンテナーアプリが含まれて います。App1 は、containerapp1 のキューにメッセージを追加する 際にパフォーマンスの問題が発生しています。キューに新しいメッ セージが追加されたときにアプリケーションリソースのクリーン アップを実行するジョブを作成します。実行するコマンドはどれで すか。(一つ選択)**
+
+・az containerapp job create --name "my-job" --resource-group "RG1" --trigger-type "Event" --replica-timeout 60 --replica-retry-limit 1
+・az containerapp job create --name "my-job" --resource-group "RG1" --trigger-type "Schedule" --replica-timeout 60 --replica-retry-limit 1 --cron-expression "*/5 * * * *"
+・az containerapp job start --name "my-job" --resource-group "RG1"
+・az containerapp job create --name "my-job" --resource-group "RG1" --trigger-type "Manual" --replica-timeout 60 --replica-retry-limit 1
+
+
+
+
+
+**解答例**
+**・az containerapp job create --name "my-job" --resource-group "RG1" --trigger-type "Event" --replica-timeout 60 --replica-retry-limit 1**
+
+
+**問題 93. Azure サブスクリプションに 10 台の仮想マシン、Vault1 と いう名前の Key Vault、NSG1 という名前のネットワークセキュリ ティグループがあります。すべてのリソースは East US リージョン にデプロイされています。仮想マシンは NSG1 によって保護されて おり、NSG1 はインターネットへのすべてのアウトバウンドトラ フィックをブロックするように構成されています。最小特権の原則 を使用し、管理作業を最小限に抑えながら、仮想マシンが Vault1 に アクセスできるようにします。NSG1 のアウトバウンドセキュリ ティ規則の宛先として何を構成しますか。(一つ選択)**
+
+・サービスタグ
+・アプリケーションセキュリティグループ
+・IP アドレス範囲
+・仮想ネットワーク
+
+
+
+
+
+**解答例**
+**・サービスタグ**
+
+
+**問題 94. Azure Storage アカウントを作成し、10 個の Blob コンテ ナーを追加する予定です。そのうち 1 つのコンテナーについては、保存データの暗号化に別の鍵を使用します。コンテナーを作成する 前に実行すべき操作を選択してください。(一つ選択)**
+
+・暗号化スコープを作成する
+・アクセスキーをローテーションする
+・カスタマーマネージドキーを構成する
+・Shared Access Signature (SAS) を生成する
+
+
+
+
+
+**解答例**
+**・暗号化スコープを作成する**
+
+
+**問題 95. あなたの組織が所有する Azure サブスクリプション 「Subscription-A」には、Azure ストレージアカウント「storage-A」 と、表 1 に示すユーザーが含まれています。管理者であるあなたは、storage-A を監視し、表 2 に示すシグナルの電子メール通知を構成す ることを計画しています。計画された監視に必要なアラートルール とアクショングループの最小数を特定します。いくつのアラート ルールとアクショングループが必要ですか。(一つ選択)**
+
+表 1: ユーザーとグループ
+| 名前 | 所属先グループ |
+| :--- | :--- |
+| User-A | Group-A |
+| User-B | Group-B |
+| User-C | Group-A |
+
+表 2: 監視シグナルと通知先
+| 名前 | タイプ | 通知先ユーザー |
+| :--- | :--- | :--- |
+| イングレス | メトリック | User-A, User-C |
+| エグレス | メトリック | User-A |
+| ストレージアカウントの削除 | アクティビティログ | User-A, User-B, User-C |
+| BLOB 範囲の復元 | アクティビティログ | User-A, User-C |
+
+・アラートルール : 3, アクショングループ : 2
+・アラートルール : 4, アクショングループ : 3
+・アラートルール : 2, アクショングループ : 4
+・アラートルール : 4, アクショングループ : 2
+
+
+
+
+
+**解答例**
+**・アラートルール : 4, アクショングループ : 3**
+
+
+**問題 96. あなたの組織が所有する Azure サブスクリプション 「Subscription-A」には、以下に示す仮想ネットワーク、仮想マシン、仮想ネットワークインターフェイスがあります。Server-A は DNS サーバーとして機能し、hogehoge.com という名前の Azure プライベー ト DNS ゾーンが VNet-B への仮想ネットワークリンクを持ち、指定 のレコードが含まれています。次の記述について、正しい場合は 「はい」を、正しくない場合は「いいえ」を選択してください。 「Server-B は host-b.hogehoge.com を 131.107.50.50 に解決する。」(一 つ選択)**
+
+| 名前 | ピアリング先 | DNS サーバー |
+| :--- | :--- | :--- |
+| VNet-A | VNet-B | デフォルト (Azure 提供) |
+| VNet-B | VNet-A | 10.10.0.4 |
+
+| 名前 | IP アドレス | ネットワークインターフェイス | 接続先 |
+| :--- | :--- | :--- | :--- |
+| Server-A | 10.10.0.4 | NIC-A | VNet-A/Subnet-A |
+| Server-B | 172.16.0.4 | NIC-B | VNet-A/Subnet-B |
+| Server-C | 192.168.0.4 | NIC-C | VNet-B/Subnet-B |
+
+| 名前 | DNS サーバー |
+| :--- | :--- |
+| NIC-A | 仮想ネットワークから継承 |
+| NIC-B | 10.10.0.4 |
+| NIC-C | 仮想ネットワークから継承 |
+
+Server-A (10.10.0.4) の DNS ゾーン設定 :
+| 名前 | タイプ | 値 |
+| :--- | :--- | :--- |
+| hogehoge.com | プライマリ DNS ゾーン | 未適用 |
+| host-a.hogehoge.com | A レコード | 131.107.10.15 |
+
+Azure プライベート DNS ゾーン (hogehoge.com) の設定 :
+| 名前 | タイプ | 値 |
+| :--- | :--- | :--- |
+| host-a | A レコード | 131.107.200.20 |
+| host-b | A レコード | 131.107.50.50 |
+
+・いいえ
+・はい
+
+
+
+
+
+**解答例**
+**・いいえ**
+
+
+**問題 97. Azure サブスクリプション Subscription1 と、それに関連付 けられた Microsoft Entra ID テナント Tenant1 を作成しました。Tenant1 には以下のユーザーが含まれています。Tenant1 に Microsoft Entra Privileged Identity Management を追加します。どの アカウントを使用できますか。(一つ選択)**
+
+| ユーザー | ロール |
+| :--- | :--- |
+| User1 | グローバル管理者 |
+| User2 | セキュリティ管理者 |
+| User3 | 特権ロール管理者 |
+
+・User2
+・User3
+・User1
+・すべてのユーザー
+
+
+
+
+
+**解答例**
+**・User1**
+
+
+**問題 98. Azure サブスクリプション内のリソースグループに、新しい Azure Container Instances をデプロイします。このコンテナーインス タンスに対して DNS 名ラベルスコープの再利用を構成する必要があ ります。どのネットワーク設定を選択しますか。(一つ選択)**
+
+・Private ネットワークタイプを選択し、既存の仮想ネットワークに接続する
+・Public ネットワークタイプを選択し、パブリック IP アドレスを割り当てる
+・None ネットワークタイプを選択し、ネットワーク接続を無効化する
+・既存の仮想ネットワーク上に専用サブネットを作成して委任する
+
+
+
+
+
+**解答例**
+**・Public ネットワークタイプを選択し、パブリック IP アドレスを割り当てる**
+
+
+**問題 99. あなたの組織には、hogehoge.com という名前の Microsoft Entra テナントがあります。Microsoft Entra Connect は、オンプレミ スの Active Directory Domain Services (AD DS) ドメインからテナン トにユーザーを同期するように構成されています。Microsoft Entra ID の属性に基づいてユーザーにライセンスを割り当てる必要があり ます。このソリューションは管理作業を最小限に抑える必要があり ます。実行する必要があるアクションはどれですか。(二つ選択)**
+
+・動的セキュリティグループを作成する
+・グループベースのライセンス割り当てを構成する
+・各ユーザーに個別にライセンスを割り当てる
+・管理単位を作成してライセンス管理を委任する
+
+
+
+
+
+**解答例**
+**・動的セキュリティグループを作成する**
+**・グループベースのライセンス割り当てを構成する**
+
+
+**問題 100. Azure Log Analytics ワークスペースで、hogehoge という名 前のテーブルからエラーイベントのみを抽出します。この要件を満 たす KQL クエリを選択してください。(一つ選択)**
+
+・search in (hogehoge) * | where EventType == "error"
+・hogehoge | where EventType == "error"
+・SELECT * FROM hogehoge WHERE EventType = 'error'
+・hogehoge | search "error"
+
+
+
+
+
+**解答例**
+**・hogehoge | where EventType == "error"**
+
+
+**問題 101. 汎用 v1 の Azure ストレージアカウント storage1 があり、 ローカル冗長ストレージ (LRS) を使用しています。ゾーン障害が 発生した場合にストレージアカウント内のデータを保護します。コ ストと管理作業を最小限に抑えるソリューションを実装します。最 初に実行すべき操作を選択してください。(一つ選択)**
+
+・アカウントを汎用 v2 にアップグレードする
+・新しいストレージアカウントを作成する
+・storage1 のレプリケーション設定を変更する
+・オブジェクトレプリケーションルールを構成する
+
+
+
+
+
+**解答例**
+**・アカウントを汎用 v2 にアップグレードする**
+
+
+**問題 102. Azure Monitor の SecurityEvent テーブルから 1,000 件のイ ベントを返す Kusto クエリがあります。Account 列で結果を集計す るようにクエリを構成します。どの演算子を使用しますか。(一つ選 択)**
+
+・where
+・project
+・summarize
+・take
+
+
+
+
+
+**解答例**
+**・summarize**
+
+
+**問題 103. Azure サブスクリプションに 2 つの仮想マシンが含まれて います。VM2 から 10.0.0.4 に対して逆引き DNS 参照を実行します。返される FQDN はどれですか。(一つ選択)**
+
+・vm1.internal.cloudapp.net
+・vm1.westeurope.cloudapp.azure.com
+・vm1.hogehoge.internal
+・vm1.core.windows.net
+
+
+
+
+
+**解答例**
+**・vm1.internal.cloudapp.net**
+
+
+**問題 104. オンプレミスの Active Directory Domain Services (AD DS) ドメイン「hogehoge.local」を含むネットワーク環境があります。こ のドメインには以下の表に示すサーバーが含まれており、Azure へ の移行を計画しています。アドレス空間 10.0.0.0/16、サブネット Subnet-A (10.0.1.0/24) を持つ仮想ネットワーク VNet-A を作成しまし た。ドメインコントローラー DC-A を仮想マシンとして VNet-A に 移行します。移行後も hogehoge.local のメンバーサーバーが AD DS DNS 名を解決できるようにする必要があります。DC-A に設定すべ き IP アドレスを選択してください。(一つ選択)**
+
+| 名前 | IP アドレス | 役割 |
+| :--- | :--- | :--- |
+| DC-A | 192.168.2.1/16 | ドメインコントローラー, DNS サーバー |
+| Server-A | 192.168.2.50/16 | メンバーサーバー |
+
+・10.0.1.3 を使用する
+・192.168.2.1 を使用する
+・DHCP による動的割り当てを使用する
+・10.0.2.1 を使用する
+
+
+
+
+
+**解答例**
+**・10.0.1.3 を使用する**
+
+
+**問題 105. Azure サブスクリプションに汎用 v2 ストレージアカウント 「storage-hogehoge」が存在します。このストレージアカウントに対 して暗号化スコープ「scope-foobar」を新規作成しました。この暗号 化スコープを使用してデータを暗号化できる Azure Storage サービス の組み合わせとして正しいものを選択してください。(一つ選択)**
+
+・Blob Storage と Queue Storage のみ
+・Blob Storage のみ
+・Blob Storage と Table Storage のみ
+・Blob Storage、File Storage、Table Storage
+・File Storage と Blob Storage のみ
+・Blob Storage、File Storage、Table Storage、Queue Storage
+
+
+
+
+
+**解答例**
+**・Blob Storage のみ**
+
+
+**問題 106. 既存の仮想マシンに基づいて Azure Resource Manager テン プレートをダウンロードしました。このテンプレートを使用して 100 台の仮想マシンをデプロイします。管理者パスワードを参照す るようにテンプレートを変更する必要があります。パスワードがプ レーンテキストで保存されないようにする必要があります。パス ワードを保存するために何を作成する必要がありますか。(一つ選 択)**
+
+・Azure Key Vault とアクセスポリシー
+・Recovery Services vault とバックアップポリシー
+・Azure Storage アカウントとアクセスポリシー
+・Microsoft Entra ID とロールベースのアクセス制御
+
+
+
+
+
+**解答例**
+**・Azure Key Vault とアクセスポリシー**
+
+
+**問題 107. あなたの会社には 3 つのオフィスがあります。オフィスは マイアミ、ロサンゼルス、ニューヨークに所在し、各オフィスには データセンターがあります。East US と West US の 2 つの Azure リージョンにリソースを含む Azure サブスクリプションがあり、各 リージョンには仮想ネットワークが存在しピアリングされています。データセンター間のネットワーク遅延を最小限に抑えながら、これ らのデータセンターをサブスクリプションに接続する必要がありま す。何を作成しますか。(一つ選択)**
+
+・1 つの Virtual WAN と 3 つの Virtual Hub
+・3 つの ExpressRoute 回線と 1 つの ExpressRoute Gateway
+・3 つの VPN Gateway と 1 つの Virtual Network Gateway
+・3 つの Virtual WAN と 1 つの Virtual Hub
+
+
+
+
+
+**解答例**
+**・1 つの Virtual WAN と 3 つの Virtual Hub**
+
+
+**問題 108. あなたの組織では、Azure Policy を使用してリソースのデ プロイメントを制御しています。現在、Subscription 1 に対して特定 のポリシーが適用されており、このポリシーは ContosoRG1 という リソースグループを除外 (exclusion) する設定になっています。ポ リシーの効果 (effect) は「Deny」に設定されており、対象リソース タイプは「Microsoft.Sql/servers」です。このポリシー構成において 正しい記述はどれですか。(一つ選択)**
+
+・Subscription 1 内のすべてのリソースグループで Azure SQL Server を作成できる
+・ContosoRG1 以外のすべてのリソースグループで Azure SQL Server の作成が拒否される
+・Subscription 1 全体で Azure SQL Server の作成が拒否される
+・ContosoRG1 でのみ Azure SQL Server を作成できる
+
+
+
+
+
+**解答例**
+**・ContosoRG1 でのみ Azure SQL Server を作成できる**
+
+
+**問題 109. 複数の Azure サブスクリプションとリソースを効率的に管 理する必要があります。すべてのサブスクリプションにわたってア クセス、ポリシー、コンプライアンスを統一的に管理します。実行 すべきタスクを 3 つ選択してください。(三つ選択)**
+
+・サブスクリプションごとに個別のリソースグループを作成する
+・管理グループを作成し、すべてのサブスクリプションを割り当てる
+・個々のリソースレベルでポリシーを適用する
+・管理グループレベルでロールベースのアクセス制御を構成する
+・管理グループレベルで必要なポリシーを適用する
+・タグを使用してサブスクリプション間でリソースを分類する
+
+
+
+
+
+**解答例**
+**・管理グループを作成し、すべてのサブスクリプションを割り当てる**
+**・管理グループレベルでロールベースのアクセス制御を構成する**
+**・管理グループレベルで必要なポリシーを適用する**
+
+
+**問題 110. Microsoft Entra テナントにリンクされた Azure サブスクリ プションがあります。テナントには User-A と User-B という 2 人の ユーザーが含まれています。サブスクリプションには以下のリソー スとアラートルールが含まれています。User-A が新しい仮想ディス クを作成して VM-A に接続した場合、どのアラートルールがトリ ガーされますか。(一つ選択)**
+
+リソース構成 :
+| 名前 | タイプ | 説明 |
+| :--- | :--- | :--- |
+| RG-A | リソースグループ | なし |
+| VM-A | 仮想マシン | RG-A で作成 |
+
+アラートルール構成 :
+| 名前 | スコープ | 条件 |
+| :--- | :--- | :--- |
+| Alert-A | RG-A | すべての管理操作 |
+| Alert-B | VM-A | すべての管理操作 |
+
+・Alert-A のみがトリガーされる
+・Alert-A と Alert-B の両方がトリガーされる
+・アラートはトリガーされない
+・Alert-B のみがトリガーされる
+
+
+
+
+
+**解答例**
+**・Alert-A と Alert-B の両方がトリガーされる**
+
+
+**問題 111. あなたの組織では、新しいプロジェクトとして Azure Web App を 4 つ作成する予定です。各 Web App のランタイムスタック 要件は次の通りです：WebApp-A は .NET 6 (LTS)、WebApp-B は ASP.NET V4.8、WebApp-C は PHP 8.1、WebApp-D は Python 3.11 を使用します。これらの Web App をデプロイするために必要な App Service プランの最小数を選択してください。(一つ選択)**
+
+・1 個の App Service プランで全ての Web App をホスト可能
+・2 個の App Service プランが必要
+・3 個の App Service プランが必要
+・4 個の App Service プランが必要 ( 各 Web App に 1 つずつ )
+
+
+
+
+
+**解答例**
+**・1 個の App Service プランで全ての Web App をホスト可能**
+
+
+**問題 112. 複数のユーザーと管理者を含む Azure サブスクリプション があります。次の JSON を使用して新しいカスタムロールを作成し ます。このカスタムロールが割り当てられたユーザーが実行できる アクションを 3 つ選択してください。(該当するものをすべて選択)**
+
+```json
+{
+  "Name": "Custom Role",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Custom Role description",
+  "Actions": [
+    "Microsoft.Compute/*/read",
+    "Microsoft.Compute/snapshots/write",
+    "Microsoft.Compute/snapshots/read",
+    "Microsoft.Support/*"
+  ],
+  "NotActions": [
+    "Microsoft.Compute/snapshots/delete"
+  ],
+  "AssignableScopes": [
+    "/subscriptions/00000000-0000-0000-0000-000000000000",
+    "/subscriptions/11111111-1111-1111-1111-111111111111"
+  ]
+}
+```
+
+・スナップショットの作成と読み取りを実行する
+・Microsoft サポートに問い合わせる
+・仮想マシンのすべての設定を読み取る
+・スナップショットの作成と削除を実行する
+・仮想マシンディスクの暗号化設定を変更する
+
+
+
+
+
+**解答例**
+**・スナップショットの作成と読み取りを実行する**
+**・Microsoft サポートに問い合わせる**
+**・仮想マシンのすべての設定を読み取る**
+
+
+**問題 113. Azure Storage アカウントで SMB マルチチャネルに対応し たファイル共有を作成します。コストを最小限に抑えながら要件を 満たすストレージ構成を選択してください。(一つ選択)**
+
+・ローカル冗長ストレージ (LRS) による Premium パフォーマンス
+・geo 冗長ストレージ (GRS) による Premium パフォーマンス
+・ゾーン冗長ストレージ (ZRS) による Standard パフォーマンス
+・読み取りアクセス geo 冗長ストレージ (RA-GRS) による Premium パフォーマンス
+
+
+
+
+
+**解答例**
+**・ローカル冗長ストレージ (LRS) による Premium パフォーマンス**
+
+
+**問題 114. Azure サブスクリプションに複数のリソースが含まれてい ます。share1 に対して User1 に Storage File Data SMB Share Contributor ロールを割り当てます。最初に実行すべき操作はどれで すか。(一つ選択)**
+
+・storage1 のファイル共有に対して ID ベースのデータアクセスを有効化する
+・storage1 のセキュリティプロファイルを変更する
+・share1 に対してアクセス制御 (IAM) を構成する
+・Azure portal で storage1 に対して Microsoft Entra ID 認証を既定として選択する
+
+
+
+
+
+**解答例**
+**・storage1 のファイル共有に対して ID ベースのデータアクセスを有効化する**
+
+
+**問題 115. あなたは Azure 環境内でユーザー ID とガバナンスを管理 する責任者です。新入社員に対して、ユーザーアカウントとグルー プの作成・管理、サポートチケットの管理、サービス正常性の監視 を行う権限を付与します。最小特権の原則に従って権限を割り当て る必要があります。新入社員に割り当てるべき Microsoft Entra ロー ルはどれですか。(一つ選択)**
+
+・Service Support Administrator
+・User Administrator
+・Global Administrator
+・Helpdesk Administrator
+
+
+
+
+
+**解答例**
+**・User Administrator**
+
+
+**問題 116. 2 つの Azure サブスクリプション ( サブスクリプション 1 とサブスクリプション 2) があり、それぞれ異なる Microsoft Entra テナントに関連付けられています。サブスクリプション 1 には仮想 ネットワーク VNet1 (IP アドレス空間 : 10.0.0.0/16) があり、仮想 マシン VM1 が含まれています。サブスクリプション 2 には仮想 ネットワーク VNet2 (IP アドレス空間 : 10.10.0.0/24) があり、仮想 マシン VM2 が含まれています。VNet1 と VNet2 間でプライベート 通信を確立する必要があります。最初に実行すべき操作はどれです か。(一つ選択)**
+
+・VNet1 をサブスクリプション 2 に移動する
+・各仮想ネットワークに VPN Gateway をデプロイする
+・VM1 をサブスクリプション 2 に移動する
+・VNet2 の IP アドレス空間を変更する
+
+
+
+
+
+**解答例**
+**・各仮想ネットワークに VPN Gateway をデプロイする**
+
+
+**問題 117. Microsoft 365 テナントと hogehoge.com という名前の Azure Active Directory (Azure AD) テナントがあります。User1、 User2、User3 という 3 人のユーザーに、Library1 という名前の一時 的な Microsoft SharePoint ドキュメントライブラリへのアクセスを 許可します。ユーザー用のグループを作成する必要があり、グルー プは 180 日後に自動的に削除される必要があります。作成すべきグ ループはどれですか。(二つ選択)**
+
+・Dynamic User メンバーシップタイプを使用する Microsoft 365 グループ
+・Assigned メンバーシップタイプを使用するセキュリティグループ
+・Dynamic Device メンバーシップタイプを使用するセキュリティグループ
+・Assigned メンバーシップタイプを使用する Microsoft 365 グループ
+・Dynamic User メンバーシップタイプを使用するセキュリティグループ
+
+
+
+
+
+**解答例**
+**・Assigned メンバーシップタイプを使用する Microsoft 365 グループ**
+**・Dynamic User メンバーシップタイプを使用する Microsoft 365 グループ**
+
+
+**問題 118. あなたの会社では、複数のストレージアカウント (storage1、storage2、storage4) に Azure File Shares が構成されてい ます。Group4 というセキュリティグループに対して、すべての Azure File Shares への読み取り専用アクセス権を Azure RBAC で付 与する必要があります。この要件を満たすために実施すべき操作を 選択してください。(一つ選択)**
+
+・storage2 でファイル共有に対する ID ベースのアクセスを有効化する
+・storage1 と storage4 のアカウント種類を StorageV2 ( 汎用 v2) に変更する
+・storage1、storage2、storage4 に対して Shared Access Signature (SAS) を作成する
+・storage2 を削除して再作成し、階層型名前空間を有効化する
+
+
+
+
+
+**解答例**
+**・storage2 でファイル共有に対する ID ベースのアクセスを有効化する**
+
+
+**問題 119. Windows 上で動作する Azure App Service Web App を作成 します。この Web App は 5 インスタンスへのスケーリング、45GB のストレージ、カスタムドメイン名が必要です。コストを最小限に 抑えるソリューションを選択します。どの App Service プランを使用 しますか。(一つ選択)**
+
+・Standard プラン
+・Premium プラン
+・Basic プラン
+・Shared プラン
+
+
+
+
+
+**解答例**
+**・Standard プラン**
+
+
+**問題 120. App1 という名前の Azure Logic App があります。App1 は、 HTTP POST リクエストまたは HTTP GET リクエストを受信すると 応答を返します。ピーク時には、App1 は 5 分間に最大 200,000 件の リクエストを受信すると予想されます。App1 が予想される負荷を処 理できるようにします。何を構成しますか。(一つ選択)**
+
+・Concurrency control
+・API connections
+・Access control (IAM)
+・Run after settings
+
+
+
+
+
+**解答例**
+**・Concurrency control**
+
+
+**問題 121. ある Azure サブスクリプションに、Windows Server 2022 を実行する 2 つの仮想マシン VM-A と VM-B があります。VM-A は Azure Backup エージェントを使用せず、Azure Backup によって毎 日バックアップされています。VM-A がランサムウェアの影響を受 けデータが暗号化されたため、最新のバックアップから復元を実行 します。このとき、VM-A のファイルレベル回復を実行できる場所 はどれですか。(一つ選択)**
+
+・VM-A のみ
+・VM-A または VM-B
+・VM-A または新しい Azure 仮想マシン
+・インターネットに接続できる任意の Windows コンピューター
+・新しい Azure 仮想マシンの入り
+
+
+
+
+
+**解答例**
+**・インターネットに接続できる任意の Windows コンピューター**
+
+
+**問題 122. 組織が所有する Azure サブスクリプションにストレージ アカウントがあり、Web サイトのデータを保存しています。ユーザー からのトラフィックが、ユーザーの地理的位置に最も近い Microsoft のポイントオブプレゼンス (POP) を経由してストレージアカウン トにアクセスするように構成します。どの設定を使用しますか。(一 つ選択)**
+
+・ルーティング設定
+・Azure Front Door
+・プライベートエンドポイント
+・Azure Firewall
+
+
+
+
+
+**解答例**
+**・ルーティング設定**
+
+
+**問題 123. あなたの組織は、基幹業務システムが稼働する Azure サブ スクリプション「Subscription-A」を所有しています。Subscription-A には、VM-A という名前の仮想マシンと App-A という名前の Azure Functions が含まれます。VM-A が停止した場合に App-A を 自動実行するアラートルールを作成します。アラートルールに必要 なコンポーネントは何ですか。(一つ選択)**
+
+・アクショングループ
+・Azure Automation Runbook
+・動的グループメンバーシップルールを持つセキュリティグループ
+・アプリケーションセキュリティグループ
+
+
+
+
+
+**解答例**
+**・アクショングループ**
+
+
+**問題 124. Azure Kubernetes Service (AKS) クラスターが稼働してい ます。Azure Container Registry (ACR) に保存されているコンテナ イメージを使用してアプリケーションをデプロイします。この要件 を満たすために使用するコマンドを選択してください。(一つ選択)**
+
+・kubectl apply
+・az aks create
+・docker run
+・helm install
+
+
+
+
+
+**解答例**
+**・kubectl apply**
+
+
+**問題 125. Azure サブスクリプションに、storage1 という名前のスト レージアカウントがあります。storage1 アカウントには、share1 と いう名前のファイル共有が含まれています。サブスクリプションは、 Group1 という名前のセキュリティグループを含むハイブリッド Azure Active Directory (Azure AD) テナントにリンクされています。share1 に対して Group1 に Storage File Data SMB Share Elevated Contributor ロールを付与します。最初に実行すべき操作を選択してく ださい。(一つ選択)**
+
+・Azure AD Domain Services (Azure AD DS) の統合を有効化する
+・share1 を File Explorer を使用してマウントする
+・storage1 に対して Active Directory Domain Services (AD DS) 認証を有効化する
+・共有レベルのアクセス許可を File Explorer を使用して付与する
+
+
+
+
+
+**解答例**
+**・storage1 に対して Active Directory Domain Services (AD DS) 認証を有効化する**
+
+
+**問題 126. あなたの組織が所有する Azure 仮想マシン VM-A は、 VNet-A という名前の仮想ネットワークに接続されています。VM-A の構成は、サブネット 10.0.0.0/24、可用性セット AVSet、ネット ワークセキュリティグループなし、プライベート IP アドレス 10.0.0.4 ( 動的 )、パブリック IP アドレス 40.90.219.6 ( 動的 ) です。 インターネットに接続された Standard Load Balancer (slb-A) をデ プロイし、VM-A への接続を許可するように構成します。slb-A に バックエンドプールを作成する前に実施すべき変更を選択してくだ さい。(一つ選択)**
+
+・VM-A を可用性ゾーンに配置する
+・VM-A からパブリック IP アドレスを削除する
+・VM-A のプライベート IP アドレスを静的アドレスに変更する
+・NSG を作成して VM-A に割り当てる
+
+
+
+
+
+**解答例**
+**・VM-A からパブリック IP アドレスを削除する**
+
+
+**問題 127. hogehoge.co.jp という名前の Microsoft Entra テナントがあ ります。WebApp1 という名前の Azure App Service Web アプリと、 Vault1 という名前の Azure Key Vault を含む Azure サブスクリプ ションがあります。Vault1 には、hogehoge.co.jp のワイルドカード 証明書が含まれています。admin1@hogehoge.co.jp という名前の ユーザーがおり、WebApp1 と Vault1 の所有者ロールが割り当てら れています。Vault1 のワイルドカード証明書を使用するように WebApp1 を構成します。まず何を実施しますか。(一つ選択)**
+
+・Vault1 のアクセスポリシーを作成し、admin1 をポリシーに割り当てる
+・システム割り当てマネージド ID を WebApp1 に割り当てる
+・Vault1 のアクセスポリシーを作成し、Microsoft Azure App Service のサービスプリンシパルをポリシーに割り 当てる
+・ロールベースのアクセス制御 (RBAC) 認証システムを使用するように Vault1 を構成する
+
+
+
+
+
+**解答例**
+**・システム割り当てマネージド ID を WebApp1 に割り当てる**
+
+
+**問題 128. Web 開発者が Web アプリケーションを作成し、Azure Web App としてデプロイする予定です。ユーザーは Web アプリ ケーションにアクセスする際に資格情報を入力する必要があります。WebApp1 という名前の新しい Web App を作成し、Web アプリケー ションをデプロイしました。WebApp1 への匿名アクセスを無効にし ます。何を構成しますか。(一つ選択)**
+
+・認証 / 承認
+・デプロイ資格情報
+・アクセス制御 (IAM)
+・ネットワーク
+
+
+
+
+
+**解答例**
+**・認証 / 承認**
+
+
+**問題 129. 既存の Azure サブスクリプションに 10 台の仮想マシンが 含まれています。オンプレミスネットワークと仮想マシン間のレイ テンシを監視します。何を使用しますか。(一つ選択)**
+
+・Azure Network Watcher の接続のトラブルシューティング
+・Network Performance Monitor
+・Azure Monitor の Service Map
+・Network Watcher のネットワークセキュリティグループフローログ
+
+
+
+
+
+**解答例**
+**・Network Performance Monitor**
+
+
+**問題 130. Azure 仮想マシン VM1 を作成する計画があります。VM1 は以下の構成で設定されます：リージョンは East US、可用性オプ ションは可用性セット、イメージは Windows Server 2019 Datacenter、 サイズは Standard_D2s_v3、OS ディスクタイプは Standard HDD、 データディスクは非管理ディスクを使用します。VM1 を可用性ゾー ンに作成できるようにするために変更する必要がある設定を選択し てください。(二つ選択)**
+
+・可用性オプション
+・イメージ
+・マネージドディスクを使用
+・OS ディスクタイプ
+・サイズ
+
+
+
+
+
+**解答例**
+**・可用性オプション**
+**・マネージドディスクを使用**
+
+
+**問題 131. 企業が Azure Blob Storage を使用して大量の非構造化デー タを保存しています。このデータはアクセス頻度が低いものの、必 要時には高速な取得が求められます。データ取得のパフォーマンス を損なうことなくストレージコストを最小化します。どうすればよ いですか。(一つ選択)**
+
+・Azure Blob Storage アカウントのアクセスティアを Cool に構成する
+・Azure Blob Storage アカウントのアクセスティアを Hot に構成する
+・Azure Blob Storage アカウントのアクセスティアを Cold に構成する
+・ライフサイクル管理ポリシーを構成して Archive ティアに自動移行する
+
+
+
+
+
+**解答例**
+**・Azure Blob Storage アカウント की アクセスティアを Cool に構成する**
+
+
+**問題 132. あなたの組織では、Azure 仮想マシンのネットワーク通信 に関する問題を診断するため、Azure Network Watcher の機能を活 用することを検討しています。現在、特定のネットワークセキュリ ティグループ (NSG) ルールが原因で、一部のパケットが仮想マシ ンに到達できない問題が発生しています。どの NSG ルールがパケッ トの到達を阻止しているかを特定する必要があります。この要件を 満たすために使用すべき Azure Network Watcher の機能はどれです か。(一つ選択)**
+
+・接続のトラブルシューティング
+・IP フロー検証
+・ネクストホップ
+・パケットキャプチャ
+
+
+
+
+
+**解答例**
+**・IP フロー検証**
+
+
+**問題 133. ARM テンプレートを使用して仮想マシンスケールセット に Windows Server 2022 を実行する複数の Azure 仮想マシンをデプ ロイし、各仮想マシンに NGINX をインストールして構成します。 この要件を満たすために使用すべきものはどれですか。(一つ選択)**
+
+・Azure Application Insights
+・Custom Script Extension
+・Desired State Configuration (DSC) 拡張機能
+・Microsoft Entra アプリケーションプロキシ
+
+
+
+
+
+**解答例**
+**・Desired State Configuration (DSC) 拡張機能**
+
+
+**問題 134. Azure サブスクリプションに、ポリシーベースの仮想ネッ トワークゲートウェイ「GW-A」と仮想ネットワーク「VNet-A」が 存在します。組織が所有するオンプレミスのクライアント PC から VNet-A へのポイント対サイト (P2S) VPN 接続を構成します。この 要件を満たすために実行する必要があるアクションはどれですか。(二つ選択)**
+
+・ルートベースの仮想ネットワークゲートウェイを作成する
+・GW-A へのポイント対サイト接続構成を追加する
+・VNet-A にサービスエンドポイントを追加する
+・VNet-A にゲートウェイサブネットを追加する
+・GW-A を削除する
+
+
+
+
+
+**解答例**
+**・ルートベースの仮想ネットワークゲートウェイを作成する**
+**・GW-A を削除する**
+
+
+**問題 135. Azure サブスクリプションで Traffic Analytics を有効化す るために、Azure Active Directory (Azure AD) ユーザーである Admin1 に必要なロールを割り当てます。解決策として、サブスク リプションレベルで Admin1 に Network Contributor ロールを割り当 てました。この解決策は要件を満たしていますか?( 一つ選択 )**
+
+・いいえ、要件を満たしていない
+・はい、要件を満たしている
+・部分的に要件を満たしているが、追加で Reader 権限が必要
+・部分的に要件を満たしているが、追加で Log Analytics Contributor 権限が必要
+
+
+
+
+
+**解答例**
+**・いいえ、要件を満たしていない**
+
+
+**問題 136. Azure サブスクリプションに、ストレージアカウントが含 まれています。このストレージアカウントをゾーン冗長ストレージ (ZRS) レプリケーションへライブマイグレーションするため、 Microsoft サポートにリクエストを作成します。ライブマイグレー ションを実行する前に、ストレージアカウントに対してどのような 変更を行う必要がありますか。(一つ選択)**
+
+・アクセス層を Hot に設定する
+・レプリケーションをローカル冗長ストレージ (LRS) に設定する
+・高度な脅威保護を無効化する
+・リソースロックを削除する
+
+
+
+
+
+**解答例**
+**・リソースロックを削除する**
+
+
+**問題 137. Azure 上で稼働する Linux 仮想マシンのパフォーマンスメ トリックとシステムログを収集して監視します。この要件を満たす ために使用する Azure 拡張機能を選択してください。(一つ選択)**
+
+・Azure Network Watcher 拡張機能
+・Azure HDInsight
+・Linux Diagnostic Extension (LAD) 4.0
+・Azure パフォーマンス診断 VM 拡張機能
+
+
+
+
+
+**解答例**
+**・Linux Diagnostic Extension (LAD) 4.0**
+
+
+**問題 138. Azure サブスクリプションに仮想マシン VM1 があります。 VM1 では複数の同時実行インスタンスをサポートしない財務レポー トアプリケーション App1 が稼働しています。毎月末に App1 が実 行されると VM1 の CPU 使用率がピークに達します。毎月末に VM1 のプロセッサ性能を向上させるスケジュール実行 Runbook を 作成します。Runbook に含めるべきタスクはどれですか。(一つ選 択)**
+
+・VM1 のサイズプロパティを変更する
+・VM1 に Desired State Configuration (DSC) 拡張機能を追加する
+・サブスクリプションの vCPU クォータを増やす
+・VM1 を仮想マシンスケールセットに追加する
+
+
+
+
+
+**解答例**
+**・VM1 のサイズプロパティを変更する**
+
+
+**問題 139. あなたの会社は、オンプレミスの Active Directory ドメイ ンサービス (AD DS) 環境を運用しています。マイアミオフィスの ユーザーが Azure AD と統合されたクラウドアプリケーションに シームレスにサインインできるようにする必要があります。ユー ザーは既存のドメイン資格情報を使用し、追加の認証プロンプトな しでアクセスできる必要があります。最小限の管理オーバーヘッド でこの要件を満たすソリューションを選択してください。(一つ選 択)**
+
+・マイアミオフィスのドメインコントローラーに Active Directory Federation Services (AD FS) の役割をインス トールする
+・マイアミオフィスの各クライアントコンピューターのイントラネットゾーンに https://autologon.microsoftazuread-sso.com を追加する
+・Azure AD Connect をインストールし、パスワードハッシュ同期とシームレスシングルサインオン (Seamless SSO) を有効にする
+・マイアミオフィスのサーバーに Azure AD Connect をインストールし、パススルー認証 (Pass-through Authentication) を有効にする
+
+
+
+
+
+**解答例**
+**・マイアミオフィスのサーバーに Azure AD Connect をインストールし、パススルー認証 (Pass-through Authentication) を有効にする**
+
+
+**問題 140. Azure 仮想ネットワーク VNet-A 上に、表 1 に示す 2 台の 仮想マシンが展開されています。VNet-A はプライベート DNS ゾー ン hogehoge.com にリンクされており、この DNS ゾーンには表 2 に示 す DNS レコードが登録されています。VM-A から VM-B に対して ping コマンドを実行する際、VM-B への到達性を確認するために使 用できる DNS 名を選択してください。(一つ選択)**
+
+表 1: 仮想マシンの構成
+| 名前 | IP アドレス | 仮想ネットワーク |
+| :--- | :--- | :--- |
+| VM-A | 10.0.0.4 | VNet-A |
+| VM-B | 10.0.0.5 | VNet-A |
+
+表 2: プライベート DNS ゾーンのレコード
+| 名前 | タイプ | TTL | 値 | 自動登録 |
+| :--- | :--- | :--- | :--- | :--- |
+| link-A | TXT | 3600 | 10.0.0.5 | 無効 |
+| link-B | A | 3600 | 10.0.0.5 | 無効 |
+| link-C | CNAME | 3600 | link-B.hogehoge.com | 無効 |
+| link-D | PTR | 3600 | 10.0.0.5 | 無効 |
+
+・link-b.hogehoge.com、link-d.hogehoge.com
+・link-a.hogehoge.com、link-b.hogehoge.com
+・link-b.hogehoge.com
+・link-a.hogehoge.com、link-b.hogehoge.com、link-c.hogehoge.com、link-d.hogehoge.com
+
+
+
+
+
+**解答例**
+**・link-b.hogehoge.com**
+
+
+**問題 141. 組織の Azure サブスクリプション「Subscription-A」で多 層アプリケーションをデプロイします。アプリケーション構成は以 下の通りです。**
+
+| 階層 | インターネットアクセス | 仮想マシン数 |
+| :--- | :--- | :--- |
+| フロントエンド Web サーバー | 可 | 10 |
+| ビジネスロジック | 不可 | 100 |
+| SQL Server データベース | 不可 | 5 |
+
+**次の要件を満たすネットワークソリューションを実装します。(1)Web サーバーとビジネスロジック階層間の通信を 仮想マシン全体に均等分散する、(2)Web サーバーを SQL インジェクション攻撃から保護する。SQL インジェク ション攻撃から Web サーバーを保護するために使用する Azure リソースはどれですか。(一つ選択)**
+
+・パブリックロードバランサー
+・WAF 層を使用する Application Gateway
+・Azure DDoS Protection Standard
+・ネットワークセキュリティグループ (NSG)
+
+
+
+
+
+**解答例**
+**・WAF 層を使用する Application Gateway**
+
+
+**問題 142. Humongous Insurance 社は、マイアミ、東京、バンコクに 3 つのオフィスを持つ保険会社です。各オフィスには 5,000 人のユー ザーがいます。同社は単一ドメインの Active Directory フォレスト humongousinsurance.com を運用しており、最近 Azure Active Directory テナントをプロビジョニングしました。パリに新しいオ フィスを開設する計画があり、1,000 人のユーザーが今後 12 か月間 で採用される予定です。パリオフィスのユーザーが使用するすべて のリソースは Azure でホストされます。財務部門の監査担当者は、 テストフェーズ中に過去 1 週間のすべての Azure コストを確認でき る必要があります。財務部門の監査担当者に使用を指示すべき Azure portal のブレードはどれですか。(一つ選択)**
+
+・Cost Management + Billing 内のコスト分析
+・請求書
+・サブスクリプションの概要
+・支払い方法
+
+
+
+
+
+**解答例**
+**・Cost Management + Billing 内のコスト分析**
+
+
+**問題 143. App-A という名前の Azure App Service Web アプリがあり ます。Web Deploy を使用して App-A を展開する予定です。App-A の開発者が Microsoft Entra ID の資格情報を使用してコンテンツを App-A に展開できるようにします。ソリューションでは、最小権限 の原則を使用する必要があります。何をすべきでしょうか?( 一つ 選択 )**
+
+・開発者に Contributor ロールを割り当てる
+・開発者に Website Contributor ロールを割り当てる
+・FTPS のアプリレベルの認証情報を構成する
+・開発者に Owner ロールを割り当てる
+
+
+
+
+
+**解答例**
+**・開発者に Website Contributor ロールを割り当てる**
+
+
+**問題 144. あなたの組織では、新しいアプリケーション開発に Azure を採用し、Subscription-A という名前の Azure サブスクリプション を作成しました。Subscription-A 内に VM-A という名前の仮想マシ ンを作成しましたが、現在 Azure Backup による保護は構成されてい ません。VM-A を Azure Backup で保護し、毎日 01:00 にバックアッ プを実行して 30 日間保存する必要があります。VM-A の保護を構成 するために使用するオブジェクトを選択してください。(一つ選択)**
+
+・Recovery Services コンテナー
+・バックアップポリシー
+・復旧計画
+・Azure Site Recovery
+
+
+
+
+
+**解答例**
+**・バックアップポリシー**
+
+
+**問題 145. Azure の仮想マシン上でサードパーティ製アプリケーショ ンを運用しています。ユーザーからアプリケーション使用時にパ フォーマンスの問題が報告されました。パフォーマンスの問題の根本 原因を特定するために使用すべきサービスはどれですか。(一つ選 択)**
+
+・Azure Advisor
+・Azure Monitor
+・Log Analytics
+・Azure Service Health
+
+
+
+
+
+**解答例**
+**・Azure Monitor**
+
+
+**問題 146. Azure サブスクリプション内に、Windows Server ベースの コンテナーイメージ Image-A と Linux ベースのコンテナーイメージ Image-B がデプロイされています。これらのイメージを実行可能な Azure サービスの組み合わせとして正しいものを選択してください。 対象サービスは Azure Container Instances、Azure Container Apps、 Azure App Service の 3 つです。Image-A について実行可能なサービ スの組み合わせを選んでください。(一つ選択)**
+
+| イメージ名 | OS |
+| :--- | :--- |
+| Image-A | Windows Server |
+| Image-B | Linux |
+
+・Azure Container Instances と Azure Container Apps
+・Azure Container Instances のみ
+・Azure Container Apps と Azure App Service
+・Azure Container Instances、Azure Container Apps、Azure App Service すべて
+
+
+
+
+
+**解答例**
+**・Azure Container Instances のみ**
+
+
+**問題 147. あなたの組織では、East US リージョンにデプロイされた Azure Web Apps の App1 を使用して、ユーザーに動画コンテンツを 配信しています。北米のユーザーは問題なく動画を視聴できていま すが、アジアとヨーロッパのユーザーからは動画のバッファリング が頻繁に発生し、スムーズに再生されないという報告が上がってい ます。アジアとヨーロッパのユーザーに対する動画ストリーミング のパフォーマンスを改善するソリューションを推奨します。(一つ選 択)**
+
+・Azure Traffic Manager を構成する
+・App Service plan をスケールアップする
+・Azure Content Delivery Network (CDN) エンドポイントを構成する
+・App Service plan をスケールアウトする
+
+
+
+
+
+**解答例**
+**・Azure Content Delivery Network (CDN) エンドポイントを構成する**
+
+
+
+
+
+
+
+
+
+問題 158. あなたの組織が所有する Azure サブスクリプション内に複数の仮想マシンが稼働しています。オンプレミスネットワークとこれらの仮想マシン間のネットワーク遅延を継続的に監視します。どの Azure Network Watcher の機能を使用しますか。（一つ選択）
+
+・IP Flow Verify
+・接続モニター
+・NSG 診断
+・接続のトラブルシューティング
+
+
+
+
+
+解答例
+・接続モニター
+
+
+
+問題 159. あなたの会社では、Azure 上でロードバランサー LB1 を使用してトラフィックを分散しています。現在、仮想マシン VM1 と VM2 が異なるネットワーク構成で稼働しており、これらを LB1 のバックエンドプールに追加する必要があります。VM1 は VNET1/Subnet1 に接続されていますが、VM2 は別の仮想ネットワークに接続されています。LB1 は Standard SKU のロードバランサーで、VNET1 に関連付けられています。VM1 と VM2 を LB1 のバックエンドプールに追加するために、最初に実行すべき作業は何ですか。（一つ選択）
+
+・VM1 と VM2 を同じ可用性セットに再デプロイする
+・新しいネットワークセキュリティグループを作成し、VNET1/Subnet1 に関連付ける
+・VM2 を VNET1/Subnet1 に接続する
+・VM1 と VM2 を同じ可用性ゾーンに再デプロイする
+
+
+
+
+
+解答例
+・VM2 を VNET1/Subnet1 に接続する
+
+
+
+問題 160. Azure サブスクリプション内で、複数の Azure Container Instances を単一のコンテナーグループとしてデプロイする計画があります。以下の表に示すコンテナーインスタンスのうち、同一のコンテナーグループにデプロイ可能な組み合わせを選択してください。（一つ選択）
+
+インスタンス名 | オペレーティングシステム
+--- | ---
+Instance-A | Windows Server 2019 Nano Server
+Instance-B | Windows Server 2019 Server Core
+Instance-C | Linux
+Instance-D | Linux
+Instance-E | Linux
+
+・Instance-A と Instance-B
+・Instance-C、Instance-D、Instance-E
+・Instance-A と Instance-C
+・Instance-B のみ
+
+
+
+
+
+解答例
+・Instance-C、Instance-D、Instance-E
+
+
+
+問題 161. VM1 と VM2 という 2 つの Azure 仮想マシンがあります。RSV1 と RSV2 という 2 つの Recovery Services コンテナーがあります。VM2 は RSV1 にバックアップされています。VM2 を RSV2 にバックアップする必要があります。最初に実行すべき操作はどれですか。（一つ選択）
+
+・RSV1 のブレードでバックアップアイテムを選択し、VM2 のバックアップを停止する
+・VM2 のブレードでバックアップ設定を開き、バックアップ先を RSV2 に変更する
+・RSV2 のブレードでバックアップを選択し、仮想マシンのバックアップを構成して VM2 を指定する
+・VM2 のブレードでディザスターリカバリーを選択し、レプリケーション設定で RSV2 を Recovery Services コンテナーとして指定する
+
+
+
+
+
+解答例
+・RSV1 のブレードでバックアップアイテムを選択し、VM2 のバックアップを停止する
+
+
+
+問題 162. Azure サブスクリプションを運用しています。すべてのユーザーに対して多要素認証を有効化しました。一部のユーザーから、モバイルデバイスのメールアプリケーションが Microsoft Exchange Online メールボックスに接続できないという報告がありました。これらのユーザーは Web ブラウザーおよびコンピューター上の Microsoft Outlook 2016 からは Exchange Online にアクセスできます。モバイルデバイスのメールアプリケーションを使用できるようにするため、ユーザーに何を指示しますか。（一つ選択）
+
+・Azure Active Directory パスワードをリセットする
+・アプリパスワードを作成する
+・セルフサービスパスワードリセットを有効化する
+・Microsoft Authenticator アプリを再インストールする
+
+
+
+
+
+解答例
+・アプリパスワードを作成する
+
+
+
+問題 163. ある Azure サブスクリプションに仮想ネットワーク VNet1 が含まれており、この VNet1 はリソースグループ RG1 に属しています。サブスクリプションには User1 というユーザーが存在し、現在 Reader、Security Admin、Security Reader の各ロールが割り当てられています。User1 が VNet1 に対して他のユーザーに Reader ロールを割り当てられるようにします。どのように構成しますか。（一つ選択）
+
+・User1 に VNet1 の User Access Administrator ロールを割り当てる
+・User1 に VNet1 の Contributor ロールを割り当てる
+・User1 からサブスクリプションの Security Reader ロールと Reader ロールを削除する
+・User1 に VNet1 の Owner ロールを割り当てる
+
+
+
+
+
+解答例
+・User1 に VNet1 の User Access Administrator ロールを割り当てる
+
+
+
+問題 164. Azure App Service で .NET アプリケーションを運用しています。数日後に大量のトラフィック流入が予想されており、トラフィック急増時にリクエストエラーやクエリ失敗などの異常をリアルタイムで検知したいと考えています。.NET アプリケーションに関連するこれらのエラーを即座に把握するために使用できるサービスはどれですか。（一つ選択）
+
+・Application Insights の検索機能を使用する
+・Log Analytics ワークスペースでクエリを実行する
+・Application Insights の Live Metrics Stream を使用する
+・Azure Monitor のメトリックアラートを構成する
+
+
+
+
+
+解答例
+・Application Insights の Live Metrics Stream を使用する
+
+
+
+問題 165. あなたの会社には、パリのオフィスに 100 人のユーザーがいます。オンプレミスネットワークには、複数のサーバー（Web サーバー、ファイルサーバー、データベースサーバーを含む）が稼働しています。新しい Azure サブスクリプションを作成しました。すべてのサーバーを Azure に移行する必要があります。解決策として、azcopy.exe を実行します。この解決策は目標を達成できますか？（一つ選択）
+
+・いいえ、この解決策では目標を達成できない
+・はい、この解決策で目標を達成できる
+・部分的に達成できるが、追加の構成が必要である
+・Azure Migrate と組み合わせる場合のみ達成できる
+
+
+
+
+
+解答例
+・いいえ、この解決策では目標を達成できない
+
+
+
+問題 166. Azure で、webapp という名前の Web アプリを運用しています。また、MySQL データベースをホストする vm-db という名前の仮想マシンがあり、この仮想マシンは vnet-prod という名前の仮想ネットワークに接続されています。webapp から vm-db 上のデータにアクセスできるようにします。どうすればよいですか。（一つ選択）
+
+・webapp を vnet-prod に接続する
+・Azure Application Gateway をデプロイする
+・Azure Traffic Manager を構成する
+・vnet-prod に内部ロードバランサーをデプロイする
+
+
+
+
+
+解答例
+・webapp を vnet-prod に接続する
+
+
+
+問題 167. あなたは VM1 という名前の仮想マシンを含む Azure サブスクリプションを管理しています。オンプレミスのデータセンターには DC1 という名前のドメインコントローラーがあり、ExpressRoute を使用して Azure に接続されています。Connection Monitor で VM1 と DC1 間のネットワーク遅延を測定します。DC1 にインストールすべきものはどれですか。（一つ選択）
+
+・Azure Monitor Agent
+・Azure Connected Machine agent
+・Log Analytics agent
+・Network Watcher Agent
+
+
+
+
+
+解答例
+・Azure Monitor Agent
+
+
+
+問題 168. オンプレミスネットワークに VPN ゲートウェイがあります。次のリソースを含む Azure サブスクリプションがあります：仮想マシン VM1 とストレージアカウント storage1。VM1 から storage1 へのすべてのトラフィックが Microsoft バックボーンネットワークを経由するようにします。何を構成しますか。（一つ選択）
+
+・Azure Peering Service
+・Service Endpoint
+・Private Endpoint
+・Azure Firewall
+
+
+
+
+
+解答例
+・Private Endpoint
+
+
+
+問題 169. Subnet1 という名前のサブネットがあり、Azure 仮想マシンが含まれています。NSG1 という名前のネットワークセキュリティグループが Subnet1 に関連付けられており、NSG1 は既定のルールで構成されています。Subnet1 上のホストが Azure ポータルに接続できないようにするため、NSG1 に新しいルールを作成します。ただし、ホストは他の Azure サービスには接続できる必要があります。このルールの宛先として何を設定しますか。（一つ選択）
+
+・Application Security Group
+・Service Tag
+・Any
+・CIDR 表記の IP アドレス範囲
+
+
+
+
+
+解答例
+・Service Tag
+
+
+
+問題 170. Azure 仮想マシン VM1 があり、Azure Backup を使用して Backup1 という名前のバックアップを作成しました。Backup1 の作成後、VM1 に対して次の変更を実施しました：VM1 のサイズ変更、Data フォルダへの budget.xls ファイルのコピー、組み込み管理者アカウントのパスワードリセット、VM1 へのデータディスクの追加。管理者が「既存のものを置き換える」オプションを使用して Backup1 から VM1 を復元します。VM1 に対するすべての変更が復元されるようにするには、どの変更を再度実行する必要がありますか。（一つ選択）
+
+・データディスクを追加する
+・VM1 のサイズを変更する
+・組み込み管理者アカウントのパスワードをリセットする
+・budget.xls を Data フォルダにコピーする
+
+
+
+
+
+解答例
+・budget.xls を Data フォルダにコピーする
+
+
+
+問題 171. Azure サブスクリプションに、VNet1、VNet2、VNet3 という 3 つの仮想ネットワークがあります。VNet2 には、ルーターとして動作する VM2 という仮想アプライアンスが含まれています。VNet2 をハブネットワークとして使用するハブアンドスポークトポロジで仮想ネットワークを構成しています。VNet1 と VNet2 の間、および VNet2 と VNet3 の間でピアリングを構成する予定です。VNet2 を経由して VNet1 と VNet3 の間の接続を提供します。どの 2 つの構成を実行しますか。（二つ選択）
+
+・ピアリング接続で転送されたトラフィックを許可する
+・サブネットに関連付けるルートテーブルを作成する
+・ピアリング接続でリモートゲートウェイを使用する
+・ピアリング接続でゲートウェイトランジットを許可する
+
+
+
+
+
+解答例
+・ピアリング接続で転送されたトラフィックを許可する
+・サブネットに関連付けるルートテーブルを作成する
+
+
+
+問題 172. Azure サブスクリプション「Subscription-A」に以下のリソースが構成されています。仮想ネットワークリンク「Link-B」の自動登録を有効にすることができますか。（一つ選択）
+
+仮想ネットワーク
+名前 | リージョン
+--- | ---
+VNet-A | 東日本
+VNet-B | 東日本
+VNet-C | 西日本
+
+プライベート DNS ゾーン
+名前 | ロケーション
+--- | ---
+spot-a.com | 東日本
+spot-b.com | 東日本
+spot-c.com | 西日本
+
+仮想ネットワークリンク
+名前 | プライベート DNS ゾーン | 仮想ネットワーク | 自動登録
+--- | --- | --- | ---
+Link-A | spot-a.com | VNet-A | 有効
+Link-B | spot-b.com | VNet-B | 無効
+Link-C | spot-c.com | VNet-C | 無効
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・はい
+
+
+
+問題 173. あなたは Azure 管理者として、Web01 という名前の仮想マシン上で複数のセキュアな Web サイトをホストする計画を立てています。TCP 443 ポートを使用した HTTPS 通信を Web01 に許可し、TCP 80 ポートを使用した HTTP 通信を Web01 に対してブロックする必要があります。この要件を満たすために、Azure ポータルから実施すべき最も適切な構成手順を選択してください。（一つ選択）
+
+・Network Security Group (NSG) でインバウンドセキュリティ規則を作成し、TCP 443 ポートを許可する規則と、TCP 80 ポートを拒否する規則を追加する
+・Azure Firewall の DNAT ルールを構成し、TCP 443 ポートへのトラフィックを許可し、TCP 80 ポートへのトラフィックをドロップする
+・Application Gateway のバックエンドプールに Web01 を追加し、リスナーで TCP 443 ポートのみを構成する
+・Azure Load Balancer で TCP 443 ポート用の負荷分散規則を作成し、TCP 80 ポート用のヘルスプローブを無効化する
+
+
+
+
+
+解答例
+・Network Security Group (NSG) でインバウンドセキュリティ規則を作成し、TCP 443 ポートを許可する規則と、TCP 80 ポートを拒否する規則を追加する
+
+
+
+問題 174. Azure サブスクリプションに、VNet1 という仮想ネットワークと VM1 という仮想マシンが含まれています。VM1 は内部ネットワークからのみアクセス可能です。外部の契約業者が VM1 にアクセスする必要があります。管理作業を最小限に抑えるソリューションを実装します。何を構成しますか。（一つ選択）
+
+・Azure Bastion
+・Site-to-Site VPN
+・2 つ目のプライベート IP アドレス
+・パブリック IP アドレス
+
+
+
+
+
+解答例
+・Azure Bastion
+
+
+
+問題 175. Azure サブスクリプションに 3 つの仮想マシンが存在します。各仮想マシンは以下の構成です。vm-A はプライベート IP 192.168.1.4、パブリック IP 7.198.2.1、DNS サフィックス hogehoge.com で VNet-A に接続。vm-B はプライベート IP 192.168.1.5、パブリック IP 131.107.90.80、DNS サフィックスなしで VNet-A に接続。vm-C はプライベート IP 10.0.1.2、パブリック IP 133.200.1.2、DNS サフィックス foobar-test.com で VNet-A に接続。次に、パブリック DNS ゾーン hogehoge.com、プライベート DNS ゾーン internal-test.com、パブリック DNS ゾーン foobar-test.com を作成します。internal-test.com では VNet-A への仮想ネットワークリンクを追加し自動登録を有効化します。hogehoge.com では vm-A と vm-B に所有者ロールを割り当てます。この構成において、vm-A の DNS A レコードが hogehoge.com に追加され IP アドレスが 7.198.2.1 になりますか。（一つ選択）
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・いいえ
+
+
+
+問題 176. あなたは Azure 環境の管理者です。Tenant1 という名前の Azure Active Directory テナントと、Subscription1 という名前の Azure サブスクリプションを管理しています。Azure AD Privileged Identity Management を有効化しました。Lab Creator ロールのメンバーをセキュアにする必要があります。ソリューションは、ラボ作成者がラボを作成する際にアクセスを要求することを保証する必要があります。最初に実行すべき操作はどれですか。（一つ選択）
+
+・Azure AD Privileged Identity Management で Azure リソースを検出する
+・Subscription1 で Lab Creator ロールのメンバーを編集する
+・Azure AD Privileged Identity Management で Lab Creator のロール設定を編集する
+・Azure AD Identity Protection でサインインリスクポリシーを作成する
+
+
+
+
+
+解答例
+・Azure AD Privileged Identity Management で Azure リソースを検出する
+
+
+
+問題 177. あなたの組織では、storage1 と storage2 という 2 つの Premium Block Blob ストレージアカウントを運用しています。storage1 から storage2 へのオブジェクトレプリケーションを構成します。オブジェクトレプリケーションを構成する前に有効化する必要がある機能を選択してください。（該当するものをすべて選択）
+
+・storage2 の変更フィード
+・storage1 の BLOB バージョン管理
+・storage1 のコンテナーに対するポイントインタイムリストア
+・storage2 の BLOB バージョン管理
+・storage2 のコンテナーに対するポイントインタイムリストア
+・storage1 の変更フィード
+
+
+
+
+
+解答例
+・storage1 の BLOB バージョン管理
+・storage2 の BLOB バージョン管理
+・storage1 の変更フィード
+
+
+
+問題 178. Azure サブスクリプションに、ストレージアカウント storage1 があり、Microsoft Entra ID テナントにリンクされています。storage1 に対して ID ベースのアクセスを構成する予定です。ID ベースのアクセスをサポートする storage1 のデータサービスはどれですか。（該当するものをすべて選択）
+
+・Blob Storage
+・Azure Files
+・Queue Storage
+・Table Storage
+
+
+
+
+
+解答例
+・Blob Storage
+・Azure Files
+・Queue Storage
+
+
+
+問題 179. Azure サブスクリプションに複数のリソースが含まれています。ロードバランサー LB1 が構成されており、インターネットからポート 3389 を使用して VM2 へのリモートデスクトップアクセスを提供する新しいインバウンド NAT ルールを作成する予定です。この要件を満たすために、LB1 に追加で構成する必要があるコンポーネントを選択してください。（一つ選択）
+
+・バックエンドプール
+・正常性プローブ
+・送信規則
+・フロントエンド IP アドレス
+
+
+
+
+
+解答例
+・フロントエンド IP アドレス
+
+
+
+問題 180. Computer1 という名前のコンピューターがあり、VNet1 という名前の Azure 仮想ネットワークへのポイント対サイト VPN 接続を持っています。このポイント対サイト接続は自己署名証明書を使用しています。Azure から、Computer2 という名前のコンピューターに VPN クライアント構成パッケージをダウンロードしてインストールしました。Computer2 から VNet1 へのポイント対サイト VPN 接続を確立できるようにします。解決策：Microsoft Entra ID の認証ポリシーを変更します。この解決策は目標を達成していますか？（一つ選択）
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・いいえ
+
+
+
+問題 181. Azure 仮想マシンで以下の操作を実行した後、仮想マシンの再デプロイを実施します。この場合、失われる変更はどれですか。（一つ選択）
+
+- C ドライブにファイルを作成
+- D ドライブにファイルを作成
+- スクリーンセーバーのタイムアウト設定を変更
+- デスクトップの背景画像を変更
+
+・C ドライブに作成したファイル
+・スクリーンセーバーのタイムアウト設定
+・D ドライブに作成したファイル
+・レジストリに保存されたユーザー設定
+
+
+
+
+
+解答例
+・D ドライブに作成したファイル
+
+
+
+問題 182. Azure 仮想マシンをデプロイするための Azure Resource Manager テンプレート「Template1」があります。このテンプレートの variables セクションには「"location": "westeurope"」という記述があり、resources セクションでは仮想マシンの location プロパティがこの変数を参照しています。Template1 を使用して仮想マシンを West US リージョンにデプロイする必要があります。どのような対応を行うべきですか。（一つ選択）
+
+・デプロイ時にパラメータファイルで location の値を westus に指定する
+・variables セクションの location の値を westus に変更する
+・resources セクションで仮想マシンの location プロパティを直接 westus に変更する
+・テンプレートのデプロイ先リソースグループのリージョンを West US に設定する
+
+
+
+
+
+解答例
+・variables セクションの location の値を westus に変更する
+
+
+
+問題 183. Azure Active Directory (Azure AD) ドメインに 5,000 のユーザーアカウントが存在します。AdminUser1 という新しいユーザーアカウントを作成しました。AdminUser1 に User Administrator 管理者ロールを割り当てます。ユーザーアカウントのプロパティから何を実行しますか。（一つ選択）
+
+・Assigned roles ブレードから、ディレクトリロールを変更する
+・Licenses ブレードから、新しいライセンスを割り当てる
+・Groups ブレードから、ユーザーアカウントを新しいグループに招待する
+・Administrative units ブレードから、管理単位を構成する
+
+
+
+
+
+解答例
+・Assigned roles ブレードから、ディレクトリロールを変更する
+
+
+
+問題 184. 組織で新しい Azure ストレージアカウント「storage-A」を作成します。このストレージアカウントは、Azure Data Lake Storage をサポートし、アクセス頻度の低いデータのコストを最小限に抑え、データをセカンダリ Azure リージョンに自動的にレプリケートする必要があります。storage-A に設定する必要があるオプションはどれですか。（三つ選択）
+
+・階層型名前空間
+・ローカル冗長ストレージ (LRS)
+・geo 冗長ストレージ (GRS)
+・クールアクセス層
+・ホットアクセス層
+
+
+
+
+
+解答例
+・階層型名前空間
+・geo 冗長ストレージ (GRS)
+・クールアクセス層
+
+
+
+問題 185. Azure サブスクリプションに、RG1 という名前のリソースグループがあります。RG1 には、VM1 という名前の Azure 仮想マシンが含まれています。VM1 をテンプレートとして使用して新しい Azure 仮想マシンを作成します。このタスクを完了するために使用できる方法を 3 つ選択してください。（三つ選択）
+
+・Azure Cloud Shell から Get-AzVM と New-AzVM コマンドレットを実行する
+・VM1 から Export template を選択し、Deploy を選択する
+・Azure Cloud Shell から Export-AzResourceGroup と New-AzResourceGroupDeployment コマンドレットを実行する
+・RG1 から Export template を選択し、Download を選択してから、Azure Cloud Shell で New-AzResourceGroupDeployment コマンドレットを実行する
+・Azure Cloud Shell から Save-AzDeploymentTemplate と New-AzResourceGroupDeployment コマンドレットを実行する
+
+
+
+
+
+解答例
+・Azure Cloud Shell から Get-AzVM と New-AzVM コマンドレットを実行する
+・VM1 から Export template を選択し、Deploy を選択する
+・RG1 から Export template を選択し、Download を選択してから、Azure Cloud Shell で New-AzResourceGroupDeployment コマンドレットを実行する
+
+
+
+問題 186. Azure 上で Windows Server 2022 を実行する VM-A という仮想マシンを運用しています。VM-A のシステムイベントログで 1 時間以内に 3 つ以上のエラーイベントが記録された場合に通知を受け取るアラートを構成します。次の解決策を実装しました：Log Analytics ワークスペースを作成してエージェント構成設定を行い、VM-A に Microsoft Monitoring Agent をインストールし、Azure Monitor で Log Analytics ワークスペースをソースとするアラートを作成しました。この解決策は要件を満たしていますか。（一つ選択）
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・はい
+
+
+
+問題 187. AKS1 という名前の Azure Kubernetes Service (AKS) クラスターがあります。AKS1 のクラスター自動スケーラーを構成します。使用すべきツールを 2 つ選択してください。（二つ選択）
+
+・Azure CLI の az aks コマンド
+・Azure PowerShell の Set-AzAks コマンドレット
+・Kubernetes の kubectl コマンド
+・Azure Portal
+・Azure PowerShell の Update-AzAksCluster コマンドレット
+
+
+
+
+
+解答例
+・Azure CLI の az aks コマンド
+・Azure Portal
+
+
+
+問題 188. Azure サブスクリプションに以下のリソースが含まれています。Subnet1 という名前のサブネットを持つ仮想ネットワーク、NSG-VM1 と NSG-Subnet1 という名前の 2 つのネットワークセキュリティグループ (NSG : Network Security Group)、リモートデスクトップ接続を許可するために必要な Windows Server 構成を持つ VM1 という名前の仮想マシンです。NSG-Subnet1 にはデフォルトの受信セキュリティ規則のみが設定されています。NSG-VM1 にはデフォルトの受信セキュリティ規則と次のカスタム受信セキュリティ規則があります。優先度 100、送信元 Any、送信元ポート範囲 *、宛先 *、宛先ポート範囲 3389、プロトコル UDP、アクション Allow です。VM1 は Subnet1 に接続されており、NSG-VM1 は VM1 のネットワークインターフェイスに関連付けられ、NSG-Subnet1 は Subnet1 に関連付けられています。インターネットから VM1 へのリモートデスクトップ接続を確立できるようにします。解決策として、NSG-Subnet1 と NSG-VM1 に受信セキュリティ規則を追加し、インターネットソースから VirtualNetwork 宛先へのポート範囲 3389 の接続を TCP プロトコルで許可します。この解決策は目標を満たしていますか。（一つ選択）
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・はい
+
+
+
+問題 189. オンプレミスの Active Directory フォレスト内に、hogehoge.com という名前のフォレストがあり、hogehoge.com と east.hogehoge.com という 2 つのドメインが含まれています。このフォレストには複数のユーザーアカウントが存在します。Azure AD Connect を使用して east.hogehoge.com を Microsoft Entra ID（旧 Azure AD）テナントに同期する予定です。Azure AD Connect がフォレストへの接続に使用するアカウントを選択する必要があります。次のユーザーアカウント情報を確認し、最も適切なアカウントを選択してください。（一つ選択）
+
+ユーザー | ドメイン | グループメンバーシップ
+--- | --- | ---
+User1 | hogehoge.com | Domain Admins
+User2 | east.hogehoge.com | Enterprise Admins
+User3 | hogehoge.com | Enterprise Admins
+User4 | east.hogehoge.com | Domain Admins
+
+・User4 を選択する
+・User2 を選択する
+・User1 を選択する
+・User3 を選択する
+
+
+
+
+
+解答例
+・User3 を選択する
+
+
+
+問題 190. Azure サブスクリプションに、VNet1 という名前の仮想ネットワークがあります。VNet1 には、Gateway、Perimeter、NVA、Production という 4 つのサブネットが含まれています。NVA サブネットには、Perimeter サブネットと Production サブネット間のネットワークトラフィック検査を実行する 2 つのネットワーク仮想アプライアンス (NVA) が含まれています。NVA 用の Azure Load Balancer を実装します。ソリューションは次の要件を満たす必要があります。NVA は自動フェールオーバーを使用するアクティブ - アクティブ構成で実行する必要があります。ロードバランサーは、Production サブネット上の 2 つのサービスにトラフィックを負荷分散する必要があります。これらのサービスは異なる IP アドレスを持ちます。実行する必要がある 3 つのアクションはどれですか。（該当するものをすべて選択）
+
+・Standard Load Balancer をデプロイする
+・フロントエンド IP 構成、2 つのバックエンドプール、正常性プローブを追加する
+・HA ポートと Floating IP を有効にした 2 つの負荷分散ルールを追加する
+・Basic Load Balancer をデプロイする
+・フロントエンド IP 構成、バックエンドプール、正常性プローブを追加する
+・HA ポートを有効にし、Floating IP を無効にした 2 つの負荷分散ルールを追加する
+
+
+
+
+
+解答例
+・Standard Load Balancer をデプロイする
+・フロントエンド IP 構成、2 つのバックエンドプール、正常性プローブを追加する
+・HA ポートと Floating IP を有効にした 2 つの負荷分散ルールを追加する
+
+
+
+問題 191. Azure サブスクリプションに複数のリソースが含まれています。新しく IP1 という名前のパブリック IP アドレスを作成しました。IP1 を関連付けることができるリソースはどれですか。（二つ選択）
+
+・Application Gateway
+・仮想マシン
+・Load Balancer
+・仮想ネットワーク
+・VPN Gateway
+
+
+
+
+
+解答例
+・Load Balancer
+・VPN Gateway
+
+
+
+問題 192. あなたの組織が所有する Azure サブスクリプションには、VM-A という名前の仮想マシンがあります。VM-A は 24 時間 365 日稼働が必要なアプリケーションをホストしています。VM-A には 1 つのネットワークインターフェイスと 1 つのマネージドディスクがあり、D4s v3 サイズを使用しています。VM-A に対して構成変更を実施する予定です。VM-A のダウンタイムを引き起こす変更はどれですか。（一つ選択）
+
+・500GB のマネージドディスクを追加する
+・サイズを D8s v3 に変更する
+・Azure Automation State Configuration を有効にする
+・ネットワークインターフェイスを追加する
+
+
+
+
+
+解答例
+・サイズを D8s v3 に変更する
+
+
+
+問題 193. Azure AD テナント hogehoge と Azure サブスクリプション Sub1 があります。hogehoge には DevTeam というグループが含まれています。Sub1 には DevRG というリソースグループが含まれています。DevRG リソースグループ内で DevTeam グループに Logic Apps を作成する権限を付与します。解決策として、Sub1 で DevTeam グループに DevTest Labs User ロールを割り当てました。この解決策は要件を満たしていますか。（一つ選択）
+
+・要件を満たしている
+・要件を満たしていない
+・Logic Apps Contributor ロールを割り当てる必要がある
+・リソースグループレベルで Contributor ロールを割り当てる必要がある
+
+
+
+
+
+解答例
+・要件を満たしていない
+
+
+
+問題 194. Azure サブスクリプション内に TestRG という名前のリソースグループがあります。このリソースグループには VM1（仮想マシン）、VNET1（仮想ネットワーク）、Vault1（Recovery Services コンテナー）が含まれています。VNET1 には Delete リソースロックが設定されており、Vault1 には VM1 のバックアップデータが保存されています。TestRG リソースグループ全体を削除する必要があります。最初に実行すべき操作はどれですか。（一つ選択）
+
+・VM1 の電源をオフにし、Vault1 内のすべてのバックアップデータを削除する
+・VNET1 のリソースロックを削除し、VM1 の電源をオフにする
+・Vault1 内のすべてのバックアップデータを削除し、VNET1 のリソースロックを ReadOnly に変更する
+・VNET1 のリソースロックを削除し、Vault1 内のすべてのバックアップデータを削除する
+
+
+
+
+
+解答例
+・VNET1 のリソースロックを削除し、Vault1 内のすべてのバックアップデータを削除する
+
+
+
+問題 195. Azure AD (Azure Active Directory) テナントで Azure AD Privileged Identity Management を構成しています。テナントの Security Administrator (セキュリティ管理者) ロールが割り当てられた 10 人のユーザーがいます。これらのユーザーが Security Administrator ロールを引き続き必要としているかどうかを定期的に検証します。どの操作を実行しますか。（一つ選択）
+
+・Azure AD Privileged Identity Management でアクセスレビューを作成する
+・Azure AD Identity Protection でユーザーリスクポリシーを構成する
+・Azure AD Identity Protection で週次ダイジェストを構成する
+・Azure AD でロールベースのアクセス制御ポリシーを作成する
+
+
+
+
+
+解答例
+・Azure AD Privileged Identity Management でアクセスレビューを作成する
+
+
+
+問題 196. Log Analytics ワークスペースがあり、さまざまなデータソースからデータを収集しています。新しい Azure Monitor ログクエリを作成し、その結果をグラフとして共有ダッシュボードにピン留めする予定です。共有ダッシュボードに表示できるデータの最大日数はどれですか。（一つ選択）
+
+・30 日
+・90 日
+・14 日
+・365 日
+
+
+
+
+
+解答例
+・90 日
+
+
+
+問題 197. オンプレミスの Active Directory フォレスト (hogehoge.com) があり、Azure AD Connect をインストールしてパスワードハッシュ同期をシングルサインオン方式として構成しました。ステージングモードが有効になっています。同期結果を確認したところ、Synchronization Service Manager に同期ジョブが表示されません。同期を正常に完了させます。どうすればよいですか。（一つ選択）
+
+・Azure AD Connect を実行してステージングモードを無効にする
+・Azure PowerShell から Start-AdSyncSyncCycle -PolicyType Initial コマンドレットを実行する
+・Synchronization Service Manager からフルインポートを実行する
+・Azure AD Connect を実行してシングルサインオン方式をパススルー認証に変更する
+
+
+
+
+
+解答例
+・Azure AD Connect を実行してステージングモードを無効にする
+
+
+
+問題 198. あなたは、West US リージョンにある VNet1 という仮想ネットワークを管理しています。VNet1 には、Windows Server を実行する VM1 と VM2 という 2 つの仮想マシンがホストされています。3 時間にわたって VM1 から VM2 へのすべてのネットワークトラフィックを検査します。解決策として、Azure Monitor で Network In と Network Out のメトリックを作成しました。この解決策は要件を満たしていますか。（一つ選択）
+
+・いいえ、要件を満たしていない
+・はい、要件を満たしている
+
+
+
+
+
+解答例
+・いいえ、要件を満たしていない
+
+
+
+問題 199. Azure 環境で複数の仮想マシンを運用しています。コスト最適化のため、現在使用されていない休止状態の仮想マシンや、削除された仮想マシンから切り離されたまま残っている未接続のマネージドディスクを特定したいと考えています。これらの未使用リソースを効率的に発見するために最も適切な方法を選びます。（一つ選択）
+
+・Azure Advisor のコスト最適化カテゴリで推奨事項を確認する
+・Azure Monitor のメトリックエクスプローラーでディスクのパフォーマンスメトリックを分析する
+・Azure Cost Management のコスト分析機能でリソース別の支出を確認する
+・Azure Storage Explorer でストレージアカウントのプロパティとメトリックを表示する
+
+
+
+
+
+解答例
+・Azure Advisor のコスト最適化カテゴリで推奨事項を確認する
+
+
+
+問題 200. あなたは、West US、Central US、East US の Azure リージョンで Web アプリを運用しています。現在、以下の App Service plan を使用しています。
+
+プラン名 | リージョン | OS
+--- | --- | ---
+ASP1 | West US | Windows
+ASP2 | Central US | Windows
+ASP3 | East US | Linux
+
+新たに Linux OS を使用する App Service plan (ASP4) を作成する予定です。現在使用しているリージョンのうち、ASP4 をデプロイできるリージョンを特定する必要があります。どのリージョンを推奨しますか。（一つ選択）
+
+・Central US のみ
+・West US、Central US、または East US
+・East US のみ
+・West US のみ
+
+
+
+
+
+解答例
+・East US のみ
+
+
+
+問題 201. Azure の仮想ネットワークに 4 つのサブネットがあり、各サブネットには 10 台の仮想マシンが含まれています。各サブネットの 2 台の仮想マシンに対して、TCP ポート 8080 経由のインバウンドトラフィックを許可するネットワークセキュリティグループ (NSG) を構成します。NSG は各サブネットに関連付けられます。最小限の NSG ルール数でインバウンドアクセスを構成するソリューションを推奨する必要があります。NSG の宛先として何を使用しますか。（一つ選択）
+
+・Application Security Group
+・仮想マシンのプライベート IP アドレス
+・Service Tag
+・仮想マシンのサブネット
+
+
+
+
+
+解答例
+・Application Security Group
+
+
+
+問題 202. 複数のリソースグループと Azure App Service Web アプリを含む Azure サブスクリプションがあります。RG1 という名前のリソースグループには appservice1 という名前の Web アプリがホストされています。この App Service は無料の App Service Managed SSL 証明書を使用しています。RG2 という名前のリソースグループを作成しました。RG1 内のすべてのリソースを RG2 に移動する予定です。実行する必要があるアクションはどれですか。（二つ選択）
+
+・RG1 から SSL 証明書を削除し、RG2 にアップロードする
+・RG2 に新しい App Service plan を作成する
+・すべてのリソースを RG1 から RG2 に移動する
+・RG2 に新しい Web アプリを作成する
+
+
+
+
+
+解答例
+・RG2 に新しい App Service plan を作成する
+・すべてのリソースを RG1 から RG2 に移動する
+
+
+
+問題 203. Azure AD テナント adatum.com があり、以下のグループとユーザーが含まれています。Group1 と User4 に Azure AD Premium P2 ライセンスを割り当てました。この場合、Azure AD Premium P2 ライセンスが割り当てられるユーザーはどれですか。（一つ選択）
+
+グループ情報：
+グループ名 | メンバーシップの種類 | メンバー
+--- | --- | ---
+Group1 | 割り当て済み | User1, User2
+Group2 | 動的ユーザー | User3
+
+ユーザー情報：
+ユーザー名 | 所属グループ
+--- | ---
+User1 | Group1
+User2 | Group1
+User3 | Group2
+User4 | なし
+
+・User1、User2、User3、User4 のすべて
+・User4 のみ
+・User1、User2、User4 のみ
+・User1、User4 のみ
+
+
+
+
+
+解答例
+・User1、User2、User4 のみ
+
+
+
+問題 204. Azure サブスクリプションに、hogehoge.com という名前の Microsoft Entra ID テナントと、AKS1 という名前の Azure Kubernetes Service (AKS) クラスターが含まれています。管理者から、hogehoge.com のユーザーに AKS1 へのアクセス権を付与できないという報告がありました。hogehoge.com のユーザーに AKS1 へのアクセス権を付与できるようにします。最初に実行する操作を選択してください。（一つ選択）
+
+・AKS1 で RBAC を有効化する
+・hogehoge.com でマネージド ID を作成する
+・AKS1 でネームスペースを作成する
+・hogehoge.com で条件付きアクセスポリシーを構成する
+
+
+
+
+
+解答例
+・AKS1 で RBAC を有効化する
+
+
+
+問題 205. あなたの組織では、P2v2 価格レベルを使用する App Service プラン「PlanA」があり、このプラン上で Web アプリ「WebApp1」を運用しています。開発チーム「DevTeam」に WebApp1 の管理を委任する必要があります。DevTeam には以下のタスクを実行する権限が必要です：デプロイスロットの追加、PlanA の構成の閲覧、WebApp1 のロール割り当ての変更。DevTeam に割り当てるべきロールはどれですか。（一つ選択）
+
+・Website Contributor
+・Contributor
+・Web Plan Contributor
+・Owner
+
+
+
+
+
+解答例
+・Owner
+
+
+
+問題 206. 5 台の Windows Server 2016 を実行する Azure 仮想マシンがあり、Web サーバーとして構成されています。LB1 という名前の Azure Load Balancer がこれらの仮想マシンに負荷分散サービスを提供しています。訪問者が各リクエストで同じ Web サーバーによってサービスを受けられるようにする必要があります。何を構成しますか。（一つ選択）
+
+・セッション永続化を Client IP に設定する
+・アイドルタイムアウト（分）を 20 に設定する
+・プロトコルを UDP に設定する
+・Floating IP（ダイレクトサーバーリターン）を有効化に設定する
+
+
+
+
+
+解答例
+・セッション永続化を Client IP に設定する
+
+
+
+問題 207. あなたの会社の Azure サブスクリプションに Ubuntu Server 仮想マシンをデプロイする計画を立てています。特定の信頼されたルート証明機関 (CA) を追加するカスタムデプロイを実装します。仮想マシンを作成するために使用すべきものはどれですか。（一つ選択）
+
+・az vm create コマンド
+・New-AzVM コマンドレット
+・Azure portal のカスタムデータフィールド
+・New-AzureRmVM コマンドレット
+
+
+
+
+
+解答例
+・az vm create コマンド
+
+
+
+問題 208. あなたの組織では、Subscription-A と Subscription-B という 2 つの Azure サブスクリプションを管理しています。Subscription-A には表 1 の仮想ネットワークがあり、表 2 のサブネットが含まれています。Subscription-B には表 3 に示す仮想ネットワーク VNet-Z が含まれており、表 4 のサブネットが含まれています。次の記述について、正しい場合は「はい」を選択し、正しくない場合は「いいえ」を選択します。「VNet-A と VNet-B の間で VNet Peering を確立できる。」（一つ選択）
+
+表 1: Subscription-A の仮想ネットワーク
+名前 | アドレス空間 | リージョン
+--- | --- | ---
+VNet-A | 10.10.10.0/24 | 西ヨーロッパ
+VNet-B | 172.16.0.0/16 | 米国西部
+
+表 2: Subscription-A のサブネット
+名前 | アドレス空間 | 仮想ネットワーク
+--- | --- | ---
+SubnetA-A | 10.10.10.0/24 | VNet-A
+SubnetB-A | 172.16.10.0/18 | VNet-B
+SubnetB-B | 172.16.128.0/18 | VNet-B
+
+表 3: Subscription-B の仮想ネットワーク
+名前 | アドレス空間 | リージョン
+--- | --- | ---
+VNet-Z | 10.10.128.0/17 | カナダ中部
+
+表 4: VNet-Z のサブネット
+名前 | アドレス空間
+--- | ---
+Subnet-Z1 | 10.10.130.0/24
+Subnet-Z2 | 10.10.131.0/24
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・はい
+
+
+
+問題 209. あなたの会社では、Azure サブスクリプションの管理者として Admin1 というユーザーアカウントが存在します。Admin1 に対して、特定のサブスクリプション内のすべてのリソースを管理する権限を付与する必要がありますが、サブスクリプション自体の設定変更や他のユーザーへの権限付与は許可しません。この要件を満たすために実行すべき操作を選択してください。（一つ選択）
+
+・サブスクリプションブレードでサブスクリプションを選択し、アクセス制御 (IAM) の設定を変更する
+・Microsoft Entra ID ブレードでプロパティを変更する
+・サブスクリプションブレードでサブスクリプションを選択し、プロパティを変更する
+・Microsoft Entra ID ブレードでグループを変更する
+
+
+
+
+
+解答例
+・サブスクリプションブレードでサブスクリプションを選択し、アクセス制御 (IAM) の設定を変更する
+
+
+
+問題 210. あなたの組織は Azure サブスクリプション「Subscription-A」を所有しています。App-A という名前のアプリケーションをサポートするために、Azure Kubernetes Service (AKS) クラスターをデプロイします。オンプレミスのクライアントは、Pod の IP アドレスを使用して App-A に接続する必要があります。AKS クラスターに適切なネットワークプラグインを選択します。（一つ選択）
+
+・kubenet
+・Azure Private Link
+・Azure Container Networking Interface (CNI)
+・VNet 統合
+
+
+
+
+
+解答例
+・Azure Container Networking Interface (CNI)
+
+
+
+問題 211. あなたは hogehoge.com という名前の Microsoft Entra テナントを管理しています。500 人の外部ユーザーの名前とメールアドレスを含む CSV ファイルがあります。hogehoge.com テナント内に 500 人の外部ユーザーそれぞれに対してゲストユーザーアカウントを作成します。解決策：Azure portal の Microsoft Entra ID から「ユーザーの一括招待」操作を使用します。この解決策は要件を満たしていますか？（一つ選択）
+
+・いいえ、要件を満たしていません
+・はい、要件を満たしています
+
+
+
+
+
+解答例
+・はい、要件を満たしています
+
+
+
+問題 212. あなたは 10 個の Azure Web Apps をデプロイするためのテンプレートを管理しています。デプロイメントテンプレートを実行する前に、必要なリソースを事前にプロビジョニングする必要があります。Azure のコストを最小限に抑えるソリューションを選択してください。（一つ選択）
+
+・5 個の App Service plan
+・1 個の App Service plan
+・10 個の App Service plan
+・1 個の Azure Traffic Manager
+
+
+
+
+
+解答例
+・1 個の App Service plan
+
+
+
+問題 213. App Service plan として plan1 を作成し、Azure web app として webapp1 を作成しました。ステージングスロットを作成するオプションが利用できないことがわかりました。plan1 のステージングスロットを作成します。最初に実行する操作を選択してください。（一つ選択）
+
+・plan1 の App Service plan をスケールアップする
+・webapp1 のカスタムドメインを追加する
+・webapp1 の Application settings を変更する
+・webapp1 のデプロイメントセンターを構成する
+
+
+
+
+
+解答例
+・plan1 の App Service plan をスケールアップする
+
+
+
+問題 214. Azure 仮想マシン上で Microsoft SQL Server Always On 可用性グループを運用しています。可用性グループのリスナーとして Azure 内部ロードバランサーを構成します。どの設定を行いますか。（一つ選択）
+
+・セッション永続性をクライアント IP に設定する
+・Floating IP を有効化する
+・ポート 1433 で HTTP ヘルスプローブを作成する
+・セッション永続性をクライアント IP とプロトコルに設定する
+
+
+
+
+
+解答例
+・Floating IP を有効化する
+
+
+
+問題 215. Azure サブスクリプションに以下のリソースが存在します。Subnet-A は VNet-A に関連付けられており、NIC-A によって VM-A が Subnet-A に接続されています。この環境において、ASG-A を VM-A に適用する必要があります。この要件を満たすために実行すべき操作を選択してください。（一つ選択）
+
+名前 | タイプ
+--- | ---
+ASG-A | Application Security Group
+NSG-A | Network Security Group
+Subnet-A | サブネット
+VNet-A | 仮想ネットワーク
+NIC-A | ネットワークインターフェイス
+VM-A | 仮想マシン
+
+・ASG-A のプロパティから VM-A を指定する
+・NIC-A を ASG-A に関連付ける
+・NSG-A のセキュリティルールで ASG-A を送信元または送信先として指定する
+・Subnet-A に ASG-A を関連付ける
+
+
+
+
+
+解答例
+・NIC-A を ASG-A に関連付ける
+
+
+
+問題 216. VNet-A という名前の仮想ネットワークを含む Azure サブスクリプションがあります。VNet-A は 10.0.0.0/16 の IP アドレス空間を使用し、次の表に示すサブネットと VPN Gateway が含まれています。Subnet-A には、ルーターとして動作する VM-A という名前の仮想アプライアンスが含まれています。RT-A という名前のルートテーブルを作成しました。すべての受信トラフィックを VPN Gateway から VM-A 経由で VNet-A にルーティングします。RT-A のルート設定で、アドレスプレフィックスに指定すべき値を選択してください。（一つ選択）
+
+サブネット名 | IP アドレス範囲
+--- | ---
+Subnet | 10.0.0.0/24
+Subnet-A | 10.0.1.0/24
+Subnet-B | 10.0.2.0/24
+GatewaySubnet | 10.0.254.0/24
+
+・10.0.0.0/16
+・10.0.1.0/24
+・10.0.254.0/24
+・10.0.0.0/24
+
+
+
+
+
+解答例
+・10.0.0.0/16
+
+
+
+問題 217. Azure サブスクリプションに仮想マシン VM-A と、Azure Key Vault「KV-A」が存在します。VM-A に対して次の要件を満たす暗号化を実装します。暗号化キーは KV-A に格納して使用すること、VM がエクスポートされた場合も暗号化を維持すること、OS ディスクとデータディスクの両方を暗号化すること。これらの要件を満たす暗号化方式を選択してください。（一つ選択）
+
+・Azure Disk Encryption
+・プラットフォーム管理キーによるサーバー側暗号化
+・ホストでの暗号化
+・顧客管理キーを使用したサーバー側暗号化
+
+
+
+
+
+解答例
+・Azure Disk Encryption
+
+
+
+問題 218. Azure 環境でパブリック Standard Load Balancer を新規作成します。次の表に示すパブリック IP アドレスリソースが既に存在する場合、このロードバランサーに関連付け可能な IP アドレスはどれですか。（一つ選択）
+
+名前 | IP バージョン | SKU | 割り当て方法 | 可用性ゾーン
+--- | --- | --- | --- | ---
+IP-A | IPv6 | Basic | 静的 | 適用不可
+IP-B | IPv4 | Basic | 動的 | 適用不可
+IP-C | IPv4 | Standard | 静的 | ゾーン冗長
+IP-D | IPv4 | Standard | 動的 | ゾーン冗長
+
+・IP-C または IP-D
+・IP-A または IP-C
+・IP-B
+・IP-A、IP-B、IP-C、IP-D
+
+
+
+
+
+解答例
+・IP-C または IP-D
+
+
+
+問題 219. VM4 の技術要件を満たすために、診断ログデータを収集し、特定の条件に基づいて管理者に通知を送信する必要があります。この要件を実現するために作成および構成すべき Azure サービスはどれですか。（一つ選択）
+
+・Azure Monitor アクショングループ
+・Azure Event Hub
+・Azure Logic App
+・Azure Service Bus
+
+
+
+
+
+解答例
+・Azure Logic App
+
+
+
+問題 220. あなたの組織では、異なるランタイムスタックを使用する 5 つの Azure Web Apps を作成します。WebApp-A は .NET Core 3.1 (LTS)、WebApp-B は ASP.NET v4.8、WebApp-C は PHP 7.3、WebApp-D は Ruby 2.6、WebApp-E は PHP 7.4 を使用します。これらの Web Apps をホストするために必要な Azure App Service プランの最小数はいくつですか。（一つ選択）
+
+・1
+・2
+・3
+・5
+
+
+
+
+
+解答例
+・2
+
+
+
+問題 221. Azure サブスクリプションに、VM1 と VM2 という 2 つの仮想マシンが含まれています。VM1 と VM2 は、同じバックアップポリシーを使用して Vault1 という Recovery Services コンテナーにバックアップされています。会社は追加の仮想マシンと Recovery Services コンテナーを作成する計画があり、このプロセス中に Vault1 は廃止されます。Vault1 を削除する必要があります。Vault1 を削除する前に実行する必要がある 3 つのアクションはどれですか。正解はそれぞれソリューションの一部を示しています。（該当するものをすべて選択）
+
+・VM1 と VM2 のバックアップを停止し、バックアップデータを削除する
+・Vault1 に対して削除ロックを有効にする
+・論理的な削除機能を無効にし、すべてのバックアップデータを削除する
+・論理的な削除状態にあるすべてのアイテムを完全に削除する
+・VM1 と VM2 を削除する
+
+
+
+
+
+解答例
+・VM1 と VM2 のバックアップを停止し、バックアップデータを削除する
+・論理的な削除機能を無効にし、すべてのバックアップデータを削除する
+・論理的な削除状態にあるすべてのアイテムを完全に削除する
+
+
+
+問題 222. Azure サブスクリプションに、storage1 という名前のストレージアカウントが含まれています。インターネットから storage1 へのアクセスを無効にします。storage1 で構成する必要があるのはどれですか。（一つ選択）
+
+・Firewalls and virtual networks
+・Access keys
+・Encryption
+・Data protection
+
+
+
+
+
+解答例
+・Firewalls and virtual networks
+
+
+
+問題 223. App-A、App-B、App-C という名前の 3 つの Azure App Service アプリがあります。各アプリには本番デプロイスロットとテストデプロイスロットがあり、本番スロットのバックアップ構成設定は次の表の通りです。2024 年 3 月 26 日時点で、App-A のストレージには 1 つだけバックアップが存在するかどうかを判断します。正しい場合は「はい」を選択し、正しくない場合は「いいえ」を選択します。（一つ選択）
+
+アプリ | バックアップ間隔 | バックアップスケジュール開始日 | 保持期間（日数） | 少なくとも 1 つのバックアップを保持
+--- | --- | --- | --- | ---
+App-A | 1 日 | 2024 年 3 月 16 日 | 0 | はい
+App-B | 1 日 | 2024 年 3 月 26 日 | 30 | はい
+App-C | 1 日 | 2024 年 4 月 15 日 | 15 | いいえ
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・はい
+
+
+
+問題 224. Azure 仮想マシンをカスタム Azure Resource Manager テンプレートを使用してデプロイしました。仮想マシンがメンテナンスの影響を受けるという通知を受け取ったため、直ちに別の物理ホストに移動します。解決策として、仮想マシンの概要ブレードから別のサブスクリプションに移動する操作を実行しました。この解決策は目標を達成していますか。（一つ選択）
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・いいえ
+
+
+
+問題 225. 組織が所有する VM-A という名前の Azure 仮想マシンで基幹業務システムのアプリケーションを実行しています。VM-A のバックアップを構成する際、バックアップ事前チェックのステータスが「警告」と表示されました。この警告ステータスの原因として最も可能性が高いものはどれですか。（一つ選択）
+
+・VM-A に最新バージョンの Azure VM Agent がインストールされていない
+・VM-A が停止状態になっている
+・VM-A に接続されているディスクが非管理ディスクである
+・バックアップポリシーの保持期間設定が不適切である
+
+
+
+
+
+解答例
+・VM-A に最新バージョンの Azure VM Agent がインストールされていない
+
+
+
+問題 226. あなたは Azure Web App の管理者です。App1 という名前の Azure Web App を運用しており、このアプリは Plan1 という名前の App Service Plan で実行されています。Plan1 は Free 価格レベルに関連付けられています。App1 が毎日 60 分間連続実行された後に停止することが判明しました。App1 を 1 日中連続して実行できるようにする必要があります。解決策として、App1 にトリガー型の WebJob を追加することを検討しています。この解決策は要件を満たしていますか？（一つ選択）
+
+・いいえ、要件を満たしていません
+・はい、要件を満たしています
+・WebJob の実行頻度を調整すれば要件を満たします
+・Always On を有効化すれば要件を満たします
+
+
+
+
+
+解答例
+・いいえ、要件を満たしていません
+
+
+
+問題 227. Azure サブスクリプションに複数のストレージリソースが含まれています。以下のタスクを実行する必要があります。Azure Storage Explorer を使用して実行できるタスクはどれですか。（一つ選択）
+
+タスク一覧：
+タスク | 内容
+--- | ---
+タスク 1 | BLOB コンテナーへのファイルアップロード
+タスク 2 | Table Storage のエンティティ管理
+タスク 3 | Azure Files の共有フォルダー作成
+タスク 4 | ストレージアカウントのアクセスキー再生成
+
+・タスク 2、タスク 3、タスク 4 のみ
+・タスク 1、タスク 2、タスク 3 のみ
+・タスク 1 と タスク 3 のみ
+・タスク 1、タスク 2、タスク 3、タスク 4 すべて
+
+
+
+
+
+解答例
+・タスク 1、タスク 2、タスク 3 のみ
+
+
+
+問題 228. 登録済みの DNS ドメイン hogehoge.com を所有しています。Azure DNS に hogehoge.com という名前のパブリック DNS ゾーンを作成しました。hogehoge.com ゾーンに作成されたレコードがインターネットから名前解決可能になるようにします。何をすべきですか？（一つ選択）
+
+・DNS ドメインレジストラで NS レコードを変更する
+・hogehoge.com ゾーンに CNAME レコードを作成する
+・hogehoge.com ゾーンに SOA レコードを作成する
+・DNS ドメインレジストラで SOA レコードを変更する
+
+
+
+
+
+問題 238. Azure サブスクリプションに 10 個の仮想ネットワークがあり、それぞれ異なるリソースグループでホストされています。別の管理者がサブスクリプション内に複数のネットワークセキュリティグループ（NSG）を作成する予定です。NSG が作成されたときに、仮想ネットワーク間の TCP ポート 8080 を自動的にブロックする必要があります。解決策として、サブスクリプションに組み込みのポリシー定義を割り当てます。この解決策は要件を満たしていますか？（一つ選択）
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・いいえ
+
+
+問題 239. Azure Storage アカウント storageaccount1 に、機密情報を格納する BLOB コンテナー container1 があります。container1 内のコンテンツが最終変更日から 6 か月間、変更または削除されないようにします。何を構成しますか。（一つ選択）
+・アクセスポリシー
+・不変性ポリシー
+・ライフサイクル管理
+・変更フィード
+
+
+
+
+
+解答例
+・不変性ポリシー
+
+
+問題 240. Azure Resource Manager (ARM) テンプレートを使用してリソースグループを作成し、そのリソースグループに Azure Storage アカウントをデプロイします。このテンプレートをデプロイするために実行すべき PowerShell コマンドレットはどれですか。（一つ選択）
+・New-AzSubscriptionDeployment
+・New-AzResourceGroupDeployment
+・New-AzDeployment
+・New-AzManagementGroupDeployment
+
+
+
+
+
+解答例
+・New-AzDeployment
+
+
+問題 241. Recovery Services コンテナーに対して Multi-User Authorization (MUA) を実装します。MUA を有効化するための最初の手順として実行する必要がある操作を選択してください。（一つ選択）
+・Azure Key Vault でシークレットを作成する
+・Resource Guard リソースを作成する
+・カスタム Azure RBAC ロールを作成する
+・マネージド ID を有効化する
+
+
+
+
+
+解答例
+・Resource Guard リソースを作成する
+
+
+問題 242. あなたは、West US リージョンでホストされている VNet1 という仮想ネットワークを管理しています。VNet1 には、Windows Server を実行する 2 台の仮想マシン VM1 と VM2 がホストされています。3 時間にわたって VM1 から VM2 へのすべてのネットワークトラフィックを検査します。Azure Network Watcher からパケットキャプチャを作成することで、この目標を達成できますか。（一つ選択）
+・いいえ、パケットキャプチャでは 3 時間の継続的な監視は実現できない
+・はい、パケットキャプチャで要件を満たすことができる
+・いいえ、Network Performance Monitor を使用する必要がある
+・いいえ、NSG Flow Logs を使用する必要がある
+
+
+
+
+
+解答例
+・はい、パケットキャプチャで要件を満たすことができる
+
+
+問題 243. あなたは、Sub1 と Sub2 という 2 つの Azure サブスクリプションを管理しています。Sub1 には、仮想マシン VM1 とストレージアカウント storage1 が含まれています。VM1 には以下のリソースが関連付けられています：マネージドディスク Disk1、ネットワークインターフェイス NetInt1、仮想ネットワーク VNet1。VM1 を Sub2 に移動する必要があります。Sub2 に移動する必要があるリソースはどれですか。（一つ選択）
+・VM1、Disk1、VNet1 のみ
+・VM1、Disk1、NetInt1、VNet1
+・VM1、Disk1、storage1 のみ
+・VM1、Disk1、NetInt1 のみ
+
+
+
+
+
+解答例
+・VM1、Disk1、NetInt1、VNet1
+
+
+問題 244. Subscription-A という名前の Azure サブスクリプションに以下のリソースが存在します。リソースグループ RG-A、メール送信先が admin@hogehoge.com のアクショングループ Action-A、メール送信先が user@foobar.com のアクショングループ Action-B が含まれています。Subscription-A には、スコープが Subscription-A 内のすべてのリソースグループ（将来のリソースをすべて含む）、条件がすべての管理操作、アクションが Action-A に設定されたアラートルール Alert-A が構成されています。さらに、Subscription-A には、スコープが Subscription-A、ルールの種類が通知を抑制する、ルール適用が特定の時間（開始 2023 年 8 月 10 日、終了 2023 年 8 月 13 日）に設定されたアラート処理ルール Rule-A が含まれています。2023 年 9 月 11 日に Subscription-A に新しいリソースグループを作成した場合、Alert-A は Azure portal のアラート一覧に表示されますか。（一つ選択）
+・いいえ、Alert-A は表示されない
+・はい、Alert-A は表示される
+
+
+
+
+
+解答例
+・はい、Alert-A は表示される
+
+
+問題 245. あなたの会社では、複数の部門が Azure サブスクリプションを使用しています。別の管理者が単一の Azure Resource Manager テンプレートを使用して、仮想マシンとストレージアカウントをデプロイしました。このデプロイに使用されたテンプレートを確認する必要があります。どのブレードからテンプレートを表示できますか。（一つ選択）
+・デプロイされた仮想マシンのブレード
+・リソースグループのブレード
+・Azure Portal のホームダッシュボード
+・サブスクリプションのブレード
+
+
+
+
+
+解答例
+・リソースグループのブレード
+
+
+問題 246. Azure に 100 台の仮想マシンをデプロイしています。これらの仮想マシンに対して CPU とメモリ使用率を監視する Azure Monitor アラートを構成しています。Azure Monitor アラートを確認したところ、50 件のアラートが「クローズ」状態になっていることを発見しました。アラート状態が「クローズ」になる原因として正しいものはどれですか。（一つ選択）
+・アラートルールに関連付けられたアクショングループが、アラート条件を自動的に修復した
+・管理者がアラートの状態を手動で変更した
+・アラートが作成されてから 90 日以上経過した
+・アラートをトリガーした条件が解消された
+
+
+
+
+
+解答例
+・アラートをトリガーした条件が解消された
+
+
+問題 247. VM3 が技術要件を満たしていないことが判明しました。この問題が NSG (ネットワークセキュリティグループ) に関連しているかどうかを検証します。どのツールを使用しますか。（一つ選択）
+・Azure Monitor の Diagnostic settings
+・Azure Network Watcher の IP flow verify
+・Azure Advisor の Security recommendations
+・VNet1 の Topology
+・Azure Network Watcher の NSG diagnostics
+
+
+
+
+
+解答例
+・Azure Network Watcher の IP flow verify
+
+
+問題 248. Azure Storage アカウント storage1 に対して Azure AD 認証を構成します。Group1 のメンバーが Azure portal を使用してファイルをアップロードできるようにします。ソリューションは最小特権の原則に従う必要があります。Group1 に割り当てる必要があるロールはどれですか。（二つ選択）
+・Storage Blob Data Contributor
+・Storage Account Contributor
+・Reader
+・Contributor
+・Storage Blob Data Reader
+
+
+
+
+
+解答例
+・Storage Blob Data Contributor
+・Reader
+
+
+問題 249. Azure 仮想マシン VM1 を運用しています。VM1 からイベントを収集しており、VM1 のシステムイベントログにエラーが記録された際に管理者へ通知するアラートルールを Azure Monitor で作成します。監視対象として指定すべきリソースタイプを選択してください。（一つ選択）
+・Azure Monitor Metrics アラート
+・仮想マシン
+・Log Analytics ワークスペース
+・Azure Diagnostics 拡張機能
+
+
+
+
+
+解答例
+・Log Analytics ワークスペース
+
+
+問題 250. ある Azure 環境において、Subscription1 と Subscription2 という 2 つのサブスクリプションが存在します。Subscription1 には、Windows Server 2016 を実行する Server1 という仮想マシンがデプロイされており、マネージドディスクを使用しています。Server1 を Subscription2 に移動する必要があります。この際、管理作業を最小限に抑える必要があります。最初に実行すべき操作を選択してください。（一つ選択）
+・Azure PowerShell から Move-AzResource コマンドレットを実行する
+・Subscription2 内で仮想ディスクのコピーを作成する
+・仮想ディスクのスナップショットを作成する
+・Azure Portal からリソースの移動機能を使用する
+
+
+
+
+
+解答例
+・Azure PowerShell から Move-AzResource コマンドレットを実行する
+
+
+問題 251. Azure サブスクリプションを管理しています。PowerShell から特定ユーザーに対して Get-MgUser コマンドレットを実行したところ、以下の情報が返されました。
+Id: 0755b347-3545-3876-b987-098989898989, DisplayName: 山田 太郎, Mail: tyamada@hogehoge.com UserPrincipalName: tyamada_hogehoge.com#EXT#@foobar.com
+このユーザーについて正しく説明しているものはどれですか。（一つ選択）
+・このユーザーアカウントは削除されています
+・このユーザーはテナント内のゲストユーザーです
+・このユーザーには管理者ロールが割り当てられています
+・このユーザーアカウントは無効化されています
+
+
+
+
+
+解答例
+・このユーザーはテナント内のゲストユーザーです
+
+
+問題 252. Azure Monitor を使用して、仮想マシンのシステムイベントログにエラーが記録された際に管理者へ通知するアラートルールを作成します。このアラートルールで監視対象として指定すべきターゲットリソースはどれですか。（一つ選択）
+・Azure Log Analytics ワークスペース
+・仮想マシン
+・Application Insights
+・アクティビティログ
+
+
+
+
+
+解答例
+・Azure Log Analytics ワークスペース
+
+
+問題 253. Azure サブスクリプション「Subscription-A」に以下のリソースが含まれています。このサブスクリプションに「FW-A」という名前の Azure Firewall を東日本リージョンの RG-A にデプロイします。FW-A をデプロイ可能な仮想ネットワークを選択してください。（一つ選択）
+名前 Azure リージョン リソースグループ
+VNet-A 東日本 RG-A
+VNet-B 西日本 RG-A
+VNet-C 西日本 RG-B
+VNet-D 東日本 RG-B
+
+・VNet-A、VNet-D
+・VNet-A
+・VNet-A、VNet-B、VNet-C、VNet-D
+・VNet-A、VNet-B
+
+
+
+
+
+解答例
+・VNet-A
+
+
+問題 254. 複数のオンプレミス拠点と Azure 仮想ネットワーク間にルートベースのサイト間 VPN 接続を展開します。使用すべきトンネリングプロトコルを選択してください。（一つ選択）
+・SSTP
+・IKEv2
+・PPTP
+・L2TP
+
+
+
+
+
+解答例
+・IKEv2
+
+
+問題 255. あなたの組織には、Subscription-Alpha という名前の Azure サブスクリプションがあります。組織には、Windows Server 2022 を実行する Server-Primary と Server-Manage という 2 つのオンプレミスサーバーがあります。Server-Primary は、hogehoge-corp.com という名前のプライマリ DNS ゾーンを持つ DNS サーバーとして構成されています。hogehoge-corp.com には 1,000 の DNS レコードが含まれています。Server-Primary と Subscription-Alpha を Server-Manage から管理しています。Server-Manage には、DNS マネージャーコンソール、Azure PowerShell、Azure CLI がインストールされています。hogehoge-corp.com ゾーンを Subscription-Alpha の Azure DNS ゾーンに移行します。ソリューションでは、管理労力を最小限に抑える必要があります。このとき、どのツールを使用しますか。（一つ選択）
+・Azure Portal
+・DNS マネージャーコンソール
+・Azure CLI
+・Azure PowerShell
+
+
+
+
+
+解答例
+・Azure CLI
+
+
+問題 256. Azure サブスクリプションを所有しています。すべてのユーザーに対して Enterprise Mobility + Security E5 ライセンスをアクティブ化しました。ユーザーが仮想マシンを作成する前に承認を要求するようにします。最初に構成すべきものはどれですか。（一つ選択）
+・Azure Active Directory Privileged Identity Management for Azure resource roles
+・Azure Active Directory Authentication methods
+・Azure Active Directory Conditional Access policies
+・Azure Policy
+
+
+
+
+
+解答例
+・Azure Active Directory Privileged Identity Management for Azure resource roles
+
+
+問題 257. 複数の管理グループと Azure サブスクリプションを運用しています。リソースの誤削除を防止するため、削除ロックを適用できるリソースタイプを 3 つ選択します。（該当するものをすべて選択）
+・仮想マシン
+・サブスクリプション
+・リソースグループ
+・ストレージアカウントのデータ
+・管理グループ
+
+
+
+
+
+解答例
+・仮想マシン
+・サブスクリプション
+・リソースグループ
+
+
+問題 258. Azure サブスクリプション内に以下のリソースが存在します。VNet-A のサブネットに接続された 5 台の仮想マシンから、Microsoft バックボーンネットワークを経由してストレージアカウント 2 つ (storage-hogehoge、storage-foobar)、Key Vault (KeyVault-hogehoge)、および Microsoft Entra ID へのアクセスを構成します。この要件を満たすために、VNet-A のサブネットに追加する必要があるサービスエンドポイントの最小数はいくつかですか。（一つ選択）
+リソース名 種類 説明
+storage-hogehoge ストレージアカウント 汎用 v2 ストレージ
+storage-foobar ストレージアカウント 汎用 v2 ストレージ
+KeyVault-hogehoge Key Vault シークレット管理
+VNet-A 仮想ネットワーク 5 台の VM が接続
+VNet-B 仮想ネットワーク 3 台の VM が接続
+
+・4
+・1
+・3
+・2
+
+
+
+
+
+解答例
+・2
+
+
+問題 259. Azure 環境にサブスクリプション「Subscription-A」があり、Authorization、Automation、Resources、Compute、KeyVault、Network、Storage、Billing、Web、Security のリソースプロバイダーが登録されています。仮想マシン VM-A（Windows Server 2019、プライベート IP: 192.168.0.4、サブネット：192.168.0.0/24、NSG: NSG-A、東アジアリージョン）が存在します。VM-A への接続試行の成功と失敗をすべて記録します。実施する手順はどれですか。（3 つ選択）
+・東アジアリージョンで Azure Network Watcher を有効にする
+・Azure Network Watcher NSG フローログを有効にする
+・Microsoft.Insights リソースプロバイダーを登録する
+・Azure Storage アカウントを作成する
+・Azure Network Watcher 接続モニターを追加する
+・Log Analytics ワークスペースを作成する
+
+
+
+
+
+解答例
+・東アジアリージョンで Azure Network Watcher を有効にする
+・Azure Network Watcher NSG フローログを有効にする
+・Azure Storage アカウントを作成する
+
+
+問題 260. App1 という名前のアプリケーションが、VM1 と VM2 という 2 台の Azure 仮想マシンにインストールされています。App1 への接続は Azure Load Balancer を使用して管理されています。VM2 の有効なネットワークセキュリティ構成を確認したところ、IP アドレス 131.107.100.50 から TCP ポート 443 経由で App1 への接続が失敗することが判明しました。Load Balancer のルールが正しく構成されていることは確認済みです。この問題を解決するために、BlockAllOther443 という名前のインバウンドセキュリティ規則を削除します。この解決策は目標を達成できますか。（一つ選択）
+・いいえ、この解決策では目標を達成できません
+・はい、この解決策で目標を達成できます
+
+
+
+
+
+解答例
+・いいえ、この解決策では目標を達成できません
+
+
+問題 261. Azure Blob Storage コンテナに ARM テンプレートファイル deploy.json を保存しています。New-AzDeployment コマンドレットを実行してこのテンプレートをデプロイします。テンプレートを参照するために使用するパラメータはどれですか。（一つ選択）
+・-TemplateUri
+・-TemplateParameterFile
+・-TemplateSpecId
+・-TemplateFile
+
+
+
+
+
+解答例
+・-TemplateUri
+
+
+問題 262. あなたの組織が所有する Azure サブスクリプション「Subscription-A」には、以下のリソースがあります。Subnet-A という名前のサブネットを持つ仮想ネットワーク、NSG-VM-A および NSG-Subnet-A という名前の 2 つの Network Security Group (NSG)、リモートデスクトップ接続を許可するために必要な Windows Server 構成を備えた VM-A という名前の仮想マシンです。NSG-Subnet-A にはデフォルトの受信セキュリティルールのみがあります。NSG-VM-A にはデフォルトの受信セキュリティルールと、優先度 100、送信元 Any、送信元ポート範囲 *、宛先 *、宛先ポート範囲 3389、プロトコル UDP、アクション Allow のカスタム受信セキュリティルールがあります。VM-A にはパブリック IP アドレスがあり、Subnet-A に接続されています。NSG-VM-A は VM-A のネットワークインターフェイスに関連付けられ、NSG-Subnet-A は Subnet-A に関連付けられています。インターネットから VM-A へのリモートデスクトップ接続を確立します。解決策として、NSG-Subnet-A に受信セキュリティルールを追加します。このルールでは任意の送信元からポート範囲 3389 の宛先への接続を許可し、TCP プロトコルを使用します。さらに NSG-VM-A を VM-A のネットワークインターフェイスから削除します。この解決策は目標を達成しますか。（一つ選択）
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・はい
+
+
+問題 263. あなたは Subscription1 という名前の Azure サブスクリプションを管理しています。Subscription1 には VM1 という名前の仮想マシンが含まれています。あなたは Windows 10 を実行する Computer1 という名前のコンピューターを使用しており、このコンピューターはインターネットに接続されています。VM1 に Interface1 という名前のネットワークインターフェイスを追加しました。このネットワークインターフェイスには、DenyAllInBound という名前の受信ポート規則と DenyAllOutBound という名前の送信ポート規則が設定されています。Computer1 からリモートデスクトップを使用して VM1 に接続を試みましたが、接続に失敗しました。VM1 へのリモートデスクトップ接続を確立するために、最初に実行すべき操作を選択してください。（一つ選択）
+・DenyAllInBound 受信ポート規則を削除する
+・VM1 を起動する
+・ネットワークセキュリティグループに RDP 許可規則を追加する
+・DenyAllOutBound 送信ポート規則を削除する
+
+
+
+
+
+解答例
+・DenyAllInBound 受信ポート規則を削除する
+
+
+問題 264. Azure Storage アカウント storage1 があります。storage1 に対して、Scope1 という名前の暗号化スコープを作成しました。Scope1 を使用して暗号化できるストレージの種類はどれですか。（一つ選択）
+・コンテナーとファイル共有のみ
+・コンテナー、ファイル共有、およびテーブルのみ
+・コンテナーのみ
+・ファイル共有のみ
+・コンテナー、ファイル共有、テーブル、およびキューすべて
+
+
+
+
+
+解答例
+・コンテナーとファイル共有のみ
+
+
+問題 265. Azure サブスクリプション内に Linux 仮想マシンを展開しました。この仮想マシンのメトリックとログを監視する必要があります。どのツールを使用しますか。（一つ選択）
+・Azure Monitor エージェント
+・Azure HDInsight
+・Azure Analysis Services
+・Linux Diagnostic Extension (LAD) 3.0
+
+
+
+
+
+解答例
+・Azure Monitor エージェント
+
+
+問題 266. Azure Event Grid に接続するカスタムの Azure Function App を構築します。Function App にリソースが動的に割り当てられるようにする必要があります。課金は実行回数に基づいて行われる必要があります。Function App を作成する際に何を構成しますか。（一つ選択）
+・Docker Container と S1 価格レベルを使用する App Service Plan
+・Windows OS と App Service Plan ホスティングプラン
+・Linux OS と Consumption プラン
+・Windows OS と Consumption プラン
+
+
+
+
+
+解答例
+・Windows OS と Consumption プラン
+
+
+問題 267. あなたは、VM1、VM2、VM3 という 3 台の Azure 仮想マシンをデプロイする計画を立てています。これらの仮想マシンは、App1 という Web アプリケーションをホストします。単一の Azure データセンターが利用できなくなった場合でも、少なくとも 2 台の仮想マシンが利用可能であることを保証する必要があります。何をデプロイすべきですか。（一つ選択）
+・各仮想マシンを個別の Availability Zone にデプロイする
+・すべての仮想マシンを単一の Availability Set にデプロイする
+・各仮想マシンを個別の Availability Set にデプロイする
+・すべての仮想マシンを単一の Availability Zone にデプロイする
+
+
+
+
+
+解答例
+・各仮想マシンを個別の Availability Zone にデプロイする
+
+
+問題 268. Azure Stream Analytics ジョブ「Job-A」を運用しています。入力イベントの処理状況を監視し、システムに到着したものの処理されずに滞留しているイベントの数を特定します。この目的に最も適したメトリックはどれですか。（一つ選択）
+・入力イベントの逆シリアル化エラー
+・バックログされた入力イベント
+・透かしの遅延
+・順不同のイベント
+
+
+
+
+
+解答例
+・バックログされた入力イベント
+
+
+問題 269. Azure でコンテナ化された Web アプリケーションをデプロイします。Web アプリをデプロイする際に、有効なコンテナイメージソースはどれですか。（二つ選択）
+・Azure Blob Storage
+・Docker Hub
+・Azure Container Registry
+・オンプレミスのファイルサーバー
+
+
+
+
+
+解答例
+・Docker Hub
+・Azure Container Registry
+
+
+問題 270. オンプレミスサーバー上に D:\Folder1 というフォルダがあります。このフォルダの内容を、Azure ストレージアカウント hogehogestorage 内の public という名前のコンテナーにコピーします。使用すべきコマンドはどれですか。（一つ選択）
+・azcopy sync D:\Folder1 https://hogehogestorage.blob.core.windows.net/public --snapshot
+・az storage blob copy start-batch D:\Folder1 https://hogehogestorage.blob.core.windows.net/public
+・azcopy copy D:\Folder1 https://hogehogestorage.blob.core.windows.net/public --recursive
+・robocopy D:\Folder1 https://hogehogestorage.blob.core.windows.net/public /MIR
+
+
+
+
+
+解答例
+・azcopy copy D:\Folder1 https://hogehogestorage.blob.core.windows.net/public --recursive
+
+
+問題 271. ロンドンに本社を置く企業では、100 台のクライアントコンピューターを運用しています。3 年前に Azure Active Directory (Azure AD) へ移行し、セキュリティポリシーでは個人デバイスと企業所有デバイスの両方を Azure AD に登録または参加させることを義務付けています。リモートユーザーであるユーザー 1 が自宅ネットワークから個人デバイスを Azure AD に参加させることができません。他のユーザーは正常にデバイスを Azure AD に参加させることができています。ユーザー 1 がデバイスを Azure AD に参加できるようにする必要があります。どの操作を実行しますか。（一つ選択）
+・Azure AD のデバイス設定ブレードで、ユーザーごとのデバイスの最大数の設定を変更する
+・ユーザー 1 に User Administrator (ユーザー管理者) ロールを割り当てる
+・Azure AD のデバイス設定ブレードで、ユーザーがデバイスを Azure AD に参加できるようにする設定を変更する
+・ユーザー 1 の自宅ネットワークから Azure へのポイント対サイト VPN を構成する
+
+
+
+
+
+解答例
+・Azure AD のデバイス設定ブレードで、ユーザーごとのデバイスの最大数の設定を変更する
+
+
+問題 272. Azure サブスクリプションに、仮想マシン hogeVM とキーコンテナー foobarKV が含まれています。hogeVM の暗号化を構成します。ソリューションは次の要件を満たす必要があります。暗号化キーを foobarKV に保存して使用する。hogeVM を Azure からダウンロードした場合でも暗号化を維持する。OS ディスクとデータディスクの両方を暗号化する。どの暗号化方法を使用しますか。（一つ選択）
+・Azure Disk Encryption
+・Confidential disk encryption
+・プラットフォームマネージドキー
+・ホストでの暗号化
+
+
+
+
+
+解答例
+・Azure Disk Encryption
+
+
+問題 273. Recovery Services コンテナー (RSV1) があります。RSV1 には、インスタンススナップショットを 5 日間保持し、日次バックアップを 14 日間保持するバックアップポリシーが設定されています。RSV1 は VM1 の日次バックアップを実行しています。VM1 は静的 Web サイトをホストしており、8 日前に更新されました。8 日前の時点に VM1 を復旧する必要があります。ソリューションはダウンタイムを最小限に抑える必要があります。最初に実行すべき操作はどれですか。（一つ選択）
+・Create new 復元構成オプションを使用して VM1 を復元する
+・VM1 を削除する
+・VM1 の割り当てを解除する
+・Replace existing 復元構成オプションを使用して VM1 を復元する
+
+
+
+
+
+解答例
+・Replace existing 復元構成オプションを使用して VM1 を復元する
+
+
+問題 274. あなたが管理する Azure サブスクリプションには、VNet-A という仮想ネットワークがあり、その中に Subnet-B というサブネットが存在します。Subnet-B には、Windows Server OS を実行する VM-B という仮想マシンがデプロイされており、パブリック IP アドレスが割り当てられています。VM-B のネットワークインターフェイスには、NSG-VM-B というネットワークセキュリティグループが関連付けられており、Subnet-B には NSG-Subnet-B が関連付けられています。NSG-VM-B には、優先度 100 でソース Any、送信元ポート範囲 *、宛先 *、宛先ポート範囲 3389、プロトコル UDP、アクション Allow のカスタム受信セキュリティルールが設定されています。NSG-Subnet-B にはデフォルトの受信セキュリティルールのみが存在します。インターネットから VM-B への Remote Desktop Protocol 接続を確立する必要があります。解決策として、NSG-Subnet-B と NSG-VM-B の両方に、ソース Internet、送信元ポート範囲 *、宛先 VirtualNetwork、宛先ポート範囲 3389、プロトコル TCP、アクション Allow の受信セキュリティルールを追加します。この解決策は要件を満たしますか。（一つ選択）
+・いいえ、NSG-VM-B のプロトコル設定を修正する必要があるため要件を満たさない
+・はい、両方の NSG に適切なルールを追加することで要件を満たす
+・いいえ、NSG-Subnet-B のみにルールを追加すれば十分であるため冗長である
+・いいえ、パブリック IP アドレスの構成を変更する必要があるため要件を満たさない
+
+
+
+
+
+解答例
+・いいえ、NSG-VM-B のプロトコル設定を修正する必要があるため要件を満たさない
+
+
+問題 275. あなたは 100 個の Azure サブスクリプションを管理しています。すべてのサブスクリプションは同じ Microsoft Entra ID (旧 Azure AD) テナントに関連付けられています。あなたはグローバル管理者の役割を持っています。すべてのサブスクリプションにわたるすべてのリソースを一覧表示するレポートを作成する計画です。すべてのサブスクリプションのすべてのリソースを表示できるようにする必要があります。何をすべきですか。（一つ選択）
+・Azure portal から、自分のアカウントのプロファイル設定を変更する
+・Azure portal から、Microsoft Entra ID テナントのプロパティを変更する
+・PowerShell から、New-AzRoleAssignment コマンドレットを実行する
+・PowerShell から、Get-AzSubscription コマンドレットと Set-AzContext コマンドレットを組み合わせて実行する
+
+
+
+
+
+解答例
+・Azure portal から、自分のアカウント의 プロファイル設定を変更する
+
+
+問題 276. Azure Storage アカウント storage1 を作成します。次の要件を満たす必要があります：Azure Data Lake Storage をサポートする、アクセス頻度の低いデータのコストを最小化する、セカンダリ Azure リージョンへデータを自動的にレプリケートする。storage1 に構成すべきオプションはどれですか。（三つ選択）
+・階層型名前空間を有効化する
+・Geo-Redundant Storage (GRS) を選択する
+・Cool アクセス層を選択する
+・Locally-Redundant Storage (LRS) を選択する
+・Hot アクセス層を選択する
+
+
+
+
+
+解答例
+・階層型名前空間を有効化する
+・Geo-Redundant Storage (GRS) を選択する
+・Cool アクセス層を選択する
+
+
+問題 277. Windows Server 2016 Datacenter イメージを使用する仮想マシンスケールセットのデプロイを自動化します。スケールセットの仮想マシンがプロビジョニングされる際に、Web サーバーコンポーネントがインストールされた状態にする必要があります。実行すべきアクションはどれですか。（二つ選択）
+・Azure Resource Manager テンプレートの extensionProfile セクションを変更する
+・Custom Script Extension を使用して構成スクリプトをデプロイする
+・Azure Policy を作成してコンプライアンス要件を定義する
+・Desired State Configuration(DSC) 拡張機能を構成する
+・Azure Portal で新しい仮想マシンスケールセットを作成する
+
+
+
+
+
+解答例
+・Azure Resource Manager テンプレートの extensionProfile セクションを変更する
+・Custom Script Extension を使用して構成スクリプトをデプロイする
+
+
+問題 278. あなたの組織はロンドンに本社を置き、100 台のクライアントコンピューターを運用しています。3 年前に Microsoft Entra ID へ移行し、セキュリティポリシーではすべての個人デバイスと組織所有デバイスを Microsoft Entra ID に登録または参加させることを義務付けています。リモートワーカーの User-A が自宅ネットワークから個人デバイスを Microsoft Entra ID に参加させようとしましたが失敗しました。過去に User-A は同様の操作を成功させた実績があります。User-A がデバイスを Microsoft Entra ID に参加できるようにするため、あなたが実施すべき対応を選びます。（一つ選択）
+・[デバイス] ブレードから、[ユーザーはデバイスを Microsoft Entra ID に参加させることができます] 設定を変更する
+・[デバイス] ブレードで、[デバイスの最大数] 設定を変更する
+・User-A のホームネットワークから Azure へのサイト間 VPN 接続を構成する
+・クラウドデバイス管理者ロールを User-A に割り当てる
+
+
+
+
+
+解答例
+・[デバイス] ブレードで、[デバイスの最大数] 設定を変更する
+
+
+問題 279. App1 を Azure に移行する計画を立てています。ネットワークセキュリティグループ (NSG) を作成しました。ユーザーが App1 にアクセスできるようにするソリューションを推奨する必要があります。何を推奨しますか。（一つ選択）
+・インターネットからポート 443 の受信セキュリティ規則を作成し、NSG を Web サーバーを含むサブネットに関連付ける
+・インターネットからポート 443 の送信セキュリティ規則を作成し、NSG をすべてのサブネットに関連付ける
+・インターネットからポート 80 の受信セキュリティ規則を作成し、NSG を Web サーバーを含むサブネットに関連付ける
+・インターネットからポート 443 の受信セキュリティ規則を作成し、NSG をすべてのサブネットに関連付ける
+
+
+
+
+
+解答例
+・インターネットからポート 443 の受信セキュリティ規則を作成し、NSG を Web サーバーを含むサブネットに関連付ける
+
+
+問題 280. Azure Active Directory (Azure AD) テナントを運用しています。すべての管理者が Azure ポータルにアクセスする際に検証コードの入力を必須としています。管理者がオンプレミスネットワークからのみ Azure ポータルにアクセスできるようにします。何を構成しますか。（一つ選択）
+・多要素認証サービスの設定
+・Azure AD Identity Protection のユーザーリスクポリシー
+・条件付きアクセスポリシーの場所の条件
+・Azure AD Privileged Identity Management のすべてのロールの既定設定
+
+
+
+
+
+解答例
+・多要素認証サービスの設定
+
+
+問題 281. Azure サブスクリプションを所有しています。アプリケーション App1 をサポートする Azure Kubernetes Service (AKS) クラスターをデプロイする予定です。オンプレミスのクライアントは、Pod 自体の IP アドレスを使用して App1 に直接接続する必要があります。この要件を満たすために、AKS クラスターで使用するネットワークプラグインを選択します。どれを選択しますか。（一つ選択）
+・Azure CNI Overlay
+・kubenet
+・Azure CNI
+・BYO CNI
+
+
+
+
+
+解答例
+・Azure CNI
+
+
+問題 282. Azure サブスクリプション内で 3 台の仮想マシンが稼働しています。各仮想マシンは VNet-A 内の異なるサブネットに配置され、ネットワークインターフェイスの DNS 設定が個別に構成されています。VNet-A の DNS 設定ではカスタム DNS サーバー (193.77.134.10) が指定されています。VM-A のネットワークインターフェイスの DNS 設定は「なし」、VM-B と VM-C はそれぞれカスタム DNS サーバー (192.168.10.15) が設定されています。この構成において、VM-A が DNS クエリを実行する際に接続する DNS サーバーの IP アドレスはどれですか。（一つ選択）
+名前 OS サブネット 仮想ネットワーク
+VM-A Windows Server 2022 Subnet-A VNet-A
+VM-B Windows Server 2022 Subnet-B VNet-A
+VM-C Red Hat Enterprise Linux 7.7 Subnet-C VNet-A
+
+名前 NIC DNS 設定
+VM-A なし
+VM-B 192.168.10.15
+VM-C 192.168.10.15
+
+VNet-A DNS 設定：カスタム (193.77.134.10)
+
+・168.63.129.16 (Azure 提供の DNS サーバー)
+・193.77.134.10 (VNet-A で設定されたカスタム DNS サーバー)
+・192.168.10.15 (VM-B と VM-C で設定されたカスタム DNS サーバー)
+・DNS クエリは実行されない
+
+
+
+
+
+解答例
+・193.77.134.10 (VNet-A で設定されたカスタム DNS サーバー)
+
+
+問題 283. Azure サブスクリプションがあり、West US リージョンに複数の仮想マシンが含まれています。Azure Network Watcher の Traffic Analytics を使用して仮想マシンのトラフィックを監視します。作成する必要があるリソースはどれですか。（二つ選択）
+・Log Analytics ワークスペース
+・Network Security Group (NSG) フローログ
+・Azure Monitor ブック
+・ストレージアカウント
+・Application Insights
+
+
+
+
+
+解答例
+・Log Analytics ワークスペース
+・ストレージアカウント
+
+
+問題 284. Azure サブスクリプションに以下の表に示すパブリック IP アドレスがあります。パブリック Azure Standard Load Balancer を作成する際に使用できるパブリック IP アドレスはどれですか。（一つ選択）
+名前 SKU 割り当て
+IP1 Standard 静的
+IP2 Basic 動的
+IP3 Standard 動的
+
+・IP2 のみ
+・IP1 と IP3 のみ
+・IP3 のみ
+・IP1、IP2、IP3 のすべて
+
+
+
+
+
+解答例
+・IP1 と IP3 のみ
+
+
+問題 285. オンプレミスネットワークに dbserver-A という名前のデータベースサーバーがあります。Azure サブスクリプションに 3 つの仮想マシンをデプロイし、各仮想マシンは異なる可用性ゾーンに配置します。オンプレミスネットワークと Azure 仮想ネットワーク間をサイト間 VPN 接続で構成し、Azure 仮想マシンから dbserver-A への接続を確保します。Azure VPN Gateway に使用するパブリック IP アドレスの SKU と割り当て方法の組み合わせとして適切なものはどれですか。（一つ選択）
+・Standard SKU と静的 IP アドレスの割り当て
+・Basic SKU と動的 IP アドレスの割り当て
+・Standard SKU と動的 IP アドレスの割り当て
+・Basic SKU と静的 IP アドレスの割り当て
+
+
+
+
+
+解答例
+・Standard SKU と静的 IP アドレスの割り当て
+
+
+問題 286. 次の表に示す Azure 仮想ネットワークがあります。VNet1 からピアリング接続を確立できる仮想ネットワークはどれですか。（一つ選択）
+仮想ネットワーク アドレス空間 リージョン
+VNet1 10.1.0.0/16 東日本
+VNet2 10.2.0.0/16 東日本
+VNet3 10.3.0.0/16 西日本
+VNet4 10.1.0.0/16 西日本
+
+・VNet2 のみ
+・VNet2 と VNet3 のみ
+・VNet3 と VNet4 のみ
+・VNet2、VNet3、VNet5 のみ
+
+
+
+
+
+解答例
+・VNet2 と VNet3 のみ
+
+
+問題 287. あなたの会社は Microsoft Entra テナントにリンクされた Azure サブスクリプションを保有しています。Kubernetes API サーバーへのアクセスを制限する必要があります。完全なソリューションを提供する選択肢を選んでください。（二つ選択）
+・プライベートクラスター
+・Azure Policy
+・API サーバー承認済み IP 範囲
+・パブリッククラスター
+
+
+
+
+
+解答例
+・プライベートクラスター
+・API サーバー承認済み IP 範囲
+
+
+問題 288. Azure サブスクリプション内に以下のリソースが存在します。NSG-A を関連付けることができるのはどの仮想ネットワークのサブネットですか。（一つ選択）
+名前 タイプ Azure リージョン リソースグループ
+VNet-A 仮想ネットワーク 東日本 RG-B
+VNet-B 仮想ネットワーク 東日本 RG-A
+VNet-C 仮想ネットワーク 西日本 RG-A
+NSG-A Network Security Group 西日本 RG-B
+
+・VNet-A のサブネット
+・VNet-B と VNet-C のサブネット
+・VNet-A、VNet-B、VNet-C のすべてのサブネット
+・VNet-C のサブネット
+
+
+
+
+
+解答例
+・VNet-C のサブネット
+
+
+問題 289. Azure サブスクリプション内に仮想ネットワーク VNet-A があり、以下の構成となっています。Subnet-A (10.10.1.0/24) にはネットワークセキュリティグループ NSG-A が関連付けられ、Subnet-B (10.10.2.0/24) にはネットワークセキュリティグループは関連付けられていません。VM-A は Subnet-A に配置され (IP アドレス 10.10.1.5)、ネットワークインターフェイスに NSG-B が関連付けられています。VM-B は Subnet-B に配置され (IP アドレス 10.10.2.5)、ネットワークセキュリティグループは関連付けられていません。NSG-A には優先順位 101 で送信元 10.10.2.0/24、宛先 10.10.1.0/24、宛先ポート TCP/1433 を許可する受信規則があります。NSG-B には優先順位 125 で送信元 10.10.2.5、宛先 10.10.1.5、宛先ポート TCP/1433 をブロックする受信規則があります。この構成において、VM-B は VM-A の TCP ポート 1433 に接続できますか。（一つ選択）
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・いいえ
+
+
+問題 290. あなたの会社は hogehoge.com というドメイン名を登録しました。Azure DNS ゾーン hogehoge.com を作成し、IP アドレス 131.107.1.10 を持つ www という名前のホストの A レコードをゾーンに追加しました。しかし、インターネット上のホストが www.hogehoge.com を 131.107.1.10 の IP アドレスに解決できないことが判明しました。この名前解決の問題を解決する必要があります。解決策として、ドメインレジストラでネームサーバーを変更します。この解決策は目標を達成できますか。（一つ選択）
+・はい、目標を達成できる
+・いいえ、目標を達成できない
+
+
+
+
+
+解答例
+・はい、目標を達成できる
+
+
+問題 291. あなたの会社では、webapp1 という名前の Azure Web App で実行される App1 というアプリケーションを運用しています。開発者が App1 の更新版を Git1 という Git リポジトリにアップロードしました。webapp1 には本番用スロット (webapp1-prod) とテスト用スロット (webapp1-test) の 2 つのデプロイスロットが構成されています。ユーザーに更新版を公開する前に、App1 の更新版をテストする必要があります。実施すべき操作を選択してください。（二つ選択）
+・スロットのスワップを実行する
+・webapp1-test を停止する
+・App1 の更新版を webapp1-test にデプロイし、その後テストを実施する
+・App1 の更新版を webapp1-prod にデプロイし、その後テストを実施する
+
+
+
+
+
+解答例
+・App1 の更新版を webapp1-test にデプロイし、その後テストを実施する
+・スロットのスワップを実行する
+
+
+問題 292. 組織の Azure 環境には、サイト間 VPN でオンプレミスネットワークに接続する VNet-A という仮想ネットワークがあります。VNet-A 内の Subnet-A には NSG-A というネットワークセキュリティグループが関連付けられており、Basic 内部ロードバランサー ILB-A が配置されています。ILB-A のバックエンドプールには 3 台の仮想マシンが構成されています。ILB-A に接続する IP アドレスに関するデータを収集し、Azure portal から対話型クエリを実行できるようにする必要があります。作成するリソースとして最も適切なものはどれですか。（一つ選択）
+・Azure Event Hubs
+・Azure Log Analytics ワークスペース
+・Azure Storage アカウント
+・Azure Monitor メトリック
+
+
+
+
+
+解答例
+・Azure Log Analytics ワークスペース
+
+
+問題 293. Azure サブスクリプションに、West Europe リージョンに配置されたリソースグループ RG26 があります。RG26 はプロジェクトの一時的なリソースを作成するために使用されており、以下のリソースが含まれています。仮想マシン VM1、ストレージアカウント sa001、SQL データベース SQLDB01 が存在し、SQLDB01 は Recovery Services コンテナー RGV1 にバックアップされています。プロジェクト完了後、Azure portal から RG26 を削除しようとしましたが、削除に失敗しました。RG26 を削除するために最初に実行すべき操作を選択してください。（一つ選択）
+・VM1 を停止する
+・SQLDB01 のバックアップを停止する
+・sa001 を削除する
+・VM1 を削除する
+
+
+
+
+
+解答例
+・SQLDB01 のバックアップを停止する
+
+
+問題 294. あなたの組織には 3 つのオフィスがあり、Microsoft Entra ID (旧 Azure AD) テナントを含む Azure サブスクリプションを運用しています。各オフィスのローカル管理者に対して、それぞれのオフィスのユーザー管理権限のみを付与します。どの機能を使用しますか。（一つ選択）
+・Microsoft Entra ID ロール
+・管理単位 (Administrative Units)
+・Microsoft Entra ID エンタイトルメント管理のアクセスパッケージ
+・Azure ロール
+
+
+
+
+
+解答例
+・管理単位 (Administrative Units)
+
+
+問題 295. あなたの組織が所有する Azure サブスクリプション内で、Web アプリケーション用に 3 つの Azure 仮想マシンをデプロイします。1 つの Azure データセンターが使用できなくなった場合でも、少なくとも 2 つの仮想マシンが使用可能であることを保証する必要があります。どの構成を実装しますか。（一つ選択）
+・単一の Availability Set 内にすべての仮想マシンを配置する
+・各仮想マシンを異なる Availability Set に配置する
+・各仮想マシンを異なる Availability Zone に配置する
+・単一のリージョン内に仮想マシンを配置し、Azure Site Recovery を構成する
+
+
+
+
+
+解答例
+・各仮想マシンを異なる Availability Zone に配置する
+
+
+問題 296. あなたの組織では、財務部門の監査担当者が Azure 環境における月次のクラウド支出を詳細に分析する必要があります。監査担当者は、リソースグループ別、サービス別、タグ別にコストを分類し、予算との差異を確認したいと考えています。この要件を満たすために、Azure portal のどの機能を使用するように指示しますか。（一つ選択）
+・Cost Management + Billing の Cost analysis
+・Azure Advisor の Recommendations
+・Cost Management + Billing の Invoices
+・Azure Monitor の Metrics
+
+
+
+
+
+解答例
+・Cost Management + Billing の Cost analysis
+
+
+問題 297. Azure Resource Manager テンプレート (Template1) を使用して Azure 仮想マシンをデプロイします。Template1 の variables セクションには 「"location": "westeurope"」 が定義されており、resources セクションではこの変数を参照して仮想マシンのデプロイ先リージョンを指定しています。この仮想マシンを West US リージョンにデプロイする必要があります。どのような対応を行いますか。（一つ選択）
+・variables セクションの location 値を 「westus」 に変更する
+・resources セクションで直接 location 値を 「westus」 にハードコーディングする
+・デプロイ実行時のパラメータで location を 「West US」 に指定する
+・テンプレートの parameters セクションに新しい location パラメータを追加し、デプロイ時に値を渡す
+
+
+
+
+
+解答例
+・variables セクションの location 値を 「westus」 に変更する
+
+
+問題 298. Azure サブスクリプションに仮想マシン VM1 と Azure Function の App1 が含まれています。VM1 が停止した場合に App1 を実行するアラートルールを作成します。アラートルールに対して作成する必要があるものを選択してください。（一つ選択）
+・Azure Automation Runbook
+・アクショングループ
+・管理グループ
+・アプリケーションセキュリティグループ
+
+
+
+
+
+解答例
+・アクショングループ
+
+
+問題 299. Azure サブスクリプションに以下のリソースが含まれています：8 個の仮想ネットワーク、24 個の仮想マシン、16 個のストレージアカウント。Azure リソースから生成される診断データとテレメトリデータを表示する機能を提供する監視ソリューションを実装します。ソリューションに含めるべきものはどれですか。（一つ選択）
+・Log Analytics ワークスペース
+・Azure Monitor Metrics
+・Azure Machine Learning ワークスペース
+・Application Insights
+
+
+
+
+
+解答例
+・Log Analytics ワークスペース
+
+
+問題 300. Azure サブスクリプションに、NSG1 という名前のネットワークセキュリティグループがあります。NSG1 を構成して、リモートデスクトップ管理とセキュアな HTTPS 通信を許可します。NSG1 で許可すべきポート番号を選択してください。（二つ選択）
+・443
+・22
+・3389
+・80
+・587
+
+
+
+
+
+解答例
+・443
+・3389
+
+
+問題 301. あなたは hogehoge.com という名前の Microsoft Entra テナントにリンクされた Azure サブスクリプションを管理しています。現在、hogehoge.com 内のすべてのユーザーが B2B コラボレーションに外部ユーザーを招待できる状態です。Guest Inviter、User Administrator、Global Administrator ロールのメンバーのみがゲストユーザーを招待できるように制限します。どの設定を構成しますか。（一つ選択）
+・Conditional Access
+・External collaboration settings
+・User settings
+・Cross-tenant access settings
+
+
+
+
+
+解答例
+・External collaboration settings
+
+
+問題 302. Windows Server を実行する Server1 という名前の Azure 仮想マシンがあります。Azure Backup を使用してファイルとフォルダーをバックアップする構成を行います。Server1 にインストールする必要があるものはどれですか。（一つ選択）
+・Azure Connected Machine エージェント
+・Microsoft Azure Recovery Services (MARS) エージェント
+・Azure Backup Server エージェント
+・Azure Site Recovery Provider エージェント
+
+
+
+
+
+解答例
+・Microsoft Azure Recovery Services (MARS) エージェント
+
+
+問題 303. Azure Web App の webapp1 があります。仮想ネットワーク VNET1 と、MySQL データベースをホストする Azure 仮想マシン VM1 があります。VM1 は VNET1 に接続されています。webapp1 が VM1 上でホストされているデータにアクセスできるようにします。どうすればよいですか。（一つ選択）
+・webapp1 を VNET1 に接続する
+・Azure Traffic Manager をデプロイする
+・VNET1 に対してサービスエンドポイントを構成する
+・内部ロードバランサーをデプロイする
+
+
+
+
+
+解答例
+・webapp1 を VNET1 に接続する
+
+
+問題 304. Azure サブスクリプション内にリソースグループが存在し、そのリソースグループには ARM テンプレートを使用してデプロイされた複数のリソースが含まれています。リソースグループ内の各リソースがいつ作成されたかを確認します。Azure portal のサブスクリプションブレードからサブスクリプションを選択し、リソースプロバイダーをクリックして確認する方法は、この要件を満たしますか。（一つ選択）
+・いいえ、リソースプロバイダーではリソースの作成日時は確認できない
+・はい、リソースプロバイダーの登録状態から作成日時が確認できる
+・はい、リソースプロバイダーのデプロイ履歴から作成日時が確認できる
+・いいえ、アクティビティログを使用する必要がある
+
+
+
+
+
+解答例
+・いいえ、リソースプロバイダーではリソースの作成日時は確認できない
+
+
+問題 305. あなたの組織には、Sub1 と Sub2 という 2 つの Azure サブスクリプションがあります。Sub1 には仮想ネットワーク VNet1 と VPN Gateway が含まれています。Sub2 には仮想ネットワーク VNet2 が含まれています。オンプレミスには Windows を実行する Device1 というデバイスがあり、ポイント対サイト (P2S) VPN クライアントがインストールされています。VNet1 と VNet2 の間で仮想ネットワークピアリングを構成しました。VPN 接続が確立されたときに Device1 が VNet2 にアクセスできるようにします。何をすべきですか。（一つ選択）
+・VPN Gateway の設定でゲートウェイ転送を有効化し、Device1 で P2S VPN クライアントを再ダウンロードしてインストールする
+・Sub2 に Azure Bastion をデプロイする
+・Device1 で New-SelfSignedCertificate コマンドレットを実行する
+・Sub2 にプライベートエンドポイントを作成する
+
+
+
+
+
+解答例
+・VPN Gateway の設定でゲートウェイ転送を有効化し、Device1 で P2S VPN クライアントを再ダウンロードしてインストールする
+
+
+問題 306. あなたの組織では、3 つの仮想ネットワーク (VNET1、VNET2、VNET3) にそれぞれ仮想マシン (VM1、VM2、VM3) が配置されています。VM1 には DNS サービスがインストールされており、各仮想ネットワークの DNS 設定は以下の通りです。VNET1 の DNS サーバーは VM1 のプライベート IP アドレスを参照し、VNET2 と VNET3 は Azure 提供の DNS を使用しています。すべての仮想マシンが VM1 上の DNS サービスを使用して名前解決できるようにします。どの操作を実行しますか。（一つ選択）
+仮想ネットワーク 仮想マシン DNS サーバー設定
+VNET1 VM1 VM1 のプライベート IP
+VNET2 VM2 Azure 提供の DNS
+VNET3 VM3 Azure 提供の DNS
+
+・VNET1、VNET2、VNET3 間で仮想ネットワークピアリングを構成する
+・VNET2 と VNET3 にサービスエンドポイントを追加する
+・VM1 で条件付きフォワーダーを構成する
+・VNET2 と VNET3 の DNS サーバー設定を VM1 のプライベート IP アドレスに変更する
+
+
+
+
+
+解答例
+・VNET1、VNET2、VNET3 間で仮想ネットワークピアリングを構成する
+
+
+問題 307. Azure サブスクリプション内に 2 つの仮想マシンが存在します。これらの仮想マシン間で HTTPS トラフィックの負荷分散を実現するため、Azure Load Balancer を作成しました。負荷分散ルールを構成する前に、必ず作成しておく必要がある Load Balancer のリソースコンポーネントはどれですか。（二つ選択）
+・正常性プローブ
+・バックエンドプール
+・インバウンド NAT ルール
+・仮想ネットワーク
+・フロントエンド IP 構成
+
+
+
+
+
+解答例
+・正常性プローブ
+・バックエンドプール
+
+
+
+
+
+
+
+問題 318. あなたの組織では、Active Directory Domain Services (AD DS) ドメインと同期する Microsoft Entra Connect をセットアップした Microsoft Entra テナントを運用しています。ユーザーが Azure ポータルから AD DS のパスワードをリセットできるようにする必要があります。パスワードリセット時には2つの認証方法を使用できるようにします。実装すべきアクションはどれですか。（二つ選択）
+・Azure ポータルの「パスワードのリセット」から「認証方法」設定を構成する
+・Microsoft Entra Connect を実行し「パスワード ライトバック」を選択する
+・Azure ポータルの「パスワードのリセット」から「登録」設定を構成する
+・Microsoft Entra Connect を実行し「デバイス ライトバック」を選択する
+
+
+
+
+
+解答例
+・Azure ポータルの「パスワードのリセット」から「認証方法」設定を構成する
+・Microsoft Entra Connect を実行し「パスワード ライトバック」を選択する
+
+問題 319. Azure サブスクリプションに関連付けられた Microsoft Entra テナント（hogehoge.onmicrosoft.com）には、次の表に示すユーザーが存在します。UserA は新しい Microsoft Entra テナント（foobar.onmicrosoft.com）を作成しました。foobar.onmicrosoft.com テナント内で新規ユーザーアカウントを作成する必要があります。解決策として、UserA に新規ユーザーアカウントの作成を依頼します。この解決策は要件を満たしていますか。（一つ選択）
+ユーザー名 / ロール / スコープ
+UserA / グローバル管理者 / Microsoft Entra ID
+UserB / グローバル管理者 / Microsoft Entra ID
+UserC / ユーザー管理者 / Microsoft Entra ID
+UserD / 所有者 / Azure サブスクリプション
+
+・いいえ、UserC に依頼する必要がある
+・はい、要件を満たしている
+・いいえ、UserB に依頼する必要がある
+・いいえ、UserD に依頼する必要がある
+
+
+
+
+
+解答例
+・はい、要件を満たしている
+
+問題 320. Azure サブスクリプションに 2 つの Log Analytics ワークスペース（Workspace-A と Workspace-B）が存在します。Windows Server を実行する 100 台の仮想マシンからパフォーマンスデータとイベントを収集する必要があります。要件として、各仮想マシンのログを Workspace-A と Workspace-B の両方に送信し、すべての Windows イベントとセキュリティイベントをキャプチャする必要があります。各仮想マシンにインストールして構成する必要があるものを選択してください。（一つ選択）
+・Azure Monitor Agent
+・Windows VM エージェント
+・Windows 用 Azure Diagnostics (WAD) 拡張機能
+・Log Analytics エージェント (MMA)
+
+
+
+
+
+解答例
+・Azure Monitor Agent
+
+問題 321. 複数の Azure 仮想マシンと Azure Recovery Services コンテナーを運用しています。仮想マシンは既定のバックアップポリシーで構成されています。既定のバックアップポリシーにおける仮想マシンバックアップの保持期間はどれですか。（一つ選択）
+・14 日間
+・30 日間
+・180 日間
+・90 日間
+
+
+
+
+
+解答例
+・30 日間
+
+問題 322. Azure サブスクリプションに以下のリソースが含まれています。NIC1 という名前のネットワークインターフェイスを作成します。NIC1 を作成できるロケーションはどれですか。（一つ選択）
+リソース名 / タイプ / ロケーション
+VNET1 / 仮想ネットワーク / East US
+VNET2 / 仮想ネットワーク / West Europe
+NSG1 / ネットワークセキュリティグループ / North Europe
+
+・East US のみ
+・East US と West Europe のみ
+・East US、West Europe、North Europe すべて
+・East US と North Europe のみ
+
+
+
+
+
+解答例
+・East US、West Europe、North Europe すべて
+
+問題 323. Azure サブスクリプション内で、次の表に示すパブリック IP アドレスリソースを管理しています。新たに Azure Firewall Premium インスタンスをデプロイする計画があり、このファイアウォールに関連付け可能な IP アドレスを特定する必要があります。以下の表を参照して、Azure Firewall Premium で使用できる IP アドレスを選択してください。（一つ選択）
+名前 / IP バージョン / SKU / ティア / 割り当て方法
+IP-A / IPv4 / Standard / リージョナル / 静的
+IP-B / IPv4 / Standard / グローバル / 静的
+IP-C / IPv4 / Basic / リージョナル / 動的
+IP-D / IPv4 / Basic / リージョナル / 静的
+IP-E / IPv6 / Standard / リージョナル / 静的
+
+・IP-A と IP-D
+・IP-A
+・IP-B
+・IP-A、IP-B、IP-E
+
+
+
+
+
+解答例
+・IP-A
+
+問題 324. オンプレミスの Hyper-V 環境を Azure Site Recovery を使用して Azure に移行する計画を立てています。Hyper-V 環境は Microsoft System Center Virtual Machine Manager (VMM) を使用して管理されています。Hyper-V 環境には以下の仮想マシンが含まれています。Azure Site Recovery を使用して移行できる仮想マシンはどれですか。（一つ選択）
+仮想マシン名 / オペレーティングシステム / 世代
+VM1 / Windows Server 2019 / 第 2 世代
+VM2 / Windows Server 2012 R2 / 第 1 世代
+VM3 / Ubuntu 20.04 LTS / 第 2 世代
+VM4 / Windows Server 2008 R2 / 第 1 世代
+
+・VM3
+・VM4
+・VM1
+・VM2
+
+
+
+
+
+解答例
+・VM2
+
+問題 325. Azure サブスクリプションに複数のストレージリソースがあります。Azure Import/Export サービスを使用して Export1 という名前のエクスポートジョブを計画しています。Export1 を使用してエクスポート可能なデータを特定します。以下のリソースのうち、Azure Import/Export ジョブでエクスポート可能なものはどれですか。（一つ選択）
+リソース名 / リソースタイプ
+DB1 / Azure SQL Database
+Table1 / Azure Table Storage
+container1 / Azure Blob Storage
+Share1 / Azure Files
+
+・Azure Blob Storage の container1
+・Azure Table Storage の Table1
+・Azure Files の Share1
+・Azure SQL Database の DB1
+
+
+
+
+
+解答例
+・Azure Blob Storage の container1
+
+問題 326. Azure サブスクリプションに、VNet1 という名前の仮想ネットワークに接続された複数のリソースがあります。VNet1 に Bastion1 という名前の Azure Bastion ホストをデプロイする予定です。次のリソースのうち、Bastion1 を使用して保護できるリソースはどれですか。（一つ選択）
+リソース一覧：
+リソース名 / リソースタイプ
+VM1 / 仮想マシン
+App1 / App Service
+hogehoge.local / プライベート DNS ゾーン
+
+・App1 と hogehoge.local のみ
+・VM1 のみ
+・VM1 と hogehoge.local のみ
+・VM1、App1、hogehoge.local すべて
+
+
+
+
+
+解答例
+・VM1 のみ
+
+問題 327. Azure サブスクリプションに以下のリソースが含まれています。NSG1 を適用できるサブネットはどれですか。（一つ選択）
+リソース名 / タイプ / リージョン
+VNet1 / 仮想ネットワーク / 米国東部
+VNet2 / 仮想ネットワーク / 米国西部
+VNet3 / 仮想ネットワーク / 米国西部
+NSG1 / ネットワークセキュリティグループ / 米国西部
+
+・VNet2 と VNet3 のサブネットのみ
+・VNet1 のサブネットのみ
+・VNet1、VNet2、VNet3 のすべてのサブネット
+・VNet3 のサブネットのみ
+
+
+
+
+
+解答例
+・VNet2 と VNet3 のサブネットのみ
+
+問題 328. Azure サブスクリプションに複数の仮想マシンが存在し、それぞれ Windows Server 2022 が稼働しています。プライベート Azure DNS ゾーン「hogehoge.local」を作成し、VNet-Alpha からの自動登録を有効化しました。以下の表に示す仮想マシン VM-Alpha について、hogehoge.local ゾーンに自動登録される A レコードの内容を選択してください。（一つ選択）
+名前 / プライベート IP アドレス / パブリック IP アドレス / 仮想ネットワーク名 / Windows Server で構成された DNS サフィックス
+VM-Alpha / 10.2.0.10 / 40.112.72.45 / VNet-Alpha / hogehoge.local
+VM-Beta / 10.2.0.11 / 13.78.108.22 / VNet-Alpha / foobar.local
+
+・なし
+・プライベート IP アドレスのみ
+・パブリック IP アドレスのみ
+・プライベート IP アドレスとパブリック IP アドレスの両方
+
+
+
+
+
+解答例
+・プライベート IP アドレスのみ
+
+問題 329. Azure Application Gateway のパフォーマンス問題をトラブルシューティングしています。過去 6 時間の総リクエスト数と失敗したリクエスト数を比較します。何を使用しますか。（一つ選択）
+・Connection troubleshoot を使用する
+・Application Gateway の Diagnostics logs を使用する
+・Application Gateway の Metrics を使用する
+・Azure Network Watcher の NSG flow logs を使用する
+
+
+
+
+
+解答例
+・Application Gateway の Metrics を使用する
+
+問題 330. あなたは adatum.com という名前の Microsoft Entra ID（旧 Azure AD）テナントの全体管理者です。Azure ユーザーに対して多要素認証を有効化します。どうすればよいですか。（一つ選択）
+・Microsoft Entra ID Connect をインストールして構成する
+・Microsoft Entra ID の条件付きアクセスポリシーを作成する
+・セキュリティの既定値群を有効化する
+・Identity Hub を作成して構成する
+
+
+
+
+
+解答例
+・Microsoft Entra ID の条件付きアクセスポリシーを作成する
+
+問題 331. Azure サブスクリプションに複数のストレージアカウントが含まれています。あるユーザーに対して、ストレージアカウント内のコンテナーを管理し、ストレージアカウントのアクセスキーを表示する権限を付与します。最小特権の原則に従ってロールを割り当てる場合、どのロールを割り当てるべきですか。（一つ選択）
+・Storage Blob Data Contributor
+・Storage Account Contributor
+・Contributor
+・Reader
+
+
+
+
+
+解答例
+・Storage Account Contributor
+
+問題 332. 次の表に示すリソースがあります。Azure Firewall の FW-A を使用して VNet-A からの送信トラフィックを管理するために、最初に実施すべき構成はどれですか。（一つ選択）
+名前 / タイプ / 説明
+App-A / App Service / VNet-A に対して仮想ネットワーク統合が有効
+ASP-A / App Service Plan / Standard SKU
+VNet-A / 仮想ネットワーク / なし
+FW-A / Azure Firewall / VNet-A に接続
+
+・ルートテーブルを作成する
+・Azure Network Watcher を作成する
+・ASP-A を Premium SKU にアップグレードする
+・プライベートエンドポイントを構成する
+
+
+
+
+
+解答例
+・ルートテーブルを作成する
+
+問題 333. あなたは、複数のストレージアカウントを含む Azure サブスクリプションを管理しています。West US リージョンに Web アプリをデプロイし、このアプリケーションのバックアップを構成する必要があります。コストを最小限に抑えながらバックアップを実装する場合、バックアップターゲットとして使用すべきストレージアカウントはどれですか。（一つ選択）
+ストレージアカウント / リージョン / パフォーマンス / レプリケーション
+storage1 / West US / Standard / LRS
+storage2 / East US / Premium / ZRS
+storage3 / West US / Premium / GRS
+storage4 / Central US / Standard / GRS
+
+・storage3
+・storage4
+・storage2
+・storage1
+
+
+
+
+
+解答例
+・storage1
+
+問題 334. Azure サブスクリプション内に 2 つの仮想ネットワーク VNet1 と VNet2 があります。VNet1 には静的ルーティングを使用する VPN ゲートウェイ VPNGW1 が構成されており、オンプレミスネットワークとの間にサイト間 VPN 接続が確立されています。Windows 10 を実行するクライアントマシンから VNet1 へのポイント対サイト VPN 接続を構成しました。VNet1 と VNet2 の間で仮想ネットワークピアリングを設定し、オンプレミスネットワークから VNet2 への接続が可能であることを確認しました。しかし、クライアントマシンから VNet2 への接続ができません。クライアントマシンが VNet2 に接続できるようにするには、どの操作を実行する必要がありますか。（一つ選択）
+・VNet1 でゲートウェイ転送を許可する設定を有効にする
+・クライアントマシンで VPN クライアント構成パッケージをダウンロードして再インストールする
+・VPNGW1 で Border Gateway Protocol を有効にする
+・VNet2 でゲートウェイ転送を許可する設定を有効にする
+
+
+
+
+
+解答例
+・クライアントマシンで VPN クライアント構成パッケージをダウンロードして再インストールする
+
+問題 335. Azure Kubernetes Service (AKS) クラスターを運用しています。このクラスターには複数のポッドがデプロイされており、kubenet ネットワークプラグインを使用しています。セキュリティ要件として、特定のポッド間でのみ通信を許可し、その他のポッド間通信を制限する必要があります。この要件を満たすために、AKS クラスターで構成すべきものはどれですか。（一つ選択）
+・Azure Private Link
+・Calico ネットワークポリシー
+・ポッドセキュリティポリシー
+・アプリケーションセキュリティグループ
+
+
+
+
+
+解答例
+・Calico ネットワークポリシー
+
+問題 336. Azure サブスクリプションに、100 台の仮想マシンを含むリソースグループ RG1 があります。会社には製造部門、営業部門、財務部門という 3 つのコストセンターがあります。各仮想マシンを特定のコストセンターに関連付けます。何を実施しますか。（一つ選択）
+・仮想マシンにタグを割り当てる
+・仮想マシンのインベントリ設定を変更する
+・仮想マシンに診断設定を構成する
+・仮想マシンにロックを構成する
+
+
+
+
+
+解答例
+・仮想マシンにタグを割り当てる
+
+問題 337. Azure で運用している Web アプリ App1 には、本番環境用のスロット webapp1-prod とテスト環境用のスロット webapp1-test があります。webapp1-test で複数の変更をテストした後、App1 のバックアップを取得しました。その後、webapp1-test と webapp1-prod をスワップしましたが、App1 にパフォーマンスの問題が発生していることが判明しました。できるだけ迅速に以前のバージョンの App1 に戻す必要があります。どの操作を実行しますか。（一つ選択）
+・デプロイスロットを再度スワップする
+・App1 のバックアップを復元する
+・App1 を別のリソースグループに複製する
+・以前のデプロイ履歴からロールバックを実行する
+
+
+
+
+
+解答例
+・デプロイスロットを再度スワップする
+
+問題 338. Windows Server 2019 を実行する VM1 という名前の Azure 仮想マシンがあります。User1 というユーザーとして VM1 にサインインし、次の操作を実行しました：C ドライブにファイルを作成、D ドライブにファイルを作成、スクリーンセーバーのタイムアウトを変更、デスクトップの背景を変更しました。VM1 を再デプロイする予定です。VM1 を再デプロイした後、失われる変更はどれですか。（一つ選択）
+・D ドライブに作成した新しいファイル
+・変更したスクリーンセーバーのタイムアウト
+・C ドライブに作成した新しいファイル
+・新しいデスクトップの背景
+
+
+
+
+
+解答例
+・変更したスクリーンセーバーのタイムアウト
+
+問題 339. Azure サブスクリプションを管理しています。次のコマンドを実行したところ、以下の出力が得られました。
+Get-AzRoleDefinition | Format-Table -Property Name, Id
+出力結果：
+CustomRole1 111-222-333-444-555
+Owner 8e3af657-a8ff-443c-a75c-2fe8c4bcb635
+Contributor b24988ac-6180-42a0-ab88-20f7382dd24c
+Reader acdd72a7-3385-48ef-bd42-f606fba81ae7
+
+リソースグループレベルでのアクセス管理を自動化するため、以下の PowerShell スクリプトを毎週実行しています。
+$rg = "RG1"
+$RoleName = "111-222-333-444-555"
+$Role = Get-AzRoleDefinition -Name $RoleName
+New-AzRoleAssignment -SignInName user1@hogehoge.com -RoleDefinitionName $Role.Name -ResourceGroupName $rg
+
+User1 が RG1 リソースグループにアクセスできず、スクリプトが失敗することが判明しました。スクリプトを修正して正常に動作させる必要があります。スクリプトのどの部分を変更すべきですか。（一つ選択）
+・$Role = Get-AzRoleDefinition -Id $RoleName に変更する
+・$RoleName = "CustomRole1" に変更する
+・$Role = Get-AzRoleAssignment -Name $RoleName に変更する
+・New-AzRoleAssignment コマンドレットの RoleDefinitionId パラメータを使用する
+
+
+
+
+
+解答例
+・$RoleName = "CustomRole1" に変更する
+
+問題 340. Azure サブスクリプションに App1 という名前の Azure App Service Web アプリがあります。現在、以下の診断ログ設定が構成されています：Application Logging (FileSystem) は Error、Application Logging (Blob) は Information、Detailed Error Message は Warning、Web Server Logging は Verbose です。すべての Warning レベル以上のログを保存するように診断ログを構成します。有効にする診断ログの種類と重大度レベルの組み合わせとして最も適切なものはどれですか。（一つ選択）
+・Application Logging (Blob) を Warning レベルで有効化する
+・Web Server Logging を Warning レベルで有効化する
+・Detailed Error Message を Error レベルで有効化する
+・Application Logging (FileSystem) を Warning レベルで有効化する
+
+
+
+
+
+解答例
+・Application Logging (Blob) を Warning レベルで有効化する
+
+問題 341. Linux を実行する Azure 仮想マシンがあります。この仮想マシンは、JSON 形式でログデータを出力するカスタムアプリケーションをホストしています。Log Analytics ワークスペースにログを収集するソリューションを推奨します。推奨事項に含めるべきものは何ですか。（一つ選択）
+・Azure Monitor agent for Linux
+・Azure Diagnostics Extension for Linux
+・Custom Script Extension Version 2
+・Log Analytics agent for Linux
+
+
+
+
+
+解答例
+・Azure Monitor agent for Linux
+
+問題 342. Azure Monitor でアラートを作成し、SMS メッセージを送信するアクショングループを構成します。このアラートが 1 分ごとにトリガーされた場合、1 時間あたりに送信される SMS メッセージの最大数はいくつですか。（一つ選択）
+・12
+・1
+・60
+・6
+
+
+
+
+
+解答例
+・12
+
+問題 343. Azure サブスクリプションに、Web アプリケーションである WebApp1 が含まれています。WebApp1 にカスタムドメイン www.hogehoge.com を追加します。最初に実行する操作を選択してください。（一つ選択）
+・カスタムドメインの DNS レコードを作成する
+・WebApp1 を停止する
+・WebApp1 に TLS/SSL 証明書をアップロードする
+・WebApp1 のアプリケーション設定で接続文字列を追加する
+
+
+
+
+
+解答例
+・カスタムドメインの DNS レコードを作成する
+
+問題 344. セキュアな拠点から複数のユーザーが Azure Storage アカウント内のファイル共有にアクセスします。この拠点ではインターネットへのアウトバウンドトラフィックが制限されています。ユーザーが SMB プロトコルを使用して Azure のファイル共有にアクセスできるようにします。セキュアな拠点から許可すべきアウトバウンドポートはどれですか。（一つ選択）
+・3389
+・443
+・445
+・5671
+
+
+
+
+
+解答例
+・445
+
+問題 345. Azure 仮想ネットワークに Subnet1 と Subnet2 という 2 つのサブネットがあります。VM1 という仮想マシンが Subnet1 に接続されており、Windows Server を実行しています。VM1 を両方のサブネットに直接接続します。最初に実行すべき操作はどれですか。（一つ選択）
+・Azure portal から新しいネットワークインターフェイスを追加する
+・Azure portal からネットワークセキュリティグループを作成する
+・Azure portal から既存のネットワークインターフェイスの IP 構成を変更する
+・Windows Server にサインインしてネットワークブリッジを作成する
+
+
+
+
+
+解答例
+・Azure portal から新しいネットワークインターフェイスを追加する
+
+問題 346. あなたの組織は東京、神奈川、ニューヨークの 3 拠点にオンプレミスデータセンターを運用しています。Azure 環境として東日本リージョンと米国東部リージョンにそれぞれ仮想ネットワークを構築済みで、これらはピアリング接続されています。今回、3 拠点のオンプレミスデータセンターを Azure サブスクリプションに接続する要件があり、拠点間のネットワーク遅延を最小化する必要があります。この要件を満たすために作成すべき構成を選択してください。（一つ選択）
+・1 つの Virtual WAN と 3 つの仮想ハブ
+・3 つの VPN Gateway と 1 つの ExpressRoute Gateway
+・3 つの Virtual WAN と 1 つの仮想ハブ
+・1 つの Azure Firewall と 3 つの VPN Gateway
+
+
+
+
+
+解答例
+・1 つの Virtual WAN と 3 つの仮想ハブ
+
+問題 347. Azure サブスクリプションに以下のリソースが含まれています。リソースグループ RG1 には「Not allowed resource types」という Azure Policy が割り当てられており、次のリソースタイプが禁止されています：Microsoft.Network/virtualNetwork と Microsoft.Compute/virtualMachines。RG1 内に新しい仮想マシン VM2 を作成し、既存の仮想ネットワーク VNET1 に接続する必要があります。最初に実行すべき操作はどれですか。（一つ選択）
+・ポリシーから Microsoft.Compute/virtualMachines を削除する
+・VNET1 に新しいサブネットを追加する
+・Azure Resource Manager テンプレートを作成する
+・ポリシーから Microsoft.Network/virtualNetworks を削除する
+
+
+
+
+
+解答例
+・ポリシーから Microsoft.Compute/virtualMachines を削除する
+
+問題 348. あなたの会社は、オンプレミスのサーバーを Azure に移行する計画を立てています。単一の仮想ネットワーク上に開発環境、テスト環境、本番環境の仮想マシンが配置されます。開発環境、テスト環境、本番環境の仮想マシン間のトラフィックを特定のポートに制限します。何を使用しますか。（一つ選択）
+・Application Security Group
+・Network Security Group
+・Azure Firewall
+・Azure Load Balancer
+
+
+
+
+
+解答例
+・Network Security Group
+
+問題 349. Azure サブスクリプションを所有しています。Policy1 という名前の Azure Policy の定義を作成する予定です。Policy1 に修復情報を含める必要があります。修復情報を追加すべき定義セクションはどれですか。（一つ選択）
+・policyRule
+・parameters
+・metadata
+・properties
+
+
+
+
+
+解答例
+・metadata
+
+問題 350. あなたの組織では、Azure サブスクリプション「Subscription-A」で WebApp-A というリソースグループを運用しており、その中に Azure 仮想マシンが含まれています。この仮想マシンは Subnet-A という名前のサブネットに配置されており、NSG-A という Network Security Group (NSG) が Subnet-A に関連付けられています。現在、NSG-A にはデフォルトルールのみが設定されています。セキュリティ要件として、Subnet-A 上のホストから Azure Portal へのアクセスを遮断する必要がありますが、その他のインターネットホストへの接続は許可する必要があります。この要件を満たすために、NSG-A に送信セキュリティルールを作成します。このルールの宛先として設定すべき項目は何ですか。（一つ選択）
+・アプリケーションセキュリティグループ
+・サービスタグ
+・任意の IP アドレス範囲
+・特定の IP アドレス
+
+
+
+
+
+解答例
+・サービスタグ
+
+問題 351. 開発チームが Azure Container Instances をデプロイする予定です。コンテナには永続的なストレージレイヤーが必要です。どのサービスを使用しますか。（一つ選択）
+・Azure Blob Storage
+・Azure Table Storage
+・Azure Files
+・Azure SQL Database
+
+
+
+
+
+解答例
+・Azure Files
+
+問題 352. 次の表に示すリソースをデプロイする予定です。これらのリソースをデプロイするために使用する単一の Azure Resource Manager (ARM) テンプレートを作成します。VM1 の dependsOn セクションに追加する必要があるリソースはどれですか。（一つ選択）
+リソース名 / リソースタイプ
+VM1 / 仮想マシン
+NIC1 / ネットワークインターフェイス
+VNET1 / 仮想ネットワーク
+NSG1 / ネットワークセキュリティグループ
+IP1 / パブリック IP アドレス
+
+・VNET1
+・Storage Account
+・NIC1
+・NSG1
+
+
+
+
+
+解答例
+・NIC1
+
+問題 353. VNet1 という名前の仮想ネットワークがあります。VNet1 にはデバイスが接続されていません。同じリージョン内の VNet2 という名前の別の仮想ネットワークと VNet1 をピアリングする計画です。VNet2 のアドレス空間は 10.2.0.0/16 です。VNet1 のアドレス空間は 10.2.0.0/24 です。ピアリングを作成する必要があります。最初に何をしますか。（一つ選択）
+・VNet1 にゲートウェイサブネットを追加する
+・VNet1 のアドレス空間を変更する
+・VNet1 と VNet2 にサブネットを作成する
+・VNet2 でプライベートエンドポイントを構成する
+
+
+
+
+
+解答例
+・VNet1 のアドレス空間を変更する
+
+問題 354. East US リージョンの可用性セットを使用して仮想マシンをデプロイしています。2 つの障害ドメインと 10 個の更新ドメインに 18 台の仮想マシンをデプロイしました。Microsoft が計画的な物理ハードウェアメンテナンスを実施する場合、最大で何台の仮想マシンが同時に使用不可になりますか。（一つ選択）
+・1 台
+・2 台
+・9 台
+・18 台
+
+
+
+
+
+解答例
+・2 台
+
+問題 355. あなたの会社はオーストラリアに本社があり、アジアに複数の支社があります。会社のデータセンターは VMware 仮想化インフラストラクチャを使用して複数の仮想サーバーをホストしています。Azure サブスクリプションを購入し、すべての仮想マシンを Australia Southeast リージョンのリソースグループに移行する計画です。Azure Migrate 移行プロジェクトを作成する必要があります。どの地域 (Geography) を選択しますか。（一つ選択）
+・Australia
+・Asia Pacific
+・United States
+・Europe
+
+
+
+
+
+解答例
+・Australia
+
+問題 356. storage1 という名前の Azure Storage アカウントがあり、container1 という名前の Blob コンテナーが含まれています。container1 に追加される新しいコンテンツを 1 年間変更できないようにします。何を構成しますか。（一つ選択）
+・アクセスレベル
+・不変性ポリシー
+・Access control (IAM) 設定
+・アクセス層
+
+
+
+
+
+解答例
+・不変性ポリシー
+
+問題 357. Microsoft Entra テナントとオンプレミスの Active Directory ドメインに複数のユーザーが存在します。セルフサービスパスワードリセット (SSPR) のパスワードライトバック機能を構成します。コストを最小限に抑えるソリューションが必要です。使用すべき Microsoft Entra ID エディションはどれですか。（一つ選択）
+・Microsoft Entra ID P2
+・Microsoft Entra ID Free
+・Microsoft Entra ID P1
+・Microsoft Entra ID for Office 365
+
+
+
+
+
+解答例
+・Microsoft Entra ID P1
+
+問題 358. 日本に支部を置く組織では、以下の表に示すリソースグループを含む Azure サブスクリプションを所有しています。RG-A には仮想マシン VM-A が実行中で、NIC-A と Disk-A に接続されています。NIC-A は VNet-A に接続されています。RG-B には西日本リージョンにある IP-B という名前のパブリック IP アドレスが含まれていますが、どの仮想マシンにも割り当てられていません。次の記述について、正しい場合は「はい」を選択し、正しくない場合は「いいえ」を選択します。「Storage-A を RG-B に移動できる。」（一つ選択）
+リソースグループ構成
+名前 / リージョン
+RG-A / 東日本
+RG-B / 西日本
+RG-A 内のリソース
+名前 / タイプ / リージョン
+Storage-A / ストレージアカウント / 東日本
+VNet-A / 仮想ネットワーク / 東日本
+NIC-A / ネットワークインターフェイス / 東日本
+Disk-A / ディスク / 東日本
+VM-A / 仮想マシン / 東日本
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・はい
+
+問題 359. 複数の Azure 仮想マシンを Web サーバーとして構成し、Azure Load Balancer を使用しています。特定のクライアントからのリクエストを常に同じバックエンドサーバーに転送するように構成します。どの設定を行いますか。（一つ選択）
+・セッションの永続性を「クライアント IP」に設定する
+・セッションの永続性を「なし」に設定する
+・アウトバウンド規則で SNAT を無効にする
+・フローティング IP (ダイレクトサーバーリターン) を有効にする
+
+
+
+
+
+解答例
+・セッションの永続性を「クライアント IP」に設定する
+
+問題 360. AKS クラスターを hogehoge という名前でデプロイしました。このクラスターに YAML マニフェストファイルをデプロイします。解決策として Azure Cloud Shell から az aks install-cli コマンドを実行して kubectl をインストールし、kubectl apply コマンドで YAML ファイルをデプロイします。この解決策は目標を達成していますか。（一つ選択）
+・はい、この解決策で目標を達成できる
+・いいえ、この解決策では目標を達成できない
+・はい、ただし追加で Azure CLI の最新バージョンへの更新が必要
+・いいえ、Azure Portal からの GUI デプロイのみが有効な方法である
+
+
+
+
+
+解答例
+・はい、この解決策で目標を達成できる
+
+問題 361. 米国に本拠地を置く組織が Azure サブスクリプション「Subscription-A」を所有しています。このサブスクリプションには以下のストレージアカウントが含まれています。米国西部リージョンに Web アプリ「App-A」をデプロイし、このアプリケーションをバックアップします。コストを最小限に抑えるソリューションを選択する必要があります。バックアップのターゲットとして使用すべきストレージアカウントはどれですか。（一つ選択）
+名前 / 種類 / ロケーション
+storage-A / StorageV2 / 米国中部
+storage-B / BlobStorage / 米国西部
+storage-C / BlockBlobStorage / 米国西部
+storage-D / FileStorage / 米国東部
+
+・storage-D
+・storage-C
+・storage-A
+・storage-B
+
+
+
+
+
+解答例
+・storage-A
+
+問題 362. オンプレミスの Active Directory と Azure AD の同期において、一部のユーザーアカウントが正常に同期されない問題が発生しています。調査の結果、ユーザープリンシパル名 (UPN) に無効な文字が含まれていることが判明しました。この問題を解決します。（一つ選択）
+・IdFix ツールを実行し、検出されたエラーに対して Edit 機能を使用する
+・Active Directory ドメインと信頼関係から、UPN サフィックスのリストを変更する
+・Azure AD Connect で送信同期規則を変更する
+・PowerShell を使用して Set-ADUser コマンドレットで UserPrincipalName 属性を一括更新する
+
+
+
+
+
+解答例
+・IdFix ツールを実行し、検出されたエラーに対して Edit 機能を使用する
+
+問題 363. オンプレミスの Active Directory と同期する Microsoft Entra ID（旧 Azure AD）テナントがあります。このテナントには複数のユーザーが存在し、それぞれ異なる同期元を持っています。Group1 という名前のグループを作成し、User1 をメンバーとして追加しました。Group1 の所有者を構成する必要があります。Group1 の所有者として追加できるユーザーの条件として正しいものはどれですか。（一つ選択）
+ユーザー名 / 同期元
+User1 / Microsoft Entra ID
+User2 / Windows Server AD
+User3 / Microsoft Entra ID
+User4 / Windows Server AD
+
+・Microsoft Entra ID で作成されたユーザーのみ
+・すべてのユーザーを所有者として追加可能
+・Windows Server AD から同期されたユーザーのみ
+・グループの作成者のみ
+
+
+
+
+
+解答例
+・Microsoft Entra ID で作成されたユーザーのみ
+
+問題 364. テスト用途で使用していた Azure 仮想マシン VM1 があり、Azure Backup で保護されています。VM1 を削除した後、VM1 のバックアップデータを完全に削除します。最初に実行すべき操作を選択してください。（一つ選択）
+・バックアップポリシーを変更する
+・Recovery Services コンテナーを削除する
+・バックアップアイテムを削除する
+・バックアップを停止してデータを保持する
+
+
+
+
+
+解答例
+・バックアップアイテムを削除する
+
+問題 365. Azure 仮想マシン VM1 のバックアップを計画しています。バックアップ事前チェックのステータスを確認したところ、警告が表示されました。この警告ステータスの原因として考えられるものはどれですか。（一つ選択）
+・VM1 が停止している
+・VM1 に Azure VM Agent (WaAppAgent.exe) の最新バージョンがインストールされていない
+・Recovery Services vault が存在しない
+・VM1 がマネージドディスクを使用していない
+
+
+
+
+
+解答例
+・VM1 に Azure VM Agent (WaAppAgent.exe) の最新バージョンがインストールされていない
+
+問題 366. あなたの組織は、hogehoge.onmicrosoft.com という名前の Microsoft Entra ID（旧 Azure AD）テナントを含むハイブリッドインフラストラクチャを運用しています。このテナントには複数のユーザーアカウントが登録されており、User1 はメンバータイプのユーザー、User2 は外部ゲストユーザー、User3 はオンプレミス Active Directory から同期されたユーザー、User4 は招待が保留中のゲストユーザーです。あなたは All Users グループに対してクラウドリソースを共有する予定です。User1、User2、User3、User4 のすべてがクラウドリソースに正常に接続できるようにする必要があります。最初に実行すべき操作はどれですか。（一つ選択）
+・User4 の招待を完了させ、ゲストアカウントとしてアクティブ化する
+・User3 に対してクラウド認証を有効化する
+・外部コラボレーション設定を変更してゲストユーザーのアクセス権限を調整する
+・User4 用のメンバータイプのユーザーアカウントを新規作成する
+
+
+
+
+
+解答例
+・User4 の招待を完了させ、ゲストアカウントとしてアクティブ化する
+
+問題 367. App1 という名前のアプリケーションが VM1 と VM2 という 2 台の Azure 仮想マシン上で稼働しています。App1 用の Availability Set を実装する予定です。VM1 と VM2 をホストしているハードウェアの計画メンテナンス中も App1 が利用可能である必要があります。Availability Set に含めるべき構成を選択してください。（一つ選択）
+・1 つの Fault Domain
+・2 つの Fault Domain
+・2 つの Update Domain
+・1 つの Update Domain
+
+
+
+
+
+解答例
+・2 つの Update Domain
+
+問題 368. Azure サブスクリプション内のストレージアカウント「storage-A」に、コンテナー「container-A」が存在します。このコンテナーに対して、読み取り専用アクセスを提供し、HTTP と HTTPS の両方のプロトコルを許可し、コンテナー内のすべてのコンテンツに対してアクセス許可を適用する必要があります。この要件を満たすために使用すべき機能はどれですか。（一つ選択）
+・アクセスキー
+・共有アクセス署名 (SAS)
+・Azure Content Delivery Network (CDN)
+・ストレージアカウントのファイアウォール規則
+
+
+
+
+
+解答例
+・共有アクセス署名 (SAS)
+
+問題 369. Azure サブスクリプションにパブリックロードバランサーがあり、VM-A、VM-B、VM-C という 3 つの仮想マシン間でポート 80 と 443 の負荷分散を実行しています。既存の負荷分散構成を維持したまま、すべての RDP 接続を VM-C のみに転送します。どの機能を構成しますか。（一つ選択）
+・負荷分散規則
+・バックエンドプール
+・インバウンド NAT 規則
+・正常性プローブ
+
+
+
+
+
+解答例
+・インバウンド NAT 規則
+
+問題 370. あなたは App1 という名前の Azure App Services Web アプリを管理しています。Web Deploy を使用して App1 をデプロイする予定です。App1 の開発者が Azure Active Directory (Azure AD) の資格情報を使用して App1 にコンテンツをデプロイできるようにします。このソリューションは最小特権の原則に従う必要があります。何をすべきですか。（一つ選択）
+・App1 に対して Website Contributor ロールを開発者に割り当てる
+・App1 に対して Contributor ロールを開発者に割り当てる
+・App1 に対して Owner ロールを開発者に割り当てる
+・Azure AD の資格情報を使用した Basic 認証を有効化する
+
+
+
+
+
+解答例
+・App1 に対して Website Contributor ロールを開発者に割り当てる
+
+問題 371. あなたの組織が所有する Azure サブスクリプション「Subscription-A」には、次の表に示す Web アプリが含まれています。Application Insights を使用して、各アプリのパフォーマンスと使用状況を監視します。ソリューションでは、アプリケーションコードへの変更を最小限に抑える必要があります。App-A に対して適用すべきものを選択してください。（一つ選択）
+名前 / Web フレームワーク / ホスティング環境
+App-A / ASP.NET / Windows Server 2022 を実行し、IIS が構成されているオンプレミスの物理サーバー
+App-B / ASP.NET Core / Windows Server 2022 を実行し、IIS が構成されている Azure 仮想マシン
+
+・Application Insights エージェントをインストールする
+・Application Insights SDK を使用する
+・Azure Diagnostics 拡張機能を有効にする
+・Log Analytics エージェントをインストールする
+
+
+
+
+
+解答例
+・Application Insights エージェントをインストールする
+
+問題 372. あなたは、Workspace1 と Workspace2 という 2 つの Log Analytics ワークスペースと、Windows Server を実行する 100 台の仮想マシンを含む Azure サブスクリプションを管理しています。仮想マシンからパフォーマンスデータとイベントを収集する必要があります。ソリューションは次の要件を満たす必要があります：複数の Log Analytics ワークスペース (Workspace1 と Workspace2) にログを送信する、すべての Windows イベントをキャプチャする、すべてのセキュリティイベントをキャプチャする。各仮想マシンにインストールして構成する必要があるものはどれですか。（一つ選択）
+・Azure Monitor Agent
+・Log Analytics Agent (MMA)
+・Azure Diagnostics Extension (WAD)
+・Azure VM Agent
+
+
+
+
+
+解答例
+・Azure Monitor Agent
+
+問題 373. Azure ストレージアカウント storage1 に blob コンテナー container1 があります。container1 に追加される新しいコンテンツを 1 年間変更できないようにします。何を構成しますか。（一つ選択）
+・不変性ポリシー
+・アクセスレベル
+・アクセス層
+・Access control (IAM) 設定
+
+
+
+
+
+解答例
+・不変性ポリシー
+
+問題 374. あなたの組織には、Azure サブスクリプション「Subscription-A」があります。この Subscription-A には、VNet-A という名前の Azure 仮想ネットワークが含まれています。VNet-A は Azure ExpressRoute を使用してオンプレミスネットワークに接続しています。ExpressRoute で障害が発生した場合に備えて、自動フェールオーバー環境を準備します。サイト間 VPN を使用して VNet-A をオンプレミスネットワークに接続することを検討しています。ソリューションではコストを最小限に抑える必要があります。どのアクションを実行しますか。（三つ選択）
+・ゲートウェイサブネットを作成する
+・VpnGw1 SKU を使用する VPN Gateway を作成する
+・ローカルネットワークゲートウェイを作成する
+・接続オブジェクトを作成する
+・Standard SKU を使用する VPN Gateway を作成する
+
+
+
+
+
+解答例
+・ゲートウェイサブネットを作成する
+・VpnGw1 SKU を使用する VPN Gateway を作成する
+・ローカルネットワークゲートウェイを作成する
+
+問題 375. 新しい Azure App Service アプリを構成します。要件は次の通りです。app.hogehoge.com のカスタムドメイン名を検証できること、最大 8 つのインスタンスまで自動的にスケールできること、コストと管理労力は最小限に抑えることです。このとき、ドメインの検証にはどのタイプの DNS レコードを使用しますか。（一つ選択）
+・TXT
+・CNAME
+・A
+・MX
+
+
+
+
+
+解答例
+・TXT
+
+問題 376. Windows Server 2016 を実行する VM1 という名前の Azure 仮想マシンがあります。VM1 のシステムイベントログに 1 時間以内に 3 つ以上のエラーイベントが記録された場合に Azure でアラートを作成します。次のソリューションを実装しました。Azure ストレージアカウントを作成し、Shared Access Signature (SAS) を構成しました。VM1 に Microsoft Monitoring Agent をインストールしました。Azure Monitor でアラートを作成し、ストレージアカウントをソースとして指定しました。この方法は要件を満たしていますか。（一つ選択）
+・いいえ、要件を満たしていません
+・はい、要件を満たしています
+・はい、ただし Log Analytics workspace の追加構成が必要です
+・いいえ、Azure Event Hubs を使用する必要があります
+
+
+
+
+
+解答例
+・いいえ、要件を満たしていません
+
+問題 377. Azure Active Directory Privileged Identity Management を構成しています。Admin1 という管理者に対して、RG1 というリソースグループへの読み取りアクセス権を 1 か月間のみ付与します。ユーザーロールは即座に割り当てる必要があります。どうしますか。（一つ選択）
+・期限付きのアクティブロールを割り当てる
+・永続的なアクティブロールを割り当てる
+・条件付きアクセスポリシーを使用してカスタムロールを作成する
+・資格のあるロールを割り当てる
+
+
+
+
+
+解答例
+・期限付きのアクティブロールを割り当てる
+
+問題 378. 汎用 v1 ストレージアカウント storageaccount1 にプライベートコンテナー container1 があります。container1 内のデータに対して 14 日間の期間限定で読み取りアクセスを許可します。どの方法を使用しますか。（一つ選択）
+・アカウント SAS を作成する
+・サービス SAS を作成する
+・保存されているアクセスポリシーを作成する
+・ストレージアカウントを汎用 v2 にアップグレードする
+
+
+
+
+
+解答例
+・サービス SAS を作成する
+
+問題 379. Azure サブスクリプションに以下のリソースが含まれています。Azure 仮想マシン 100 台、Azure SQL Database 20 個、Azure ファイル共有 50 個。Azure Backup を使用してすべてのリソースの日次バックアップを作成します。作成する必要があるバックアップポリシーの最小数はいくつですか。（一つ選択）
+・1
+・2
+・3
+・170
+
+
+
+
+
+解答例
+・3
+
+問題 380. あなたの会社では、Azure 上に複数の仮想ネットワーク (VNet) を構成しています。VNET1 (アドレス空間：10.0.1.0/24) に VM1 が、VNET2 (アドレス空間：10.0.2.0/24) に VM2 が、VNET3 (アドレス空間：10.0.3.0/24) に VM4 が配置されています。現在、VM1 と VM4 の間で通信ができない状態です。管理作業を最小限に抑えながら、VM1 と VM4 間の通信を可能にする必要があります。どの方法を選択しますか。（一つ選択）
+・VM4 に 10.0.1.5/24 の IP アドレスを割り当てる
+・VNET1 と VNET3 の間に VNet Peering を確立する
+・Network Security Group (NSG) を作成し、VM1 と VM4 に関連付ける
+・VNET1 から VNET2、VNET2 から VNET3 への VNet Peering を構成し、ゲートウェイ転送を有効化する
+
+
+
+
+
+解答例
+・VNET1 と VNET3 の間に VNet Peering を確立する
+
+問題 381. あなたの組織では、以下の表に示す仮想マシンについて、負荷分散を実現することを検討しています。下記の構成を持つロードバランサーをデプロイしました。VM-A と VM-B を LB-A のバックエンドプールに追加できることを確認します。解決策として、2 つの Standard SKU パブリック IP アドレスを作成し、各仮想マシンのネットワークインターフェイスに関連付けます。これは目標を達成していますか。（一つ選択）
+名前 / パブリック IP SKU / 接続先 / 状態
+VM-A / なし / VNet-A/Subnet-A / 停止 (割り当て解除)
+VM-B / Basic / VNet-A/Subnet-B / 実行中
+ロードバランサー構成：
+項目 / 設定値
+名前 / LB-A
+タイプ / Internal
+SKU / Standard
+仮想ネットワーク / VNet-A
+
+・いいえ
+・はい
+
+
+
+
+
+解答例
+・いいえ
+
+問題 382. Azure コンテナーレジストリ「Registry1」があり、「image1」という名前のイメージが含まれています。image1 を使用してコンテナーインスタンスをデプロイしようとすると、エラーメッセージが表示されます。image1 を使用してコンテナーインスタンスを正常にデプロイできるようにします。解決策：Registry1 に対してマネージド ID に AcrPull ロールを割り当てます。この解決策は目標を達成していますか。（一つ選択）
+・はい
+・いいえ
+
+
+
+
+
+解答例
+・はい
+
+問題 383. Azure サブスクリプションがあり、Traffic Analytics が構成されています。次の設定を持つ VM1 という名前の新しい仮想マシンをデプロイします。リージョンは East US、仮想ネットワークは VNet1、NIC ネットワークセキュリティグループは NSG1 です。Traffic Analytics を使用して VM1 のトラフィックを監視します。どの設定を構成しますか。（一つ選択）
+・NSG1 の NSG フローログ
+・VM1 の診断設定
+・VNet1 のフローログ
+・VM1 の Connection Monitor
+
+
+
+
+
+解答例
+・NSG1 の NSG フローログ
+
+問題 384. Azure 仮想ネットワーク VNet1 があります。contoso.com という名前の Azure Private DNS ゾーンを作成しました。VNet1 上の仮想マシンが contoso.com プライベート DNS ゾーンに自動登録されるようにします。何をすべきですか。（一つ選択）
+・VNet1 の DNS 設定でカスタム DNS サーバーを構成する
+・各仮想マシンにカスタム DNS サーバーを個別に構成する
+・contoso.com に仮想ネットワークリンクを追加し、自動登録を有効にする
+・VNet1 に Azure DNS Private Resolver をデプロイする
+
+
+
+
+
+解答例
+・contoso.com に仮想ネットワークリンクを追加し、自動登録を有効にする
+
+問題 385. Azure サブスクリプションに hogehoge.com という名前の Azure DNS ゾーンがあります。新しいサブドメイン sub.hogehoge.com を追加し、このサブドメインを別の DNS サーバーに委任します。ドメイン委任を構成するにはどうすればよいですか。（一つ選択）
+・hogehoge.com ゾーンに sub という名前の NS レコードセットを追加する
+・sub.hogehoge.com の AAAA レコードを追加する
+・hogehoge.com の CNAME レコードを変更する
+・sub.hogehoge.com の SOA レコードを作成する
+
+
+
+
+
+解答例
+・hogehoge.com ゾーンに sub という名前の NS レコードセットを追加する
+
+問題 386. 組織内に複数の仮想ネットワークが存在し、これらの間でピアリング接続を確立する計画があります。以下の表に示す仮想ネットワークの構成において、VNet-A とピアリング接続を確立できる仮想ネットワークはどれですか。（該当するものをすべて選択）
+名前 / アドレス空間 / サブネット / リソースグループ / Azure リージョン
+VNet-A / 10.11.0.0/16 / 10.11.0.0/17 / RG-East / 東日本
+VNet-B / 10.11.0.0/17 / 10.11.0.0/25 / RG-East / 東日本
+VNet-C / 10.10.0.0/22 / 10.10.1.0/24 / RG-West / 西日本
+VNet-D / 192.168.16.0/22 / 192.168.16.0/24 / RG-US / 米国西部
+
+・VNet-C と VNet-D
+・VNet-D のみ
+・VNet-B と VNet-C
+・VNet-C のみ
+
+
+
+
+
+解答例
+・VNet-C と VNet-D
+
