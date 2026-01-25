@@ -1,0 +1,338 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+#　python extract_transcript.py Cpathmeeting.html
+
+import argparse
+import datetime as _dt
+import html as _html
+import json
+import re
+import sys
+import zipfile
+from email import policy
+from email.parser import BytesParser
+from html.parser import HTMLParser
+from pathlib import Path
+
+
+TIME_RE = re.compile(r"\b(\d{1,2}):(\d{2})(?::(\d{2}))?\b")
+
+
+def _detect_text_encoding(data: bytes) -> str:
+    for enc in ("utf-8-sig", "utf-8"):
+        try:
+            data.decode(enc)
+            return enc
+        except UnicodeDecodeError:
+            pass
+    head = data[:4096].decode("ascii", errors="ignore").lower()
+    m = re.search(r'charset\s*=\s*["\']?([a-z0-9_\-]+)', head)
+    if m:
+        return m.group(1)
+    return "cp932"
+
+
+def _read_text(path: Path) -> str:
+    data = path.read_bytes()
+    enc = _detect_text_encoding(data)
+    return data.decode(enc, errors="ignore")
+
+
+def _hms_from_any(value):
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        seconds = value / 1000.0 if value > 10_000 else float(value)
+        return str(_dt.timedelta(seconds=seconds)).split(".")[0]
+    if isinstance(value, str):
+        s = value.strip()
+        m = re.match(r"^PT(\d+(?:\.\d+)?)S$", s)
+        if m:
+            seconds = float(m.group(1))
+            return str(_dt.timedelta(seconds=seconds)).split(".")[0]
+        m = TIME_RE.search(s)
+        if m:
+            a = int(m.group(1))
+            b = int(m.group(2))
+            c = int(m.group(3) or 0)
+            if m.group(3) is None:
+                a, b, c = 0, a, b
+            return f"{a:02d}:{b:02d}:{c:02d}"
+    return None
+
+
+def _best_field(d, candidates):
+    for c in candidates:
+        if c in d and d[c] not in (None, ""):
+            return d[c]
+    lower_map = {str(k).lower(): k for k in d.keys()}
+    for c in candidates:
+        k = lower_map.get(c.lower())
+        if k is not None and d[k] not in (None, ""):
+            return d[k]
+    return None
+
+
+def _is_transcript_like_item(obj: dict) -> bool:
+    keys = {str(k).lower() for k in obj.keys()}
+    has_text = any(k in keys for k in ("text", "spokentext", "utterance", "transcript", "caption"))
+    has_time = any(k in keys for k in ("starttime", "start", "offset", "time", "timestamp"))
+    has_speaker = any(k in keys for k in ("speaker", "speakername", "displayname", "participant", "name"))
+    return has_text and (has_time or has_speaker)
+
+
+def _find_transcript_items(root):
+    items = []
+    stack = [root]
+    while stack:
+        cur = stack.pop()
+        if isinstance(cur, dict):
+            if _is_transcript_like_item(cur):
+                items.append(cur)
+            for v in cur.values():
+                if isinstance(v, (dict, list)):
+                    stack.append(v)
+        elif isinstance(cur, list):
+            for v in cur:
+                if isinstance(v, (dict, list)):
+                    stack.append(v)
+    return items
+
+
+def _format_items(items):
+    out = []
+    for it in items:
+        text = _best_field(it, ["text", "spokenText", "utterance", "transcript", "caption"])
+        if not text:
+            continue
+        speaker = _best_field(it, ["speakerName", "displayName", "speaker", "participant", "name"])
+        t = _best_field(it, ["startTime", "start", "offset", "time", "timestamp"])
+        hms = _hms_from_any(t)
+
+        text = " ".join(str(text).split())
+        speaker = " ".join(str(speaker).split()) if speaker else None
+
+        if hms and speaker:
+            out.append(f"{hms} {speaker}: {text}")
+        elif hms:
+            out.append(f"{hms} {text}")
+        elif speaker:
+            out.append(f"{speaker}: {text}")
+        else:
+            out.append(text)
+    return out
+
+
+class _InnerText(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=False)
+        self._parts = []
+        self._skip_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in ("script", "style", "noscript"):
+            self._skip_depth += 1
+            return
+        if self._skip_depth:
+            return
+        if tag == "br":
+            self._parts.append("\n")
+        elif tag in ("p", "div", "li", "tr", "section", "article"):
+            self._parts.append("\n")
+
+    def handle_endtag(self, tag):
+        if tag in ("script", "style", "noscript"):
+            self._skip_depth = max(0, self._skip_depth - 1)
+
+    def handle_data(self, data):
+        if not self._skip_depth and data:
+            self._parts.append(data)
+
+    def handle_entityref(self, name):
+        if not self._skip_depth:
+            self._parts.append(f"&{name};")
+
+    def handle_charref(self, name):
+        if not self._skip_depth:
+            self._parts.append(f"&#{name};")
+
+    def text(self) -> str:
+        raw = "".join(self._parts)
+        raw = _html.unescape(raw)
+        raw = raw.replace("\r\n", "\n").replace("\r", "\n")
+        lines = [re.sub(r"[ \t]+", " ", ln).strip() for ln in raw.split("\n")]
+        return "\n".join([ln for ln in lines if ln])
+
+
+def _extract_json_candidates(html_text: str):
+    candidates = []
+
+    m = re.search(r'__NEXT_DATA__\s*=\s*({.*?})\s*;</script>', html_text, re.DOTALL)
+    if m:
+        candidates.append(m.group(1))
+
+    for m in re.finditer(r"<script[^>]*>(.*?)</script>", html_text, re.DOTALL | re.IGNORECASE):
+        chunk = m.group(1).strip()
+        if len(chunk) < 1000:
+            continue
+        mm = re.search(r"({\s*\".*\")\s*;?\s*$", chunk, re.DOTALL)
+        if mm:
+            candidates.append(mm.group(1))
+
+    return candidates
+
+
+def extract_from_html_text(html_text: str, *, only_transcript_lines: bool) -> str:
+    for jc in _extract_json_candidates(html_text):
+        try:
+            obj = json.loads(jc)
+        except Exception:
+            continue
+        items = _find_transcript_items(obj)
+        formatted = _format_items(items)
+        if len(formatted) >= 5:
+            return "\n".join(formatted)
+
+    parser = _InnerText()
+    parser.feed(html_text)
+    all_text = parser.text()
+
+    if not only_transcript_lines:
+        return all_text
+
+    lines = all_text.split("\n")
+
+    segments = []
+    i = 0
+    while i < len(lines):
+        ln = lines[i]
+
+        # "Name: utterance" style
+        if re.match(r"^.{1,40}:\s+.+$", ln):
+            segments.append(ln)
+            i += 1
+            continue
+
+        m = TIME_RE.search(ln)
+        if not m:
+            i += 1
+            continue
+
+        t_raw = m.group(0)
+        t_norm = _hms_from_any(t_raw) or t_raw
+
+        # If the timestamp line also contains text, keep it as the utterance.
+        remainder = ln.replace(t_raw, "").strip(" \t-–—:：")
+
+        j = i + 1
+        speaker = None
+        if j < len(lines):
+            cand = lines[j]
+            if not TIME_RE.search(cand) and len(cand) <= 40 and remainder == "":
+                speaker = cand
+                j += 1
+
+        text_lines = []
+        if remainder:
+            text_lines.append(remainder)
+
+        while j < len(lines) and not TIME_RE.search(lines[j]) and len(text_lines) < 8:
+            text_lines.append(lines[j])
+            j += 1
+
+        text = " ".join([x for x in (x.strip() for x in text_lines) if x])
+        if text:
+            if speaker:
+                segments.append(f"{t_norm} {speaker}: {text}")
+            else:
+                segments.append(f"{t_norm} {text}")
+
+        i = j
+
+    return "\n".join(segments) if segments else all_text
+
+
+def extract_from_html(path: Path, *, only_transcript_lines: bool) -> str:
+    return extract_from_html_text(_read_text(path), only_transcript_lines=only_transcript_lines)
+
+
+def extract_from_mhtml(path: Path, *, only_transcript_lines: bool) -> str:
+    msg = BytesParser(policy=policy.default).parsebytes(path.read_bytes())
+    for part in msg.walk():
+        if part.get_content_type() == "text/html":
+            html_text = part.get_content()
+            if not isinstance(html_text, str):
+                html_text = str(html_text)
+            return extract_from_html_text(html_text, only_transcript_lines=only_transcript_lines)
+    raise ValueError("No text/html part found in MHTML.")
+
+
+def extract_from_vtt(path: Path) -> str:
+    s = _read_text(path)
+    lines = [ln.strip() for ln in s.replace("\r\n", "\n").replace("\r", "\n").split("\n")]
+    out = []
+    i = 0
+    while i < len(lines):
+        ln = lines[i]
+        if "-->" in ln:
+            start = ln.split("-->")[0].strip().split()[0]
+            i += 1
+            text_lines = []
+            while i < len(lines) and lines[i]:
+                text_lines.append(lines[i])
+                i += 1
+            text = " ".join(text_lines)
+            text = re.sub(r"<[^>]+>", "", text)
+            text = " ".join(text.split())
+            if text:
+                out.append(f"{start} {text}")
+        i += 1
+    return "\n".join(out)
+
+
+def extract_from_docx(path: Path) -> str:
+    with zipfile.ZipFile(path) as z:
+        xml = z.read("word/document.xml").decode("utf-8", errors="ignore")
+    texts = re.findall(r"<w:t[^>]*>(.*?)</w:t>", xml, flags=re.DOTALL)
+    texts = [_html.unescape(re.sub(r"\s+", " ", t)).strip() for t in texts]
+    return "\n".join([t for t in texts if t])
+
+
+def main(argv=None) -> int:
+    p = argparse.ArgumentParser(
+        description="Extract Teams/Stream transcript text from a saved HTML/MHTML file (no pip)."
+    )
+    p.add_argument("input", help="Saved .html/.htm/.mhtml/.vtt/.docx file path")
+    p.add_argument("-o", "--output", help="Output .txt path (default: <input>_transcript.txt)")
+    p.add_argument("--all-text", action="store_true", help="Do not filter; output all visible text.")
+    args = p.parse_args(argv)
+
+    in_path = Path(args.input)
+    if not in_path.exists():
+        print(f"File not found: {in_path}", file=sys.stderr)
+        return 2
+
+    ext = in_path.suffix.lower()
+    only_transcript_lines = not args.all_text
+
+    if ext in (".html", ".htm"):
+        text = extract_from_html(in_path, only_transcript_lines=only_transcript_lines)
+    elif ext in (".mhtml", ".mht"):
+        text = extract_from_mhtml(in_path, only_transcript_lines=only_transcript_lines)
+    elif ext == ".vtt":
+        text = extract_from_vtt(in_path)
+    elif ext == ".docx":
+        text = extract_from_docx(in_path)
+    else:
+        print("Unsupported file type. Use .html/.htm/.mhtml/.vtt/.docx", file=sys.stderr)
+        return 2
+
+    out_path = Path(args.output) if args.output else in_path.with_name(in_path.stem + "_transcript.txt")
+    out_path.write_text(text, encoding="utf-8")
+    print(f"Wrote: {out_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
