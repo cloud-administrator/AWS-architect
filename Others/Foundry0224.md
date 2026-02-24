@@ -1,48 +1,8 @@
-microsoft foundryを使用して、Azure上でAIのモデルをデプロイするプロジェクトに参加しています。
-リスク評価を行うこととなりましたので、下記のデプロイ方式に対する、各種リスク項目の内容を調査してください。
-※必ず公式サイトを調査してください。
-※表でまとめてください。
+※この表の「推論データ」＝入力（プロンプト）＋出力（生成結果）。  
+※Azure の「geography」はデータ居住性の境界で、1 geography に 1 つ以上の「region」が含まれます。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/reliability/regions-overview?utm_source=openai))
 
-●デプロイ方式
-・Faundry標準
-・serverless API
-・managed compute
-
-●リスク項目
-・データの処理場所
-・推論データの保存
-・モデル提供者へのデータ共有
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-
-
-前提（公式ドキュメント上の区分）: 「Foundry標準（Foundry Models）」は Azure AI Foundry resource 側、「serverless API」は AI project resource 側のデプロイ方式です。 ([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/model-inference/faq))
-
-| リスク項目 | Foundry標準（Foundry resource / Foundry Models・Azure Direct Models） | serverless API（AI project resource） | managed compute（Managed online deployment） |
+| デプロイ方式 | データの処理場所 | 推論データの保存 | モデル提供者へのデータ共有 |
 |---|---|---|---|
-| データの処理場所 | 標準: 指定 geography 内で処理（同 geography 内の複数リージョン間で処理され得る）。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>Global: any geography／DataZone: 指定 data zone 内で処理され得る。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>Global/DataZone の at-rest データは指定 geography に保持（Foundry Models の Global Standard は推論が any Azure location になり得る旨の記載あり）。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy)) | デプロイ時に指定した geography 内で処理（運用目的で同 geography 内のリージョン間で処理され得る）。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/concept-data-privacy)) | モデル weights を dedicated VM にデプロイ（VM quota は per-region で消費）。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/concept-data-privacy))<br>推論 endpoint URI に region が含まれる。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/deploy-models-managed)) |
-| 推論データの保存 | モデルは stateless（prompt/completion はモデルに保存されない）。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>ただし abuse monitoring で human review が必要な場合、prompt/completion のサンプルが datastore に保存され得る。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>Responses API/Threads/Stored completions 等の stateful 機能ではメッセージ履歴等を保存。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy)) | モデルは stateless で prompt/output を保存しない。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/concept-data-privacy)) | Data collector / payload logging を有効化すると、推論の request/response 等を Blob Storage に保存（既定: `azureml://datastores/workspaceblobstore/paths/modelDataCollector`。1 行=1 推論イベントの JSON）。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-collect-production-data?view=azureml-api-2)) |
-| モデル提供者へのデータ共有 | Azure Direct Models: prompt/completion 等は OpenAI 等の model providers に提供されず、provider-operated service とも連携しない。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>Foundry Models: prompt/output は model provider に共有されない（ただし MaaS では customer contact info/transaction details が共有され得る旨の記載あり）。 ([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/model-inference/faq)) | Microsoft は prompt/output を model provider に共有しない（学習/改善にも利用しない）。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/concept-data-privacy))<br>ただし customer contact info と transaction details（usage volume を含む）が model publisher に共有される可能性。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/concept-data-privacy)) | Microsoft はログ/コンテンツをモデル提供者へ共有せず、モデル提供者への runtime connection もない。 ([microsoft.com](https://www.microsoft.com/en-us/security/blog/2025/03/04/securing-generative-ai-models-on-azure-ai-foundry/))<br>また、モデルコンテナが全てスキャン済みとは限らないため、データ exfiltration 対策として VNet 利用等が推奨。 ([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/concept-data-privacy)) |◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
-
-
-◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+| **Foundry標準（Azure Direct Models：Azure OpenAI を含む）**([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy)) | **基本**: デプロイ先として指定した geography 内で処理（同 geography 内の別 region で処理される場合あり）。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>**例外**: “Global” は任意 geography で処理され得る／“DataZone” は指定 data zone 内で処理され得る（ただし at-rest は指定 geography）。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy)) | **基本**: モデル自体は stateless（モデルの中にプロンプト/出力は保存されない）。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>**例外①**: 履歴を持つ機能（Responses/Assistants Threads/Stored completions 等）を使うと、メッセージ履歴などがサービス内に保存され得る。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy))<br>**例外②**: 不正利用対策（abuse monitoring）で、プロンプト/出力のサンプルが選ばれて保存・人手レビューされる場合がある。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy)) | プロンプト/出力/学習データは OpenAI 等のモデル提供者に提供されず、提供者のサービスともやり取りしない（Microsoft が Azure 内でホスト）。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/responsible-ai/openai/data-privacy)) |
+| **serverless API（MaaS）**([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy)) | デプロイ時に指定した geography 内で処理（運用上、同 geography 内の別 region で処理される可能性）。([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy)) | モデルは stateless（プロンプト/出力を保存しない）。([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy)) | プロンプト/出力はモデル提供者に共有されない。([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy))<br>ただし model publisher に「連絡先」「取引情報（利用量含む）」が共有され得る。([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy)) |
+| **managed compute（Managed online deployment）**([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy)) | モデル weights を専用 VM（dedicated virtual machines）にデプロイし、その REST API で推論。([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy))<br>（参考）Endpoint の Target URI は `https://<endpoint-name>.<region>.inference.ml.azure.com/score` 形式。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/deploy-models-managed?utm_source=openai)) | **設定次第**: data collector（推論データ収集）を有効化すると、request/response や model_inputs/model_outputs が workspace の Blob Storage に保存される。([learn.microsoft.com](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-collect-production-data?view=azureml-api-2)) | **基本**: 推論は dedicated VM 上の endpoint で実行（serverless API のような「Microsoft 管理の共有ホスティングAPI」に投げる方式ではない）。([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy))<br>**注意**: すべてのモデルコンテナが脆弱性スキャン済みとは限らないため、データ持ち出し対策として VNet 等で保護することが推奨。([learn.microsoft.com](https://learn.microsoft.com/azure/ai-foundry/how-to/concept-data-privacy)) |
