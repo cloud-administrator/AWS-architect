@@ -115,7 +115,65 @@ ChatGPT Enterpriseのグループ構造は「フラット（単一階層）」�
 
 ======================================================================
 
+**前提（混同しやすい用語）**
+- Enterprise導入でいう「グループ（Groups）」＝ワークスペース内の“メンバー集合”で、アクセス/権限付与の単位です。 ([help.openai.com](https://help.openai.com/en/articles/9083985))
+- 別機能として「グループチャット（Group chats）」＝複数人＋ChatGPTで同じ会話をする機能があります（権限管理のGroupsとは別物）。 ([help.openai.com](https://help.openai.com/en/articles/12703475-group-chats))
 
+**1) グループ（ChatGPT Enterprise/Edu）でできること**
+- ワークスペース内のアクセス/権限を、より細かく制御するための単位（RBAC利用時は必須）。 ([help.openai.com](https://help.openai.com/en/articles/9083985))
+- GPTs/Projects/Apps などへのアクセス許可を“グループ単位”で行いやすくする。 ([help.openai.com](https://help.openai.com/en/articles/9083985))
+- 管理できる人：Owner/Adminのみ（一般ユーザーは、GPT共有時にグループが表示されるが、作成/編集は不可）。 ([help.openai.com](https://help.openai.com/en/articles/9083985))
+- 所属/運用：参加リクエストは不可（招待制）、複数グループ所属は可。 ([help.openai.com](https://help.openai.com/en/articles/9083985))
+- 上限：10,000グループ/ワークスペース、ユーザー数はグループあたり無制限。 ([help.openai.com](https://help.openai.com/en/articles/9083985))
+- SCIM：directory syncで、IdP側で同期対象にしたグループがChatGPTのGroupsに反映（手動グループ作成も併用可）。 ([help.openai.com](https://help.openai.com/en/articles/9627404))
+
+**2) カスタムロール（RBAC）でできること**
+- Ownerが `chatgpt.com/admin/settings` でRBAC（Permissions & roles）を設定（Webのみ）。既定権限（default）と、カスタムロールを作成してグループに割り当てます。 ([help.openai.com](https://help.openai.com/en/articles/11750701-rbac//))
+- 既存のワークスペースロール（Member/Admin/Owner）は“管理権限”で、RBACのカスタムロールは“エンドユーザーの機能アクセス制御”です。 ([help.openai.com](https://help.openai.com/en/articles/11750701-rbac//))
+- 設定できる権限例：Canvas、ChatGPT agent、Codex、Apps、GPTs（作成/共有/削除/利用等）、Projects、Record、Search、Shared projects。 ([help.openai.com](https://help.openai.com/en/articles/11750701-rbac//))
+- 複数ロール：ユーザーは複数ロールを継承でき、権限はロール間の“最大（最も許可が広い）”になります。 ([help.openai.com](https://help.openai.com/en/articles/11750701-rbac//))
+- Apps（旧Connectors）：Enterprise/EduはAppsが既定で無効。Ownerが有効化し、RBACで「どのカスタムロールが、どのAppsを使えるか」を制御できます。 ([help.openai.com](https://help.openai.com/en/articles/11509118-admin-controls-security-and-compliance-in-apps-connectors-enterprise-edu-and-business?_bhlid=53d357b4b6c8333b3394badd97aa24fd8b8da695))
+- 使用量上限（spend controls）：RBACの一部として、週次・ユーザー単位で「ワークスペース既定上限」＋「カスタムロール別上限（Admin alert / Hard cap等）」を設定できます。 ([help.openai.com](https://help.openai.com/en/articles/20001001-setting-usage-limits-for-custom-roles-in-chatgpt-enterprise))
+
+**気になっていること（回答）**
+- グループを入れ子にできる？：公式記事（Groups/SCIM/RBAC）には“グループをグループに含める”説明がなく、公式情報だけでは可否を確認できません。 ([help.openai.com](https://help.openai.com/en/articles/9083985))
+- グループの中で権限を分けられる？：RBACは「ロールをグループへ割り当て→ユーザーが継承」なので、権限を分けたい場合は“グループ/ロールを分ける”設計になります（複数ロールは最大権限になる点に注意）。 ([help.openai.com](https://help.openai.com/en/articles/11750701-rbac//))  
+  - 例外（共有プロジェクト）：プロジェクトに“グループを招待”しつつ、特定メンバーだけ個別にアクセス（チャット/編集）を上げられます。ただしユーザーには「個別設定」と「グループ設定」の“高い方”が適用されます。 ([help.openai.com](https://help.openai.com/ja-jp/articles/10169521-projects-in-chatgpt))
+- 部署単位で分ける意味：SCIMでIdPグループ同期ができ、グループ単位でロール付与・Apps許可・共有（例：プロジェクトにグループ招待）が運用できるため、部署単位は“運用単位”として意味があります。 ([help.openai.com](https://help.openai.com/en/articles/9627404))  
+  - 運用上の注意（提案）：複数ロールは最大権限になるため、“部署”だけでなく「必要な権限プロファイル」でもグループを切る方が安全です。 ([help.openai.com](https://help.openai.com/en/articles/11750701-rbac//))
+
+**図（プレゼン用・Mermaid）**
+```mermaid
+flowchart LR
+  IdP[IdPのユーザー/グループ\n(Okta・Entra ID・Google Workspace等)]
+  IdP -->|SCIM directory sync| G[ChatGPT: Groups\n(メンバー集合)]
+
+  Admin[Workspace Owner / Admin\n(グループ管理)] -->|作成・メンバー追加| G
+
+  Owner[Workspace Owner\n(RBAC設定/Webのみ)] --> RBAC[Permissions & roles (RBAC)]
+  RBAC --> D[Default permissions\n(カスタムロール未付与のメンバー)]
+  RBAC --> R[Custom roles\n(権限トグル/Apps許可/使用量上限など)]
+  R -->|グループに割り当て| G
+
+  U[ユーザー] -->|所属(複数可)| G
+  G -->|ロールを継承| P[有効権限\n= ロール間で最大(最も許可が広い)]
+  D -->|ロールが無い場合| P
+  P --> F[利用できる機能\nCanvas / Search / Apps / GPTs / Projects / …]
+```
+([help.openai.com](https://help.openai.com/en/articles/9083985))
+
+```mermaid
+flowchart TD
+  U[ユーザー] --> Q{Custom roleが\n1つ以上ある?}
+  Q -- いいえ --> D[Workspace default permissions]
+  Q -- はい --> M[割り当てロールの権限を統合\n= 最大(最も許可が広い)]
+  D --> E[有効権限]
+  M --> E
+  L[使用量上限も\n複数ロール時は最も許可的(least restrictive)] --> E
+```
+([help.openai.com](https://help.openai.com/en/articles/11750701-rbac//))
+
+必要なら、この2図をそのまま `pptx`（1〜2枚）にして `d:\★仕事の資料\MUAM案件` 配下へ出力します。スライドの言語（日本語のみ/日英併記）だけ指定してください。
 ======================================================================
 
 
