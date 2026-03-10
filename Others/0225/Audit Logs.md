@@ -597,6 +597,50 @@ Get-ChildItem '\\FS01\OpenAILogs\runlogs' |
 
 ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 
+2026年3月10日時点で、OpenAI公式サイトのみを確認した結論です。  
+前提として、以下は `ChatGPT Enterprise / Edu` の `OpenAI Compliance Logs Platform` を対象にしています。`API Platform` の別系統の Audit Log API とは分けて考えた方が安全です。
+
+**結論**
+| 対象 | OpenAI側の保持期間 | 保持期間を変更できるか | 補足 |
+|---|---|---|---|
+| `Audit Logs` | `30日` | 公開情報では `変更可` の記載なし。実質 `変更不可として扱う` のが安全 | `ChatGPT Audit & Authentication Logs` と `Codex Usage Logs` は `Compliance Logs Platform` に含まれるため、この30日ルールがかかる |
+| `Compliance API Logs` | `30日` | 公開情報では `変更可` の記載なし。実質 `変更不可として扱う` のが安全 | OpenAIは、長く残したい場合は継続的にダウンロードして自社保管するよう案内している |
+
+根拠は、OpenAIが `Compliance Logs Platform retains data for 30 days` と明記していること、そして `Audit / Auth / Codex logs` もこの `Compliance Logs Platform` に含まれるとリリースノートで明記していることです。  
+そのため、`Audit Logs` も `Compliance API Logs` も、OpenAI側のログ保持は基本 `30日` と整理するのが正確です。
+
+**重要な例外**
+`Compliance API` には、「ログファイルの保持」と「取得対象の元データの保持」が混在します。ここは分けて見る必要があります。
+
+| 項目 | 保持期間 | 変更できるか |
+|---|---|---|
+| 会話・Canvas などのワークスペースデータ | ワークスペースの retention policy に従う | `はい`。OpenAI公式で `indefinite` または `time-bound (90 days, 180 days, etc.)` があると確認できる |
+| Temporary Chat | `30日` | `いいえ`。OpenAI公式で、custom retention があっても `30日` 固定と明記 |
+| 会話に添付したファイル | chat retention とは別で失効。Enterprise では `48時間` で失効しうる | 実質 `固定扱い`。少なくとも公開情報では変更可の記載なし |
+| 削除済みデータのOpenAI内部バックアップ | `最大30日追加` | ユーザーからは制御不可、Compliance API からも不可視 |
+
+つまり、
+- `ログファイル自体` の保持は `30日固定`
+- `Compliance APIで見える元の会話データ` は、一部 `ワークスペースの retention policy` に依存して変更可能
+- ただし `Temporary Chat` と `会話添付ファイル` は例外あり
+
+という整理です。
+
+**実務上の判断**
+- `Audit Logs` と `Compliance API Logs` は、OpenAI側だけに頼ると `30日` で見えなくなる前提で設計すべきです。
+- 保持期間を延ばしたい場合、OpenAI側の設定変更ではなく、`定期取得して自社ファイルサーバー/SIEMに保存` が必要です。
+- `Compliance API` の会話データについては、必要ならワークスペース retention policy の見直しも検討できます。ただし、それでも `Temporary Chat` と `ファイル失効` は別ルールです。
+
+**公式ソース**
+- [OpenAI Compliance Platform for Enterprise Customers](https://help.openai.com/en/articles/9261474-compliance-apis-for-enterprise-customers)
+- [ChatGPT Enterprise & Edu Release Notes](https://help.openai.com/en/articles/10128477-chatgpt-enterprise-edu-release-notes)
+- [Chat and File Retention Policies in ChatGPT](https://help.openai.com/en/articles/8983778-chat-and-file-retention-policies-in-chatgpt)
+- [Temporary Chat FAQ](https://help.openai.com/en/articles/8914046-temporary-chat-faq)
+- [Data retention when a member is removed from a workspace](https://help.openai.com/en/articles/8266418-does-a-member-lose-access-to-chat-history-and-files-if-removed-from-a-workspace)
+- [SCIM Integration FAQ](https://help.openai.com/en/articles/10011769)
+
+必要なら次に、これを `提案書向けの1ページ比較表` にして、`変更可/不可` が一目で分かる体裁に整えます。
+
 
 ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 
