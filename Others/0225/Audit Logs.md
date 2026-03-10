@@ -318,6 +318,282 @@ OpenAIの最新整理では、両方とも別製品というより、同じ `Ope
 
 ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 
+**Windowsファイルサーバー保存手順書（PowerShell）**
+
+この手順書は、`Audit Logs` と `Compliance API Logs` を `OpenAI Compliance Logs Platform` から取得し、Windows のファイルサーバーへ `raw JSONL` のまま保存するための実施手順です。  
+取得APIの入口は共通で、`event_type` を切り替えてログ種別ごとに取得します。
+
+公開資料で確認できる `event_type` の例は `AUTH_LOG` のみです。`Admin Audit` や `Conversation logs` などの正確な `event_type` 名は、Enterprise ログイン後の [API reference](https://chatgpt.com/admin/api-reference) で確認し、以下の `<...>` を置き換えてください。
+
+**0. 事前に決める値**
+- `<PRINCIPAL_ID>`: `workspace ID` または `org-...` の `organization ID`
+- `<SHARE_ROOT>`: 例 `\\FS01\OpenAILogs`
+- `<EVENT_TYPES>`: 例 `AUTH_LOG`, `<ADMIN_AUDIT_EVENT_TYPE>`, `<CONVERSATION_LOG_EVENT_TYPE>`, `<APP_CALLS_EVENT_TYPE>`, `<CODEX_USAGE_EVENT_TYPE>`
+
+**1. OpenAI側で事前設定する**
+1. `Workspace settings -> General` または `Permissions & roles` で `workspace ID / organization ID` を確認する。
+2. `Workspace settings -> Identity & access -> Access Restrictions` で、ログ取得サーバーの固定IPを `Compliance API` 用 allowlist に登録する。
+3. Enterprise 専用の [API reference](https://chatgpt.com/admin/api-reference) で `Compliance API key` を発行する。
+4. 同じく Enterprise 専用の [API reference](https://chatgpt.com/admin/api-reference) で、収集対象の `event_type` 一覧を確認する。
+
+**2. Windows側の保存先を作成する**
+エクスポートサーバーで、PowerShell を管理者で開いて実行します。
+
+```powershell
+New-Item -ItemType Directory -Path 'C:\OpenAI\ComplianceExport' -Force
+New-Item -ItemType Directory -Path '\\FS01\OpenAILogs\raw' -Force
+New-Item -ItemType Directory -Path '\\FS01\OpenAILogs\checkpoints' -Force
+New-Item -ItemType Directory -Path '\\FS01\OpenAILogs\runlogs' -Force
+```
+
+ファイルサーバー側では、実行アカウントに `\\FS01\OpenAILogs` への書き込み権限を付与してください。
+
+**3. エクスポートスクリプトを保存する**
+`[C:\OpenAI\ComplianceExport\Export-OpenAILogs.ps1](/C:/OpenAI/ComplianceExport/Export-OpenAILogs.ps1)` として保存します。
+
+```powershell
+#Requires -Version 5.1
+param(
+    [Parameter(Mandatory = $true)] [string] $PrincipalId,
+    [Parameter(Mandatory = $true)] [string] $EventType,
+    [Parameter(Mandatory = $true)] [string] $ShareRoot,
+    [int] $Limit = 100,
+    [string] $After
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.Web
+
+if (-not $env:COMPLIANCE_API_KEY) {
+    throw 'COMPLIANCE_API_KEY environment variable is not set.'
+}
+
+$ApiBase = 'https://api.chatgpt.com/v1/compliance'
+$ScopeSegment = if ($PrincipalId.StartsWith('org-')) { 'organizations' } else { 'workspaces' }
+
+$RawDir = Join-Path $ShareRoot 'raw'
+$CheckpointDir = Join-Path $ShareRoot 'checkpoints'
+New-Item -ItemType Directory -Path $RawDir, $CheckpointDir -Force | Out-Null
+
+$CheckpointFile = Join-Path $CheckpointDir "$EventType.json"
+
+function Write-Utf8NoBom {
+    param([string] $Path, [string] $Content)
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($Path, $Content, $utf8NoBom)
+}
+
+$handler = [System.Net.Http.HttpClientHandler]::new()
+$client = [System.Net.Http.HttpClient]::new($handler)
+$client.DefaultRequestHeaders.Authorization =
+    New-Object System.Net.Http.Headers.AuthenticationHeaderValue('Bearer', $env:COMPLIANCE_API_KEY)
+
+function Invoke-ComplianceRequest {
+    param(
+        [Parameter(Mandatory = $true)] [string] $Path,
+        [hashtable] $Query = @{}
+    )
+
+    $builder = [System.UriBuilder]::new("$ApiBase/$ScopeSegment/$PrincipalId/$Path")
+    $queryString = [System.Web.HttpUtility]::ParseQueryString($builder.Query)
+
+    foreach ($key in $Query.Keys) {
+        $queryString[$key] = $Query[$key]
+    }
+
+    $builder.Query = $queryString.ToString()
+    $response = $client.GetAsync($builder.Uri).GetAwaiter().GetResult()
+    $body = $response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+
+    if (-not $response.IsSuccessStatusCode) {
+        throw "HTTP $($response.StatusCode.value__): $body"
+    }
+
+    return $body
+}
+
+if (-not $After -and (Test-Path $CheckpointFile)) {
+    $After = (Get-Content $CheckpointFile -Raw | ConvertFrom-Json).last_end_time
+}
+
+if (-not $After) {
+    $After = (Get-Date).ToUniversalTime().AddHours(-1).ToString('yyyy-MM-ddTHH:mm:ssZ')
+}
+
+$currentAfter = $After
+
+do {
+    $listBody = Invoke-ComplianceRequest -Path 'logs' -Query @{
+        limit      = $Limit
+        event_type = $EventType
+        after      = $currentAfter
+    }
+
+    $listObj = $listBody | ConvertFrom-Json
+
+    foreach ($entry in @($listObj.data)) {
+        $logBody = Invoke-ComplianceRequest -Path "logs/$($entry.id)"
+        $utcNow = (Get-Date).ToUniversalTime()
+        $datePath = $utcNow.ToString('yyyy\\MM\\dd')
+        $targetDir = Join-Path $RawDir (Join-Path $EventType $datePath)
+        New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+
+        $fileName = '{0}_{1}.jsonl' -f $utcNow.ToString('yyyyMMddTHHmmssZ'), $entry.id
+        $targetFile = Join-Path $targetDir $fileName
+        Write-Utf8NoBom -Path $targetFile -Content $logBody
+        Write-Host "Saved: $targetFile"
+    }
+
+    $currentAfter = $listObj.last_end_time
+    $hasMore = $false
+    if ($null -ne $listObj.has_more) {
+        $hasMore = [System.Convert]::ToBoolean($listObj.has_more)
+    }
+}
+while ($hasMore)
+
+if ($currentAfter -and $currentAfter -ne 'null') {
+    $checkpoint = [ordered]@{
+        principal_id   = $PrincipalId
+        event_type     = $EventType
+        last_end_time  = $currentAfter
+        updated_at_utc = (Get-Date).ToUniversalTime().ToString('o')
+    }
+    Write-Utf8NoBom -Path $CheckpointFile -Content ($checkpoint | ConvertTo-Json)
+    Write-Host "Checkpoint updated: $CheckpointFile"
+}
+
+$client.Dispose()
+$handler.Dispose()
+```
+
+**4. 複数ログ種別をまとめて回すバッチを保存する**
+`[C:\OpenAI\ComplianceExport\Run-OpenAILogBatch.ps1](/C:/OpenAI/ComplianceExport/Run-OpenAILogBatch.ps1)` として保存します。
+
+```powershell
+#Requires -Version 5.1
+
+$env:COMPLIANCE_API_KEY = [Environment]::GetEnvironmentVariable('COMPLIANCE_API_KEY', 'Machine')
+
+$PrincipalId = '<PRINCIPAL_ID>'
+$ShareRoot = '\\FS01\OpenAILogs'
+
+$EventTypes = @(
+    'AUTH_LOG',
+    '<ADMIN_AUDIT_EVENT_TYPE>',
+    '<CONVERSATION_LOG_EVENT_TYPE>',
+    '<APP_CALLS_EVENT_TYPE>',
+    '<CODEX_USAGE_EVENT_TYPE>'
+)
+
+$runLog = Join-Path $ShareRoot ('runlogs\run_' + (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ') + '.log')
+
+Start-Transcript -Path $runLog -Append | Out-Null
+try {
+    foreach ($EventType in $EventTypes) {
+        & 'C:\OpenAI\ComplianceExport\Export-OpenAILogs.ps1' `
+            -PrincipalId $PrincipalId `
+            -EventType $EventType `
+            -ShareRoot $ShareRoot `
+            -Limit 100
+    }
+}
+finally {
+    Stop-Transcript | Out-Null
+}
+```
+
+**5. 初回の手動テストを行う**
+まずは公開資料で確認できる `AUTH_LOG` で疎通確認します。
+
+```powershell
+Set-Location 'C:\OpenAI\ComplianceExport'
+$env:COMPLIANCE_API_KEY = '<COMPLIANCE_API_KEY>'
+
+.\Export-OpenAILogs.ps1 `
+  -PrincipalId '<PRINCIPAL_ID>' `
+  -EventType 'AUTH_LOG' `
+  -ShareRoot '\\FS01\OpenAILogs' `
+  -Limit 100 `
+  -After (Get-Date).ToUniversalTime().AddDays(-1).ToString('yyyy-MM-ddTHH:mm:ssZ')
+```
+
+確認コマンドです。
+
+```powershell
+Get-ChildItem '\\FS01\OpenAILogs\raw\AUTH_LOG' -Recurse |
+    Select-Object -First 5 FullName, Length, LastWriteTime
+
+Get-Content '\\FS01\OpenAILogs\checkpoints\AUTH_LOG.json'
+```
+
+問題なければ、`Run-OpenAILogBatch.ps1` の `<...>` を実際の `event_type` に置き換えて実行します。
+
+```powershell
+[Environment]::SetEnvironmentVariable('COMPLIANCE_API_KEY', '<COMPLIANCE_API_KEY>', 'Machine')
+Set-Location 'C:\OpenAI\ComplianceExport'
+.\Run-OpenAILogBatch.ps1
+```
+
+**6. 1時間ごとの定期実行を登録する**
+実行アカウントは、ファイル共有へ書き込みできる専用サービスアカウントを推奨します。
+
+```powershell
+$action = New-ScheduledTaskAction `
+    -Execute 'powershell.exe' `
+    -Argument '-NoProfile -ExecutionPolicy Bypass -File "C:\OpenAI\ComplianceExport\Run-OpenAILogBatch.ps1"'
+
+$trigger = New-ScheduledTaskTrigger `
+    -Once `
+    -At ((Get-Date).Date.AddMinutes(5)) `
+    -RepetitionInterval (New-TimeSpan -Hours 1) `
+    -RepetitionDuration (New-TimeSpan -Days 3650)
+
+$settings = New-ScheduledTaskSettingsSet `
+    -StartWhenAvailable `
+    -MultipleInstances IgnoreNew
+
+$cred = Get-Credential 'DOMAIN\svc_openai_export'
+
+Register-ScheduledTask `
+    -TaskName 'OpenAI Compliance Log Export' `
+    -Action $action `
+    -Trigger $trigger `
+    -Settings $settings `
+    -User $cred.UserName `
+    -Password $cred.GetNetworkCredential().Password
+```
+
+登録後の確認です。
+
+```powershell
+Start-ScheduledTask -TaskName 'OpenAI Compliance Log Export'
+Get-ScheduledTaskInfo -TaskName 'OpenAI Compliance Log Export'
+Get-ChildItem '\\FS01\OpenAILogs\runlogs' |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 3 Name, LastWriteTime, Length
+```
+
+**7. 運用時の注意**
+- OpenAI公式では `Compliance Logs Platform` の保持期間は `30日` です。未取得のまま30日を超えると回収できません。
+- 実運用は `1時間ごと` を推奨します。
+- 会話内ファイルそのものも保存対象なら、別ジョブで早めに回収してください。OpenAI公式では Enterprise の会話添付ファイルは `48時間` で失効しうると案内されています。
+- `raw` ファイルは加工せずに別フォルダへ保管し、検索やSIEM投入は別処理に分けるのが安全です。
+- `Apps` や `Codex` を有効化している場合は、対応する `event_type` を必ず収集対象へ追加してください。
+
+**公式ソース**
+- [OpenAI Compliance Platform for Enterprise Customers](https://help.openai.com/en/articles/9261474-compliance-apis-for-enterprise-customers)
+- [OpenAI Compliance Logs Platform quickstart](https://developers.openai.com/cookbook/examples/chatgpt/compliance_api/logs_platform)
+- [IP allowlisting for ChatGPT](https://help.openai.com/en/articles/12111596-ip-allowlisting-for-chatgpt)
+- [What workspace settings can I control for my workspace?](https://help.openai.com/en/articles/8411955)
+- [Chat and File Retention Policies in ChatGPT](https://help.openai.com/en/articles/8983778-how-are-files-vs-chats-retained)
+- [Admin Controls, Security, and Compliance in apps](https://help.openai.com/en/articles/11509118-admin-controls-security-and-compliance-in-apps-enterprise-edu-and-business)
+- [Using Codex with your ChatGPT plan](https://help.openai.com/en/articles/11369540-codex-in-chatgpt)
+- [Enterprise API reference](https://chatgpt.com/admin/api-reference)
+
+必要なら次に、これを `社内手順書フォーマット` に合わせて、`前提条件 / 作業手順 / 確認項目 / 障害時対応` の4章構成に整えます。
+
 
 ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 
