@@ -198,3 +198,219 @@ https://help.openai.com/en/articles/12111596-ip-allowlisting-for-chatgpt
 https://help.openai.com/en/articles/10128477-chatgpt-enterprise-edu-release-notes
 https://help.openai.com/en/articles/10875114-user-analytics-for-chatgpt-enterprise-and-edu
 https://developers.openai.com/api/reference/overview/
+
+
+
+
+
+
+◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+
+2026年3月11日時点で、OpenAI公式サイトだけを再確認したうえで、`Compliance Platform / Compliance Logs Platform` の取得手順を、実務でそのまま使える順番で整理します。
+
+まず前提です。  
+`Compliance Platform` は大きな箱で、その中に
+
+- `Compliance Logs Platform`
+- `Stateful Compliance API`
+
+の2系統があります。  
+`新しくログ取得を始めるなら、まず Compliance Logs Platform を使う` のが自然です。OpenAI自身もこれを「immutable, append-only」の監査向けログ取得として案内しており、旧来の会話系 stateful route は `2026年3月5日` に非推奨化、`2026年6月5日` に削除予定です。
+
+**全体像**
+1. Enterprise契約があることを確認する
+2. ChatGPT側のIDを確認する
+3. Compliance用のAPIキーを用意する
+4. 必要ならCompliance API用のIP allowlistを設定する
+5. `logs` 一覧APIで「ログファイル一覧」を取る
+6. 返ってきた各 `log_file_id` を個別にダウンロードする
+7. `has_more` と `last_end_time` でページングする
+8. JSONLを自社のSIEM / data lake に保存する
+9. 必要な場合だけ Stateful Compliance API を補助的に使う
+
+**1. Enterprise契約であることを確認する**
+OpenAIの公式ヘルプでは、Compliance Platform は `Enterprise customers only` です。  
+つまり、Free / Plus / Pro / Business 向けの一般APIではなく、ChatGPT Enterprise 前提の機能です。
+
+**2. ChatGPT側のIDを確認する**
+ログ取得には、公式 quickstart 上 `ChatGPT account ID or API Platform Org ID` が必要です。  
+一方、ChatGPT 管理画面の公式ヘルプでは `workspace ID / organization ID` を確認できると案内されています。
+
+実務上は、まず ChatGPT 管理画面で ID を確認するのが一番わかりやすいです。
+
+- ChatGPTでプロフィールを開く
+- `Workspace settings` に入る
+- `General` または `Permissions & Roles` で `workspace ID / organization ID` を確認する
+
+補足です。  
+OpenAIの SSO 文書では、各 ChatGPT workspace には対応する Platform organization があり、`org-id` は共通だと説明されています。  
+なので、取得対象を ChatGPT 側のUUIDで指定する方法と、`org-...` で指定する方法があります。迷ったら、`ChatGPT workspace 側のID` を使うほうが理解しやすいです。
+
+**3. Compliance用のAPIキーを用意する**
+ここは少し誤解しやすいです。
+
+公開されている公式資料で明示されているのは次の2点です。
+
+- quickstart の前提条件は `Enterprise Compliance API key`
+- OpenAI の API key は `Developer Platform の API Keys page` で作成・編集する
+
+この2点を突き合わせると、`Developer Platform (platform.openai.com) の API Keys page で Compliance 用のキーを準備する` という理解が最も自然です。  
+これは公開資料の突き合わせによる整理です。
+
+実際の準備イメージは次です。
+
+- `platform.openai.com` の `API Keys` に行く
+- `Create new secret key` を押す
+- 作成したキーを安全に保管する
+- 使えるなら `Restricted` を選び、Compliance用 scope を付ける  
+  正確な scope 名は、`chatgpt.com/admin/api-reference` のログイン後ドキュメントで確認してください
+
+重要な補足です。  
+`2026年3月11日時点で確認できる現在の公開ヘルプ記事` では、昔の案内にあったような「support@openai.com にメールして有効化」という手順は確認できませんでした。  
+少なくとも現在の公開情報では、`Enterprise であること` と `Compliance API documentation / quickstart` が案内されています。
+
+**4. 必要なら IP allowlist を設定する**
+もしワークスペースで IP allowlisting を使うなら、Compliance API 用の送信元IPも登録が必要です。
+
+設定場所:
+- `Workspace Settings`
+- `Identity & access`
+- `Access Restrictions`
+
+ここで重要なのは次です。
+
+- Workspace用 allowlist と Compliance API用 allowlist は別
+- Compliance API traffic は IP allowlisting の対象
+- Compliance API keys では IP allowlisting が常に強制され、オフにできない
+
+つまり、SIEM連携サーバやバッチ実行サーバのグローバルIPを許可しないと、キーが正しくてもAPI呼び出しは失敗します。
+
+**5. まずは「ログファイル一覧」を取得する**
+Compliance Logs Platform は、1件ずつイベントを返すのではなく、`時間区切りのJSONLログファイル` を配る形です。  
+なので最初にやるのは、`イベント本体の取得` ではなく `ファイル一覧の取得` です。
+
+ベースURL:
+```text
+https://api.chatgpt.com/v1/compliance
+```
+
+workspace ID を使う場合:
+```text
+GET /workspaces/{workspace_id}/logs
+```
+
+org-id を使う場合:
+```text
+GET /organizations/{org_id}/logs
+```
+
+主なクエリ:
+- `event_type`
+- `limit`
+- `after`
+
+`after` は `ISO 8601` 形式の日時です。  
+公式 quickstart でも、`AUTH_LOG` と `after=<UTC日時>` の形で例示されています。
+
+**6. 返ってきた各ログファイルをダウンロードする**
+一覧APIの結果には `data[].id` が入ります。  
+この `id` ごとに、次のAPIで実ファイルを落とします。
+
+```text
+GET /workspaces/{workspace_id}/logs/{log_file_id}
+```
+
+または
+
+```text
+GET /organizations/{org_id}/logs/{log_file_id}
+```
+
+ダウンロードした中身は `JSONL` です。  
+1行1イベントなので、そのまま SIEM や data lake に流し込みやすい形式です。
+
+**7. ページングする**
+一覧APIは1回で全部返る前提ではありません。  
+公式 quickstart では次の値でページングしています。
+
+- `has_more`
+- `last_end_time`
+
+流れはこうです。
+
+1. `after=開始時刻` で一覧取得
+2. 返ってきた `data[].id` を全部ダウンロード
+3. `has_more=true` なら、次回の `after` に `last_end_time` を入れて再実行
+4. `has_more=false` になるまで続ける
+
+**8. 保存先は必ず自社側に持つ**
+OpenAI の公式ヘルプでは、`Compliance Logs Platform retains data for 30 days` と明記されています。  
+なので、OpenAI上に長期保存される前提ではいけません。
+
+実務ではこう考えるのが安全です。
+
+- OpenAIから定期的に取り込む
+- 自社のSIEM / S3 / Data Lake / eDiscovery基盤に保存する
+- 長期保持は自社ポリシーで行う
+
+**9. Stateful Compliance API は必要なときだけ使う**
+OpenAIの現在の説明では、Stateful Compliance API は
+
+- リクエスト時点の状態を引く
+- Logs Platform のイベントから参照されるデータを join する
+- legacy data types を扱う
+
+ための補助的な位置づけです。  
+新規導入で「監査ログを継続収集したい」だけなら、まずは `Compliance Logs Platform` から始めるのがよいです。
+
+ただし注意点として、会話ログの古い stateful route は `2026年3月5日` に非推奨化され、`2026年6月5日` に削除予定です。  
+新規実装で旧 route 前提にしないのが大事です。
+
+**最小の PowerShell 例**
+Windows環境なら、まずはこんな形で試せます。
+
+```powershell
+$env:COMPLIANCE_API_KEY = "<your_key>"
+$workspaceId = "<your_workspace_uuid>"
+$eventType = "AUTH_LOG"  # 他の値はログイン後のAPI Referenceで確認
+$after = (Get-Date).ToUniversalTime().AddDays(-1).ToString("yyyy-MM-ddTHH:mm:ssZ")
+
+$headers = @{ Authorization = "Bearer $env:COMPLIANCE_API_KEY" }
+$base = "https://api.chatgpt.com/v1/compliance/workspaces/$workspaceId"
+
+New-Item -ItemType Directory -Force -Path .\compliance-logs | Out-Null
+
+do {
+  $listUrl = "$base/logs?event_type=$eventType&limit=100&after=$after"
+  $resp = Invoke-RestMethod -Method Get -Headers $headers -Uri $listUrl
+
+  foreach ($file in $resp.data) {
+    $out = ".\compliance-logs\$($file.id).jsonl"
+    Invoke-WebRequest -Method Get -Headers $headers -Uri "$base/logs/$($file.id)" -OutFile $out
+  }
+
+  $after = $resp.last_end_time
+} while ($resp.has_more)
+```
+
+`org-...` を使う場合は、`workspaces` を `organizations` に変えれば大丈夫です。
+
+**運用上の注意**
+- Compliance API は `analytics 用ではありません`。集計用途なら `User Analytics` のほうが向いています。
+- Compliance API は raw log なので、system-generated / injected message も含まれます。
+- そのため、User Analytics の数字と完全一致しないことがあります。
+- 全 authenticated request は OpenAI 側でも security/compliance purposes でログ化されます。
+
+参照した OpenAI 公式ソース:
+- [OpenAI Compliance Platform for Enterprise Customers](https://help.openai.com/en/articles/9261474-compliance-api-for-chatgpt-enterprise-edu-and-chatgpt-for-teachers)
+- [OpenAI Compliance Logs Platform quickstart](https://developers.openai.com/cookbook/examples/chatgpt/compliance_api/logs_platform)
+- [Compliance API documentation](https://chatgpt.com/admin/api-reference)
+- [What workspace settings can I control for my workspace?](https://help.openai.com/en/articles/8411955)
+- [IP allowlisting for ChatGPT](https://help.openai.com/en/articles/12111596-ip-allowlisting-for-chatgpt/)
+- [SSO Overview](https://help.openai.com/en/articles/10468051-sso-overview)
+- [Assign API Key Permissions](https://help.openai.com/en/articles/8867743-assign-api-key-permissions)
+- [Compliance API vs User Analytics in ChatGPT Enterprise/Edu](https://help.openai.com/en/articles/11327494-compliance-api-vs-user-analytics-in-chatgpt-enterprise-edu)
+- [ChatGPT Enterprise & Edu Release Notes](https://help.openai.com/en/articles/10128477-chatgpt-enterprise-edu-release-notes)
+
+必要なら次に、`監査ログ取得だけに絞った最短手順版` か、`社内手順書としてそのまま貼れる文章` に整えます。
+
