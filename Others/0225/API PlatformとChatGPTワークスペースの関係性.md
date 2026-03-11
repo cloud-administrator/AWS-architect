@@ -149,6 +149,51 @@ https://developers.openai.com/api/reference/resources/organization/subresources/
 https://help.openai.com/en/articles/9261474-compliance-apis-for-enterprise-customers
 https://developers.openai.com/cookbook/examples/chatgpt/compliance_api/logs_platform/
 https://developers.openai.com/codex/enterprise/admin-setup/
+
+
+
+
+
+==========================================================================================
+
+
+
+
+
+結論からいうと、`完全には合っていません`。  
+より正確には、`ChatGPT Enterprise のログ取得に、推論やアプリ開発のための API Platform 利用は不要`ですが、`APIで取得する以上、APIキーなし・Platform完全非利用で済むわけではない`、が公式情報ベースの整理です。
+
+ChatGPT Enterprise の使用履歴や操作履歴を取る主な入口は、`API Platform Audit Logs` ではなく、`ChatGPT 側の Compliance Platform / Compliance Logs Platform` です。OpenAI はこれを「ChatGPT workspace の logs and metadata」にアクセスする機能として説明しており、2025年12月3日には `ChatGPT Audit & Authentication Logs` も Compliance Logs Platform で扱えるようになったと案内しています。つまり、`workspaceの利用履歴・監査/認証ログを取りたい`なら、見るべき先は基本的にこちらです。  
+一方で `API Platform Audit Logs` は、API key、invite、project、user/service account、organization config など `API Platform organization 側の操作`を追うためのものです。
+
+ただし、ここが重要で、OpenAI の公式 quickstart は Compliance Logs Platform の前提条件として `Enterprise Compliance API key` を要求しています。また、OpenAI の公式ヘルプでは API key の作成場所を `Developer Platform (platform.openai.com) の API Keys ページ` としています。さらに OpenAI は `every ChatGPT workspace has a corresponding Platform organization` と明記しています。  
+そのため、`モデル推論のために API Platform を使う必要はない`は正しいですが、`API keyを一切発行せず、API Platformにも触れずにAPI取得できる`は、公式情報と一致しません。
+
+実務上はこう整理するのが安全です。
+
+- `ChatGPT workspace の生ログ・会話ログ・監査/認証ログをAPIで取る`  
+  `Compliance Platform / Compliance Logs Platform` を使う
+- `API Platform 側のAPIキー作成やProject変更などを監査する`  
+  `API Platform Audit Logs` を使う
+- `集計された利用状況だけ見たい`  
+  `User Analytics` を使う。公開ドキュメント上はダッシュボード + CSV export で、`User Analytics API` は確認できませんでした
+- `APIキーを発行しない`  
+  `Compliance API / Compliance Logs Platform をAPIで呼ぶことはできない` と考えるのが妥当です
+
+なので、あなたの質問に一文で答えると、  
+`「API Platformで推論や開発をする必要はない」が、「API Platformを全く使わず、APIキーも発行せずにChatGPT EnterpriseのログをAPI取得できる」は現時点の公式情報ではNo` です。
+
+参照した OpenAI 公式情報:
+- [OpenAI Compliance Platform for Enterprise Customers](https://help.openai.com/en/articles/9261474-compliance-api-for-chatgpt-enterprise-edu-and-chatgpt-for-teachers)
+- [OpenAI Compliance Logs Platform quickstart](https://developers.openai.com/cookbook/examples/chatgpt/compliance_api/logs_platform)
+- [Assign API Key Permissions](https://help.openai.com/en/articles/8867743-assign-api-key-permissions)
+- [SSO Overview](https://help.openai.com/en/articles/10468051-sso-overview)
+- [Admin and Audit Logs API for the API Platform](https://help.openai.com/en/articles/9687866-admin-and-audit-logs-api-for-the-api-platform)
+- [ChatGPT Enterprise & Edu Release Notes](https://help.openai.com/en/articles/10128477-chatgpt-enterprise-edu-release-notes)
+- [User Analytics for ChatGPT Enterprise and Edu](https://help.openai.com/en/articles/10875114)
+- [ChatGPT Pricing](https://chatgpt.com/pricing)
+
+必要なら次に、`社内説明用に誤解が出にくい表現` にして、2-3段落の説明文や図解用の文章に整えます。
 https://help.openai.com/en/articles/12111596-ip-allowlisting-for-chatgpt
 https://help.openai.com/en/articles/10128477-chatgpt-enterprise-edu-release-notes
 https://help.openai.com/en/articles/10875114-user-analytics-for-chatgpt-enterprise-and-edu
