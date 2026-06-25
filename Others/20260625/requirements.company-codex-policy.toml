@@ -1,0 +1,162 @@
+# 会社 PC 向け Codex 管理ポリシー。
+# この内容を下記の管理画面へ貼り付けます。
+# https://chatgpt.com/codex/cloud/settings/policies
+#
+# 設定の考え方:
+# - Codex が触れる範囲を Workspace 内中心に制限します。
+# - 承認なし実行、フルアクセス、ライブ Web 検索、ユーザー管理 MCP/Hooks を禁止します。
+# - 共有フォルダは UNC ワイルドカードと mapped drive 文字で防御的に制限します。
+# - 共有フォルダの物理的な書き込み禁止は Windows ACL/GPO/Intune 側でも行ってください。
+
+# 承認なしモード never を禁止します。
+# on-request は sandbox 内の通常作業を自動実行する場合がありますが、
+# 下部の rules で shell 実行は承認確認させます。
+allowed_approval_policies = ["on-request"]
+allowed_approvals_reviewers = ["user"]
+
+# Web 検索は cached のみにします。live 検索は許可しません。
+# disabled はより安全な方向なので常に許容されます。
+allowed_web_search_modes = ["cached"]
+
+# 他端末からのリモート操作を禁止し、Hooks は管理者管理のものだけ許可します。
+allow_remote_control = false
+allow_managed_hooks_only = true
+
+# 新しい Codex クライアントでは、下で定義する会社用権限を既定にします。
+default_permissions = "company_workspace"
+
+# 古い Codex クライアント向けの互換設定です。
+# permission profile 非対応環境では read-only に倒して安全側にします。
+allowed_sandbox_modes = ["read-only"]
+
+# ユーザーが選べる権限プロファイルを限定します。
+# :workspace と :danger-full-access は選ばせません。
+[allowed_permission_profiles]
+":read-only" = true
+company_workspace = true
+
+# 会社用の権限プロファイルです。
+# :workspace を土台にしつつ、共有フォルダ・tmp・ネットワークを追加で絞ります。
+[permissions.company_workspace]
+description = "Workspace-only editing, no command network, shared folders denied."
+extends = ":workspace"
+
+# Workspace 外の広いアクセスを閉じ、必要最小限だけ読めるようにします。
+[permissions.company_workspace.filesystem]
+glob_scan_max_depth = 6
+":root" = "deny"
+":minimal" = "read"
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+
+# 共有フォルダ対策です。
+# UNC 形式の \\server\share はワイルドカードで防御的に拒否します。
+# mapped drive は TOML だけではネットワーク共有か判定できないため、
+# 共有ドライブで使われやすい H: から Z: を拒否します。
+# ローカルディスクに使っている文字があれば、該当行を削除してください。
+"\\\\*\\*" = "deny"
+"\\\\*\\*\\**" = "deny"
+"H:\\" = "deny"
+"I:\\" = "deny"
+"J:\\" = "deny"
+"K:\\" = "deny"
+"L:\\" = "deny"
+"M:\\" = "deny"
+"N:\\" = "deny"
+"O:\\" = "deny"
+"P:\\" = "deny"
+"Q:\\" = "deny"
+"R:\\" = "deny"
+"S:\\" = "deny"
+"T:\\" = "deny"
+"U:\\" = "deny"
+"V:\\" = "deny"
+"W:\\" = "deny"
+"X:\\" = "deny"
+"Y:\\" = "deny"
+"Z:\\" = "deny"
+
+# Workspace 内は編集可能にします。
+# ただし .git/.codex/.agents は読み取りに留め、env や secret 系は拒否します。
+[permissions.company_workspace.filesystem.":workspace_roots"]
+"." = "write"
+".git" = "read"
+".codex" = "read"
+".agents" = "read"
+"*.env" = "deny"
+"*/*.env" = "deny"
+"*/*/*.env" = "deny"
+"**/*secret*" = "deny"
+"**/*credential*" = "deny"
+
+# Codex が実行するコマンドからのネットワークアクセスを禁止します。
+[permissions.company_workspace.network]
+enabled = false
+allow_upstream_proxy = false
+allow_local_binding = false
+dangerously_allow_non_loopback_proxy = false
+dangerously_allow_all_unix_sockets = false
+
+# 管理者強制の読み取り拒否です。
+# ユーザー側 config では弱められません。
+[permissions.filesystem]
+deny_read = [
+  "\\\\*\\*",
+  "\\\\*\\*\\**",
+  "H:\\",
+  "I:\\",
+  "J:\\",
+  "K:\\",
+  "L:\\",
+  "M:\\",
+  "N:\\",
+  "O:\\",
+  "P:\\",
+  "Q:\\",
+  "R:\\",
+  "S:\\",
+  "T:\\",
+  "U:\\",
+  "V:\\",
+  "W:\\",
+  "X:\\",
+  "Y:\\",
+  "Z:\\",
+]
+
+# MCP の許可リストです。空のため、ユーザー定義 MCP は許可されません。
+# 必要な MCP だけ、管理者が identity.command または identity.url 付きで追加します。
+[mcp_servers]
+
+# 外部操作や拡張機能につながる機能を無効化します。
+# hooks は true ですが、allow_managed_hooks_only により管理者管理 hooks のみ許可されます。
+[features]
+hooks = true
+apps = false
+browser_use = false
+browser_use_external = false
+browser_use_full_cdp_access = false
+computer_use = false
+in_app_browser = false
+plugin_sharing = false
+plugins = false
+
+# Workspace パス検査などを起動時に行いたい場合は、
+# 管理者が managed hook のディレクトリ、イベント定義、スクリプトを別途配布してください。
+# この TOML には未配布の hook 実体は書かず、非管理 hooks の禁止だけ行っています。
+
+# Windows sandbox は unelevated のみにします。
+# 権限昇格を避ける方針です。
+[windows]
+allowed_sandbox_implementations = ["unelevated"]
+
+# コマンド実行ルールです。
+# shell 起動は承認確認、管理者権限化や drive mapping は禁止します。
+[rules]
+prefix_rules = [
+  { pattern = [{ any_of = ["bash", "sh", "zsh", "powershell", "pwsh", "cmd"] }], decision = "prompt", justification = "Company policy requires explicit approval for shell entrypoints." },
+  { pattern = [{ any_of = ["sudo", "su", "runas"] }], decision = "forbidden", justification = "Privilege escalation is prohibited on company-managed PCs." },
+  { pattern = [{ token = "Start-Process" }, { any_of = ["-Verb", "-verb"] }, { any_of = ["RunAs", "runas"] }], decision = "forbidden", justification = "Privilege escalation is prohibited on company-managed PCs." },
+  { pattern = [{ token = "net" }, { token = "use" }], decision = "forbidden", justification = "Mapping network drives is prohibited on company-managed PCs." },
+  { pattern = [{ any_of = ["New-PSDrive", "subst"] }], decision = "forbidden", justification = "Creating alternate drive mappings is prohibited on company-managed PCs." },
+]
