@@ -1,0 +1,557 @@
+# =====================================================================
+# requirements.toml - Company Codex managed requirements
+# =====================================================================
+# ChatGPT Codex > Cloud managed requirements に貼り付ける前提。
+#
+# 目的:
+# - requirements.toml のみでユーザーが上書きできない制約をかける。
+# - Codex 0.138.0+ では permission profile で Workspace 内だけ編集可にする。
+# - 旧クライアント向けには allowed_sandbox_modes で full access を遮断する。
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# 1) 承認ポリシー
+# ---------------------------------------------------------------------
+
+# 「never」を許可しない。untrusted command は承認ゲートを通す。
+allowed_approval_policies = ["untrusted"]
+
+# 承認者をユーザーに固定する。auto_review による自動承認へ逃がさない。
+allowed_approvals_reviewers = ["user"]
+
+# ---------------------------------------------------------------------
+# 2) 旧クライアント互換: sandbox_mode
+# ---------------------------------------------------------------------
+
+# danger-full-access / --yolo を禁止する。
+# 旧クライアントでは permission profile を無視するため、この行で最低限の互換制御を行う。
+allowed_sandbox_modes = ["read-only", "workspace-write"]
+
+# ---------------------------------------------------------------------
+# 3) Web 検索
+# ---------------------------------------------------------------------
+
+# live Web 取得を禁止し、OpenAI 管理インデックスの cached 検索だけ許可する。
+# 仕様上 "disabled" は常に許可されるため、実際には「cached または disabled」になる。
+allowed_web_search_modes = ["cached"]
+
+
+# ---------------------------------------------------------------------
+# 4) Codex 0.138.0+ 向け: 既定 permission profile
+# ---------------------------------------------------------------------
+
+# ユーザーの既定 profile を管理者定義の Workspace 専用 profile に固定する。
+# 重要: TOML では [table] の後に書いたキーはその table 配下になるため、
+# default_permissions は必ず最初の [table] より前、トップレベルに置く。
+default_permissions = "company_workspace_only"
+
+# ---------------------------------------------------------------------
+# 5) Hooks / MCP / Plugin / App / Browser / Computer Use
+# ---------------------------------------------------------------------
+
+# ユーザー、プロジェクト、セッション、プラグイン由来の hooks を読み込ませない。
+# 管理者が managed layer で定義した hooks だけ許可する。
+allow_managed_hooks_only = true
+
+# 端末のリモートコントロールを禁止する。
+allow_remote_control = false
+
+# Appshots はコード・画面情報の漏えい面を増やすため無効化する。
+allow_appshots = false
+
+[features]
+# 管理者管理 hooks を有効化する。allow_managed_hooks_only=true と併用する。
+hooks = true
+
+# permission profile の外側の操作面を減らす。
+apps = false
+browser_use = false
+browser_use_external = false
+browser_use_full_cdp_access = false
+in_app_browser = false
+computer_use = false
+
+# 複数 agent による追加実行面を使わせない。
+multi_agent = false
+
+# ユーザー導入プラグインとプラグイン共有を止める。
+plugins = false
+plugin_sharing = false
+
+[computer_use]
+# 万一 Computer Use が有効なクライアントでも、管理 macOS ロック後の操作を禁止する。
+allow_locked_computer_use = false
+
+# MCP は管理者 allowlist 方式に限定する。
+# 空の [mcp_servers] は、管理者が明示していない MCP server をすべて無効化する。
+[mcp_servers]
+
+# 社内 MCP を許可する場合だけ、管理者が次のような allowlist を追加する。
+# [mcp_servers.internal_docs.identity]
+# url = { match = "exact", value = "https://mcp.example.co.jp/codex" }
+
+[marketplaces]
+# ユーザーが任意の marketplace source から plugin を追加・インストール・更新することを禁止する。
+restrict_to_allowed_sources = true
+
+# ---------------------------------------------------------------------
+# 6) shell / subprocess 側のネットワーク遮断
+# ---------------------------------------------------------------------
+
+[experimental_network]
+# sandboxed networking requirements を有効化する。
+# これ自体は command network access を付与しない。
+enabled = true
+
+# 管理者定義の allowlist だけを有効にする。
+# allowed_domains を空にしているため、ユーザー側の許可追加は効かない。
+managed_allowed_domains_only = true
+allowed_domains = []
+
+# ローカル・プライベートネットワークや上流プロキシ経由の抜け道を閉じる。
+allow_local_binding = false
+allow_upstream_proxy = false
+dangerously_allow_all_unix_sockets = false
+dangerously_allow_non_loopback_proxy = false
+
+# 明示的に拒否したいローカル・メタデータ・社内名解決系。
+denied_domains = [
+  "localhost",
+  "127.0.0.1",
+  "::1",
+  "169.254.169.254",
+  "*.local",
+  "*.lan",
+]
+
+# ---------------------------------------------------------------------
+# 7) Codex 0.138.0+ 向け: 管理者定義 permission profile
+# ---------------------------------------------------------------------
+
+[allowed_permission_profiles]
+# 管理者定義 profile のみ選択可にする。
+company_workspace_only = true
+
+# built-in profile は選択不可。特に full access は禁止。
+":read-only" = false
+":workspace" = false
+":danger-full-access" = false
+
+[permissions.company_workspace_only]
+description = "Company policy: edit only active Workspace roots; deny shared or mounted folders."
+# :workspace の保護を継承する。例: Workspace 内の .codex/ や .git/ は read-only のまま。
+extends = ":workspace"
+
+[permissions.company_workspace_only.filesystem]
+# ** を含む deny glob を Linux / WSL / Windows native で事前展開する深さ。
+# 深くしすぎると起動前スキャンが重くなるため、通常は 3〜5 から検証する。
+glob_scan_max_depth = 5
+
+# 原則としてファイルシステム全体を拒否し、実行に最低限必要な runtime/tool パスだけ読む。
+":root" = "deny"
+":minimal" = "read"
+
+# 一時ディレクトリへの書き込みも禁止する。
+# Workspace 外への成果物・中間ファイル退避を防ぐ。
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+
+# macOS: 外部ディスク、ネットワークボリューム、クラウド同期フォルダを拒否する。
+# Windows でも ~ は %USERPROFILE% 相当として扱われるため、OneDrive/Dropbox/Box/SharePoint などをここで拒否する。
+"/Volumes" = "deny"
+"/Volumes/**" = "deny"
+"/Network" = "deny"
+"/Network/**" = "deny"
+"~/Library/CloudStorage" = "deny"
+"~/Library/CloudStorage/**" = "deny"
+"~/OneDrive*" = "deny"
+"~/OneDrive*/**" = "deny"
+"~/Dropbox*" = "deny"
+"~/Dropbox*/**" = "deny"
+"~/Google Drive*" = "deny"
+"~/Google Drive*/**" = "deny"
+"~/Box*" = "deny"
+"~/Box*/**" = "deny"
+"~/SharePoint*" = "deny"
+"~/SharePoint*/**" = "deny"
+
+# Linux / WSL: 一般的な mount point を拒否する。
+# WSL の Windows ドライブは通常 /mnt/c, /mnt/d ... 配下に現れるため /mnt 全体を閉じる。
+"/mnt" = "deny"
+"/mnt/**" = "deny"
+"/media" = "deny"
+"/media/**" = "deny"
+"/run/media" = "deny"
+"/run/media/**" = "deny"
+"/net" = "deny"
+"/net/**" = "deny"
+
+# Windows native: UNC/network shares とローカル共有フォルダを拒否する。
+# UNC は \\server\share 形式と //server/share 形式の両方を想定する。
+# native Windows では managed deny_read は direct file tools に効くが、shell subprocess の読み取りには直接効かないため、
+# 共有操作・権限昇格につながる Windows コマンドも rules.prefix_rules で別途禁止する。
+'\\*' = "deny"
+'\\**' = "deny"
+'\\*\**' = "deny"
+'//*' = "deny"
+'//**' = "deny"
+'//*/**' = "deny"
+'C:\Users\Public' = "deny"
+'C:\Users\Public\**' = "deny"
+'C:/Users/Public' = "deny"
+'C:/Users/Public/**' = "deny"
+
+# Windows native: マップされたネットワークドライブ・リムーバブルドライブ対策。
+# requirements.toml だけでは mapped drive とローカル固定ドライブを静的に識別できないため、
+# 既定では C: 以外の drive letter を拒否する。
+# 会社標準で D: などの固定ローカル開発ドライブを使う場合は、該当ドライブだけ削除し、
+# endpoint policy 側で network/removable drive の Workspace 登録を制御する。
+'D:\' = "deny"
+'D:\**' = "deny"
+'D:/' = "deny"
+'D:/**' = "deny"
+'E:\' = "deny"
+'E:\**' = "deny"
+'E:/' = "deny"
+'E:/**' = "deny"
+'F:\' = "deny"
+'F:\**' = "deny"
+'F:/' = "deny"
+'F:/**' = "deny"
+'G:\' = "deny"
+'G:\**' = "deny"
+'G:/' = "deny"
+'G:/**' = "deny"
+'H:\' = "deny"
+'H:\**' = "deny"
+'H:/' = "deny"
+'H:/**' = "deny"
+'I:\' = "deny"
+'I:\**' = "deny"
+'I:/' = "deny"
+'I:/**' = "deny"
+'J:\' = "deny"
+'J:\**' = "deny"
+'J:/' = "deny"
+'J:/**' = "deny"
+'K:\' = "deny"
+'K:\**' = "deny"
+'K:/' = "deny"
+'K:/**' = "deny"
+'L:\' = "deny"
+'L:\**' = "deny"
+'L:/' = "deny"
+'L:/**' = "deny"
+'M:\' = "deny"
+'M:\**' = "deny"
+'M:/' = "deny"
+'M:/**' = "deny"
+'N:\' = "deny"
+'N:\**' = "deny"
+'N:/' = "deny"
+'N:/**' = "deny"
+'O:\' = "deny"
+'O:\**' = "deny"
+'O:/' = "deny"
+'O:/**' = "deny"
+'P:\' = "deny"
+'P:\**' = "deny"
+'P:/' = "deny"
+'P:/**' = "deny"
+'Q:\' = "deny"
+'Q:\**' = "deny"
+'Q:/' = "deny"
+'Q:/**' = "deny"
+'R:\' = "deny"
+'R:\**' = "deny"
+'R:/' = "deny"
+'R:/**' = "deny"
+'S:\' = "deny"
+'S:\**' = "deny"
+'S:/' = "deny"
+'S:/**' = "deny"
+'T:\' = "deny"
+'T:\**' = "deny"
+'T:/' = "deny"
+'T:/**' = "deny"
+'U:\' = "deny"
+'U:\**' = "deny"
+'U:/' = "deny"
+'U:/**' = "deny"
+'V:\' = "deny"
+'V:\**' = "deny"
+'V:/' = "deny"
+'V:/**' = "deny"
+'W:\' = "deny"
+'W:\**' = "deny"
+'W:/' = "deny"
+'W:/**' = "deny"
+'X:\' = "deny"
+'X:\**' = "deny"
+'X:/' = "deny"
+'X:/**' = "deny"
+'Y:\' = "deny"
+'Y:\**' = "deny"
+'Y:/' = "deny"
+'Y:/**' = "deny"
+'Z:\' = "deny"
+'Z:\**' = "deny"
+'Z:/' = "deny"
+'Z:/**' = "deny"
+
+# ホスト・ユーザーの認証情報やクラスタ/クラウド認証情報を拒否する。
+"~/.ssh" = "deny"
+"~/.gnupg" = "deny"
+"~/.aws" = "deny"
+"~/.azure" = "deny"
+"~/.gcloud" = "deny"
+"~/.kube" = "deny"
+"~/.docker" = "deny"
+
+[permissions.company_workspace_only.filesystem.":workspace_roots"]
+# Active Workspace root のみ書き込み可能にする。
+"." = "write"
+
+# VCS / Codex / devcontainer の設定は変更不可に近づける。
+".git" = "read"
+".codex" = "read"
+".agents" = "read"
+".devcontainer" = "read"
+
+# Workspace 内にある秘密情報は読ませない。
+"**/*.env" = "deny"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+"**/*.pem" = "deny"
+"**/*.key" = "deny"
+"**/*secret*" = "deny"
+"**/*credential*" = "deny"
+"**/*token*" = "deny"
+"**/id_rsa" = "deny"
+"**/id_ed25519" = "deny"
+
+[permissions.company_workspace_only.network]
+# shell/subprocess 側のネットワークを禁止する。
+# Web 検索の cached モードとは別の制御。
+enabled = false
+
+# ローカルネットワーク・上流プロキシ・Unix socket の抜け道を明示的に閉じる。
+allow_local_binding = false
+allow_upstream_proxy = false
+dangerously_allow_non_loopback_proxy = false
+dangerously_allow_all_unix_sockets = false
+
+[permissions.company_workspace_only.network.unix_sockets]
+# Docker / Podman socket 経由のホスト権限逃げを拒否する。
+"/var/run/docker.sock" = "deny"
+"/run/docker.sock" = "deny"
+"/run/podman/podman.sock" = "deny"
+
+# ---------------------------------------------------------------------
+# 8) 管理者強制の deny-read: 共有・マウント・秘密情報を二重に拒否
+# ---------------------------------------------------------------------
+
+[permissions.filesystem]
+# ユーザーの local config では弱められない read deny。
+# Workspace として誤登録された場合も、共有フォルダや mount point の読み取りを拒否する。
+deny_read = [
+  # macOS mount / network / cloud sync
+  "/Volumes",
+  "/Volumes/**",
+  "/Network",
+  "/Network/**",
+  "~/Library/CloudStorage",
+  "~/Library/CloudStorage/**",
+  "~/OneDrive*",
+  "~/OneDrive*/**",
+  "~/Dropbox*",
+  "~/Dropbox*/**",
+  "~/Google Drive*",
+  "~/Google Drive*/**",
+  "~/Box*",
+  "~/Box*/**",
+  "~/SharePoint*",
+  "~/SharePoint*/**",
+
+  # Linux / WSL mount points
+  "/mnt",
+  "/mnt/**",
+  "/media",
+  "/media/**",
+  "/run/media",
+  "/run/media/**",
+  "/net",
+  "/net/**",
+
+  # Windows native UNC/network shares, local shared folder, mapped/removable drive letters
+  # Note: native Windows managed deny_read applies to direct file tools; shell subprocess reads are controlled separately by sandbox/rules.
+  '\\*',
+  '\\**',
+  '\\*\**',
+  '//*',
+  '//**',
+  '//*/**',
+  'C:\Users\Public',
+  'C:\Users\Public\**',
+  'C:/Users/Public',
+  'C:/Users/Public/**',
+  'D:\',
+  'D:\**',
+  'D:/',
+  'D:/**',
+  'E:\',
+  'E:\**',
+  'E:/',
+  'E:/**',
+  'F:\',
+  'F:\**',
+  'F:/',
+  'F:/**',
+  'G:\',
+  'G:\**',
+  'G:/',
+  'G:/**',
+  'H:\',
+  'H:\**',
+  'H:/',
+  'H:/**',
+  'I:\',
+  'I:\**',
+  'I:/',
+  'I:/**',
+  'J:\',
+  'J:\**',
+  'J:/',
+  'J:/**',
+  'K:\',
+  'K:\**',
+  'K:/',
+  'K:/**',
+  'L:\',
+  'L:\**',
+  'L:/',
+  'L:/**',
+  'M:\',
+  'M:\**',
+  'M:/',
+  'M:/**',
+  'N:\',
+  'N:\**',
+  'N:/',
+  'N:/**',
+  'O:\',
+  'O:\**',
+  'O:/',
+  'O:/**',
+  'P:\',
+  'P:\**',
+  'P:/',
+  'P:/**',
+  'Q:\',
+  'Q:\**',
+  'Q:/',
+  'Q:/**',
+  'R:\',
+  'R:\**',
+  'R:/',
+  'R:/**',
+  'S:\',
+  'S:\**',
+  'S:/',
+  'S:/**',
+  'T:\',
+  'T:\**',
+  'T:/',
+  'T:/**',
+  'U:\',
+  'U:\**',
+  'U:/',
+  'U:/**',
+  'V:\',
+  'V:\**',
+  'V:/',
+  'V:/**',
+  'W:\',
+  'W:\**',
+  'W:/',
+  'W:/**',
+  'X:\',
+  'X:\**',
+  'X:/',
+  'X:/**',
+  'Y:\',
+  'Y:\**',
+  'Y:/',
+  'Y:/**',
+  'Z:\',
+  'Z:\**',
+  'Z:/',
+  'Z:/**',
+
+  # User secrets
+  "~/.ssh",
+  "~/.ssh/**",
+  "~/.gnupg",
+  "~/.gnupg/**",
+  "~/.aws",
+  "~/.aws/**",
+  "~/.azure",
+  "~/.azure/**",
+  "~/.gcloud",
+  "~/.gcloud/**",
+  "~/.kube",
+  "~/.kube/**",
+  "~/.docker",
+  "~/.docker/**",
+]
+
+
+# ---------------------------------------------------------------------
+# 9) Windows sandbox implementation
+# ---------------------------------------------------------------------
+
+[windows]
+# native Windows only:
+# elevated sandbox implementation のみ許可する。
+# elevated は Codex コマンドを管理者権限で実行する設定ではなく、
+# 専用の低権限 sandbox ユーザー、ファイルシステム境界、Firewall rule 等を使う
+# より強い Windows sandbox 実装。
+# これにより、ユーザーが弱い unelevated fallback を選ぶ経路を塞ぐ。
+allowed_sandbox_implementations = ["elevated"]
+
+# ---------------------------------------------------------------------
+# 10) Command rules: 権限昇格、mount 操作、危険操作を禁止または承認必須にする
+# ---------------------------------------------------------------------
+
+[rules]
+prefix_rules = [
+  # OS 権限昇格は禁止する。絶対パスや Windows の runas/Start-Process 経由も明示的に拒否する。
+  { pattern = [{ any_of = ["sudo", "/usr/bin/sudo", "/bin/sudo", "su", "/usr/bin/su", "/bin/su", "doas", "/usr/bin/doas", "/bin/doas", "pkexec", "/usr/bin/pkexec", "/bin/pkexec", "runas", "runas.exe", "Start-Process", "start-process"] }], decision = "forbidden", justification = "Company policy: OS privilege escalation is not allowed from Codex." },
+
+  # 共有フォルダ・外部ボリューム・FUSE/SSHFS を後付け mount する経路を禁止する。
+  # Windows では drive mapping / UNC share 作成 / ボリューム操作につながる代表コマンドも拒否する。
+  { pattern = [{ any_of = ["mount", "umount", "sshfs", "fusermount", "fusermount3", "diskutil", "mountvol", "mountvol.exe", "diskpart", "diskpart.exe", "subst", "subst.exe", "New-PSDrive", "new-psdrive", "New-SmbMapping", "new-smbmapping", "Remove-SmbMapping", "remove-smbmapping"] }], decision = "forbidden", justification = "Company policy: mounting, mapping, or unmounting shared/external storage is not allowed from Codex." },
+
+  # Windows: net use/share/user/localgroup など、共有・アカウント・サービス状態に影響する net 操作を禁止する。
+  { pattern = [{ any_of = ["net", "net.exe"] }, { any_of = ["use", "USE", "Use", "share", "SHARE", "Share", "user", "USER", "User", "localgroup", "LOCALGROUP", "Localgroup", "group", "GROUP", "Group", "session", "SESSION", "Session", "file", "FILE", "File", "start", "START", "Start", "stop", "STOP", "Stop"] }], decision = "forbidden", justification = "Company policy: Windows network-share, account, and service-control net commands are not allowed from Codex." },
+
+  # Windows: native Windows から WSL を起動して /mnt 経由でホスト側へ抜ける経路を禁止する。
+  { pattern = [{ any_of = ["wsl", "wsl.exe"] }], decision = "forbidden", justification = "Company policy: launching WSL from native Windows Codex is not allowed because it can expose mounted Windows drives." },
+
+  # コンテナ・クラスタ・IaC はホスト/クラウド側へ影響しやすいため禁止する。
+  { pattern = [{ any_of = ["docker", "podman", "kubectl", "helm", "terraform", "tofu"] }], decision = "forbidden", justification = "Company policy: tools that can affect host, cluster, or cloud resources are not allowed from Codex." },
+
+  # シェルや実行系・パッケージ管理系は承認ゲートを通す。
+  # Windows の cmd / PowerShell / .NET / Windows package manager も含める。
+  { pattern = [{ any_of = ["bash", "sh", "zsh", "fish", "python", "python3", "py", "py.exe", "node", "npm", "npx", "pnpm", "yarn", "bun", "pip", "pip3", "uv", "make", "cmake", "cargo", "go", "mvn", "gradle", "cmd", "cmd.exe", "powershell", "powershell.exe", "pwsh", "pwsh.exe", "dotnet", "msbuild", "msbuild.exe", "winget", "winget.exe", "choco", "choco.exe", "scoop", "scoop.cmd", "msiexec", "msiexec.exe"] }], decision = "prompt", justification = "Company policy: executable or package/build commands require explicit approval." },
+
+  # Windows: registry / service / scheduled task / ACL / boot configuration の変更につながる管理系コマンドは禁止する。
+  { pattern = [{ any_of = ["reg", "reg.exe", "sc", "sc.exe", "schtasks", "schtasks.exe", "takeown", "takeown.exe", "icacls", "icacls.exe", "bcdedit", "bcdedit.exe"] }], decision = "forbidden", justification = "Company policy: Windows registry, service, task, ACL, or boot configuration changes are not allowed from Codex." },
+
+  # Git の履歴・外部リポジトリ影響操作は承認必須にする。
+  { pattern = [{ token = "git" }, { any_of = ["commit", "push", "tag", "merge", "rebase", "reset", "clean"] }], decision = "prompt", justification = "Company policy: mutating Git operations require explicit approval." },
+
+  # 破壊的ファイル操作は承認必須にする。Workspace 内であっても誤削除リスクが高い。
+  # Windows の del/copy/move/rename と PowerShell の Remove/Move/Copy/Rename-Item 系も含める。
+  { pattern = [{ any_of = ["rm", "rmdir", "mv", "cp", "chmod", "chown", "ln", "del", "erase", "copy", "move", "ren", "rename", "Remove-Item", "remove-item", "Move-Item", "move-item", "Copy-Item", "copy-item", "Rename-Item", "rename-item", "New-Item", "new-item", "Set-Content", "set-content", "Add-Content", "add-content", "Out-File", "out-file"] }], decision = "prompt", justification = "Company policy: file mutation commands require explicit approval." },
+]
