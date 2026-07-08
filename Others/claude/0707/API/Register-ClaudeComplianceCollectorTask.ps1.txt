@@ -1,0 +1,118 @@
+<#
+.SYNOPSIS
+  ClaudeComplianceCollector.ps1 を Windows タスクスケジューラに登録する補助スクリプトです。
+
+.DESCRIPTION
+  このスクリプトは、ClaudeComplianceCollector.ps1 を 1 日 1 回自動実行するための
+  Windows タスクスケジューラ タスクを作成します。
+
+  主な設定:
+    - 実行頻度: 1 日 1 回
+    - 実行コマンド: powershell.exe -NoProfile -ExecutionPolicy Bypass -File <CollectorScriptPath> -Mode <Mode>
+    - 多重起動防止: MultipleInstances=IgnoreNew
+      既に前回タスクが実行中の場合、新しい実行を開始しません。
+
+  注意:
+    - 管理者権限の PowerShell から実行してください。
+    - API キーはこのタスク登録スクリプトには設定しません。
+      Collector 本体が ANTHROPIC_COMPLIANCE_ACCESS_KEY などの環境変数から読み込みます。
+#>
+
+[CmdletBinding()]
+param(
+    # 作成または更新するタスクスケジューラのタスク名です。
+    # 既定値のままにすると「ClaudeComplianceCollector-Daily」という名前で登録されます。
+    [string]$TaskName = 'ClaudeComplianceCollector-Daily',
+
+    # 定期実行したい Collector 本体スクリプトのパスです。
+    # 通常は C:\ProgramData\ClaudeComplianceCollector\ClaudeComplianceCollector.ps1 に配置して使います。
+    [string]$CollectorScriptPath = 'C:\ProgramData\ClaudeComplianceCollector\ClaudeComplianceCollector.ps1',
+
+    # タスクスケジューラから起動するときの Collector 実行モードです。
+    # 初回 backfill は手動実行し、定期実行は通常 AllTail または ActivityTail を指定します。
+    [ValidateSet('ActivityTail','ContentTail','AllTail')]
+    [string]$Mode = 'AllTail',
+
+    # 毎日実行する時刻です。24 時間表記で指定します。
+    # 例: '02:00' は毎日午前 2 時に実行します。
+    [string]$At = '02:00',
+
+    # タスクを特定ユーザーで実行したい場合に指定します。
+    # 未指定の場合、Register-ScheduledTask の既定動作に従って登録します。
+    # 実行ユーザーから API キー環境変数を参照できることを確認してください。
+    [string]$RunAsUser = $null
+)
+
+# エラーが発生したら処理を継続せず停止します。
+# タスク登録に失敗しているのに成功したように見えることを防ぐためです。
+$ErrorActionPreference = 'Stop'
+
+# Collector 本体が存在しない状態でタスクだけ登録すると、実行時に失敗します。
+# そのため、最初に指定パスの存在を確認します。
+if (-not (Test-Path -LiteralPath $CollectorScriptPath)) {
+    throw "Collector script not found: $CollectorScriptPath"
+}
+
+# タスクスケジューラから起動する実行ファイルです。
+# Windows 標準の powershell.exe を使うことで、外部依存を増やさない設計にしています。
+$execute = 'powershell.exe'
+
+# Collector 本体に渡す引数です。
+# -NoProfile により、ユーザーの PowerShell profile の影響を受けにくくします。
+# -ExecutionPolicy Bypass は、このタスク実行に限ってスクリプト実行ポリシーの影響を避けるためです。
+# API キーは引数に含めません。キーをコマンドライン履歴やタスク定義に残さないためです。
+$arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$CollectorScriptPath`" -Mode $Mode"
+
+# タスクの「操作」です。指定した PowerShell コマンドを実行します。
+$action = New-ScheduledTaskAction -Execute $execute -Argument $arguments
+
+# タスクの「トリガー」です。1 日 1 回、指定時刻に実行します。
+$trigger = New-ScheduledTaskTrigger -Daily -At $At
+
+# タスクの詳細設定です。
+# -MultipleInstances IgnoreNew が重要です。
+#   前回の Collector がまだ実行中の場合、新しい Collector を重複起動しません。
+# -StartWhenAvailable により、指定時刻にPC/サーバーが停止していた場合でも、起動後に実行されやすくします。
+# -ExecutionTimeLimit は最大実行時間です。初回に大量ログがある場合を考慮して 3 日にしています。
+#   定期 Tail 運用で長すぎる場合は、環境に合わせて短くしても構いません。
+$settings = New-ScheduledTaskSettingsSet `
+    -MultipleInstances IgnoreNew `
+    -StartWhenAvailable `
+    -ExecutionTimeLimit (New-TimeSpan -Days 3) `
+    -AllowStartIfOnBatteries:$false `
+    -DisallowStartIfOnBatteries
+
+# RunAsUser が未指定の場合の登録処理です。
+# -RunLevel Highest により、管理者権限で実行できるタスクとして登録します。
+# -Force により、同名タスクがあれば上書き更新します。
+if ([string]::IsNullOrWhiteSpace($RunAsUser)) {
+    Register-ScheduledTask `
+        -TaskName $TaskName `
+        -Action $action `
+        -Trigger $trigger `
+        -Settings $settings `
+        -RunLevel Highest `
+        -Description 'Daily Claude Enterprise Compliance API collector. MultipleInstances=IgnoreNew prevents overlap.' `
+        -Force | Out-Null
+}
+else {
+    # 特定ユーザーで実行したい場合はこちらです。
+    # この場合、指定ユーザーが CollectorScriptPath を読み取れること、
+    # かつ API キー環境変数を参照できることを確認してください。
+    Register-ScheduledTask `
+        -TaskName $TaskName `
+        -Action $action `
+        -Trigger $trigger `
+        -Settings $settings `
+        -RunLevel Highest `
+        -User $RunAsUser `
+        -Description 'Daily Claude Enterprise Compliance API collector. MultipleInstances=IgnoreNew prevents overlap.' `
+        -Force | Out-Null
+}
+
+# 登録結果を画面に表示します。
+# API キーは表示しません。
+Write-Host "Registered task: $TaskName"
+Write-Host "Action: $execute $arguments"
+Write-Host "Schedule: Daily at $At"
+Write-Host "Multiple instances: IgnoreNew"
