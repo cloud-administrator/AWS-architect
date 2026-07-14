@@ -1,0 +1,229 @@
+# ============================================================================
+# OpenAI Codex 管理ポリシー（requirements.toml）
+# 対象: 会社管理のネイティブ Windows 端末
+# 基準: Codex 0.138.0 以上（Codex CLI 0.138.0 / 0.144.4 で構文・適用を検証）
+# 作成日: 2026-07-14
+# ============================================================================
+#
+# 【このポリシーが強制する主な境界】
+# - 作業データの読み書きは、ログインユーザーの ~\codex_work のみに限定する。
+# - ~\codex_work 以外は既定拒否とし、Codex/OS/ツールの動作に必要な
+#   最小ランタイムパス（:minimal）だけを読み取り例外にする。
+# - 現在ユーザーが選択した任意の Workspace Root は自動許可しない。
+# - ネットワーク共有、追加ドライブ、UNC、WSL/macOS/Linux のマウント先は、
+#   許可パスとして列挙せず、ファイルシステム全体の既定拒否で遮断する。
+# - コマンドネットワークを無効化し、Codex Web検索はキャッシュ方式だけを許可する。
+# - サンドボックス外実行、追加権限要求、MCP elicitation 等の承認経路を自動拒否する。
+# - Hooks、Apps、Plugins、Browser Use、Computer Use、Remote Control、シェル実行を無効化する。
+# - MCPは管理者許可リスト方式とし、初版では許可リストを空にして全面停止する。
+#
+# 【重要: requirements.toml 単体では強制できない事項】
+# - Codex 0.138.0 未満の起動禁止・自動更新
+# - 会社指定ChatGPT Workspaceだけへのログイン強制、APIキー認証の禁止
+# - Codex Cloudの製品アクセス禁止
+# - Windows以外のOSでCodex自体を起動させないこと
+# - ~\codex_work の作成、NTFS/Reparse Point/ジャンクション/共有属性の検査
+# - Compliance APIの資格情報、収集処理、SIEM転送
+# - Project/Workspace選択画面で他フォルダを「登録する操作」自体の禁止
+#
+# 上記は存在しないキーで擬似的に記述せず、管理ポリシーの適用範囲外として扱う。
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# 1. 承認ポリシー
+# ----------------------------------------------------------------------------
+# granular の全承認経路を false に固定する。
+# 構造化した許可値はCodex CLI 0.138.0および0.144.4で読込みを確認済み。
+# これにより、権限昇格や追加権限をユーザーへ提示して承認させるのではなく、
+# 要求自体を自動拒否する。"never"、"untrusted"、"on-request" は選択不可。
+allowed_approval_policies = [{ granular = { sandbox_approval = false, rules = false, skill_approval = false, request_permissions = false, mcp_elicitations = false } }]
+
+# 自動レビューモデルを承認者にしない。将来、承認経路を追加した場合も人だけに限定する。
+allowed_approvals_reviewers = ["user"]
+
+# ----------------------------------------------------------------------------
+# 2. Permission Profile
+# ----------------------------------------------------------------------------
+# 通常の既定値は、会社指定フォルダだけを書き込み可能にする独自プロファイル。
+default_permissions = "company_workspace_only"
+
+# ----------------------------------------------------------------------------
+# 3. 旧クライアント互換用Sandbox Mode
+# ----------------------------------------------------------------------------
+# 0.138.0以降では下記ではなく Permission Profile が主制御となる。
+# 現行の書き込みプロファイルと整合させるため workspace-write を含める。
+# danger-full-access は許可しない。
+#
+# 警告: 0.137.0以前は allowed_permission_profiles/default_permissions を無視するため、
+# この互換設定だけでは ~\codex_work への単一フォルダ制限を保証できない。
+# このファイル自体には「バージョン未満なら起動拒否」というキーは存在しない。
+allowed_sandbox_modes = ["read-only", "workspace-write"]
+
+# ----------------------------------------------------------------------------
+# 4. Web検索
+# ----------------------------------------------------------------------------
+# OpenAI保持インデックスを利用するキャッシュ検索のみ許可する。
+# live/indexed は禁止。検索機能を無効にする選択肢は仕様上常に許可される。
+allowed_web_search_modes = ["cached"]
+
+# ----------------------------------------------------------------------------
+# 5. Hooks、Appshots、Remote Control
+# ----------------------------------------------------------------------------
+# ユーザー、Project、Session、Plugin由来Hooksを読み込まない。
+# [features].hooks も false にするため、管理Hooksを含め実質全面停止となる。
+allow_managed_hooks_only = true
+allow_appshots = false
+allow_remote_control = false
+
+# ----------------------------------------------------------------------------
+# 6. Windows Sandbox実装
+# ----------------------------------------------------------------------------
+# 利用者指定により unelevated のみを許可する。
+# unelevated がこのプロファイルの細分化された読み書き境界を実装できない場合、
+# クライアントは制限を緩めず、その操作を拒否することを前提とする。
+[windows]
+allowed_sandbox_implementations = ["unelevated"]
+
+# Computer Use自体を無効化するが、ロック後利用も重ねて禁止する。
+[computer_use]
+allow_locked_computer_use = false
+
+# ----------------------------------------------------------------------------
+# 7. 機能面の遮断
+# ----------------------------------------------------------------------------
+# ファイル編集以外の追加実行面・外部接続面を最小化する。
+[features]
+apps = false
+browser_use = false
+browser_use_external = false
+browser_use_full_cdp_access = false
+computer_use = false
+goals = false
+guardian_approval = false
+hooks = false
+image_generation = false
+in_app_browser = false
+memories = false
+multi_agent = false
+network_proxy = false
+plugin_sharing = false
+plugins = false
+remote_plugin = false
+shell_snapshot = false
+shell_tool = false
+skill_mcp_dependency_install = false
+unified_exec = false
+workspace_dependencies = false
+
+# ----------------------------------------------------------------------------
+# 8. 利用可能なPermission Profileの完全な許可リスト
+# ----------------------------------------------------------------------------
+# 組み込み :read-only / :workspace / :danger-full-access は許可しない。
+# 将来追加される未記載プロファイルも自動的に拒否される。
+[allowed_permission_profiles]
+company_workspace_only = true
+company_workspace_read_only = true
+
+# ----------------------------------------------------------------------------
+# 9. 通常作業用プロファイル: ~\codex_work だけ読み書き可能
+# ----------------------------------------------------------------------------
+[permissions.company_workspace_only]
+description = "会社指定の ~\\codex_work だけを読み書き可能にし、その他の作業データとネットワークを拒否する。"
+
+[permissions.company_workspace_only.filesystem]
+# まず全ファイルシステムを拒否する。UNC、マップドドライブ、追加ドライブ、
+# /mnt、/media、/Volumes、\\wsl$ 等を個別許可しないため、既定拒否となる。
+":root" = "deny"
+
+# Codex、OS、一般ツールの実行に必要な最小ランタイムパスだけ読み取り可能にする。
+# 「~\codex_work 以外は一切1バイトも読めない」ではなく、実行基盤の最小例外である。
+":minimal" = "read"
+
+# 一時領域を作業データの退避・持ち出し先として利用させない。
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+
+# ~ はログインユーザーのホーム（通常 C:\Users\<ユーザー名>）へ展開される。
+# この絶対的な許可先だけで、読み取り、作成、更新、名前変更、削除を許可する。
+'~\codex_work' = "write"
+
+# Workspace内でも管理・指示領域は読み取り専用にする。
+# 親の write より具体的な read が優先され、作成・更新・削除を防ぐ。
+'~\codex_work\.git' = "read"
+'~\codex_work\.codex' = "read"
+'~\codex_work\.agents' = "read"
+
+[permissions.company_workspace_only.network]
+# PowerShell、curl、パッケージマネージャー等を含む、サンドボックス内コマンド通信を禁止する。
+# Web検索の cached 設定とは別系統の制御。
+enabled = false
+
+# 要件指定どおり、Unix Socketの許可テーブルは定義しない。
+
+# ----------------------------------------------------------------------------
+# 10. 会社独自の読み取り専用プロファイル
+# ----------------------------------------------------------------------------
+# 組み込み :read-only の代替。~\codex_work 以外の業務データを許可しない。
+[permissions.company_workspace_read_only]
+description = "会社指定の ~\\codex_work だけを読み取り可能にし、書き込みとネットワークを拒否する。"
+
+[permissions.company_workspace_read_only.filesystem]
+":root" = "deny"
+":minimal" = "read"
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+'~\codex_work' = "read"
+
+[permissions.company_workspace_read_only.network]
+enabled = false
+
+# ----------------------------------------------------------------------------
+# 11. MCPの管理者許可リスト
+# ----------------------------------------------------------------------------
+# このテーブルが存在し、かつ空であるため、初版では全MCPサーバーを無効化する。
+# 管理者審査後は「名前」と「Identity」を厳密一致させるエントリだけを追記する。
+[mcp_servers]
+
+# 追記例（コメント解除せず、実際の管理値で新規作成すること）:
+# [mcp_servers.company_example.identity]
+# command = { executable = 'C:\Program Files\Company\mcp-server.exe', args = [
+#   { match = "exact", value = "serve" }
+# ] }
+
+# Plugin同梱MCPの許可リストも空にする。
+[plugins]
+
+# ユーザーが追加するMarketplaceを許可リスト方式にし、許可元を一件も登録しない。
+# Plugins自体も機能フラグで無効化している。
+[marketplaces]
+restrict_to_allowed_sources = true
+
+# ----------------------------------------------------------------------------
+# 12. コマンド禁止ルール（多層防御）
+# ----------------------------------------------------------------------------
+# shell_tool / unified_exec を無効化することが主制御。
+# 下記は、別の対応サーフェスや将来の経路からコマンドが提示された場合の追加防御。
+# requirements.toml のRulesは allow を定義できず、prompt または forbidden のみ指定可能。
+[rules]
+prefix_rules = [
+  # Gitその他のバージョン管理操作を全面禁止する。
+  { pattern = [{ any_of = ["git", "git.exe", "hg", "hg.exe", "svn", "svn.exe"] }], decision = "forbidden", justification = "会社ポリシーによりバージョン管理コマンドは禁止されています。" },
+
+  # シェル、スクリプト、汎用ランタイム経由の実行を禁止する。
+  { pattern = [{ any_of = ["powershell", "powershell.exe", "pwsh", "pwsh.exe", "cmd", "cmd.exe", "wsl", "wsl.exe", "bash", "bash.exe", "sh", "sh.exe", "zsh", "cscript", "cscript.exe", "wscript", "wscript.exe", "mshta", "mshta.exe", "python", "python.exe", "py", "py.exe", "node", "node.exe", "deno", "deno.exe", "bun", "bun.exe", "perl", "perl.exe", "ruby", "ruby.exe", "java", "java.exe", "dotnet", "dotnet.exe"] }], decision = "forbidden", justification = "会社ポリシーによりシェル、スクリプト、汎用ランタイムの実行は禁止されています。" },
+
+  # 管理者昇格、OS・サービス・レジストリ・ACL変更を禁止する。
+  { pattern = [{ any_of = ["runas", "runas.exe", "sudo", "su", "psexec", "psexec.exe", "psexec64", "psexec64.exe", "sc", "sc.exe", "schtasks", "schtasks.exe", "reg", "reg.exe", "regedit", "regedit.exe", "regsvr32", "regsvr32.exe", "rundll32", "rundll32.exe", "icacls", "icacls.exe", "cacls", "cacls.exe", "takeown", "takeown.exe", "fsutil", "fsutil.exe", "diskpart", "diskpart.exe", "bcdedit", "bcdedit.exe", "mountvol", "mountvol.exe"] }], decision = "forbidden", justification = "権限昇格およびOS設定・権限・サービスの変更は禁止されています。" },
+
+  # 共有接続、ドライブ割当、リンク／ジャンクション作成、リモート実行を禁止する。
+  { pattern = [{ any_of = ["net", "net.exe", "netsh", "netsh.exe", "subst", "subst.exe", "mklink", "ln", "mount", "umount", "winrs", "winrs.exe", "winrm", "winrm.cmd", "ssh", "ssh.exe", "scp", "scp.exe", "sftp", "sftp.exe", "robocopy", "robocopy.exe", "xcopy", "xcopy.exe"] }], decision = "forbidden", justification = "共有接続、ドライブ割当、リンク作成、リモート実行は禁止されています。" },
+
+  # 外部通信、ダウンロード、パッケージ導入を禁止する。
+  { pattern = [{ any_of = ["curl", "curl.exe", "wget", "wget.exe", "bitsadmin", "bitsadmin.exe", "certutil", "certutil.exe", "ftp", "ftp.exe", "tftp", "tftp.exe", "telnet", "telnet.exe", "nc", "nc.exe", "ncat", "ncat.exe", "winget", "winget.exe", "choco", "choco.exe", "scoop", "scoop.cmd", "npm", "npm.cmd", "npx", "npx.cmd", "pnpm", "pnpm.cmd", "yarn", "yarn.cmd", "pip", "pip.exe", "pip3", "pip3.exe"] }], decision = "forbidden", justification = "外部通信、ダウンロード、パッケージ導入は禁止されています。" },
+
+  # コンテナ／オーケストレーション経由のローカルサービスアクセスを禁止する。
+  { pattern = [{ any_of = ["docker", "docker.exe", "podman", "podman.exe", "kubectl", "kubectl.exe", "nerdctl", "nerdctl.exe"] }], decision = "forbidden", justification = "コンテナおよびオーケストレーション操作は禁止されています。" },
+
+  # Codex自身を子プロセスとして起動し、別設定・Cloud経路を呼び出すことを禁止する。
+  { pattern = [{ any_of = ["codex", "codex.exe"] }], decision = "forbidden", justification = "Codexの再帰起動や別実行経路の呼び出しは禁止されています。" }
+]
