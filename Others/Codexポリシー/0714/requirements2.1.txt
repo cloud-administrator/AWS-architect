@@ -1,0 +1,275 @@
+# ============================================================================
+# OpenAI Codex 企業管理ポリシー（requirements.toml）
+#
+# 目的:
+# - Codexが読み書きできる作業領域を、ログインユーザーの
+#   ~/codex_work のみに限定する。
+# - Windows共有、別ドライブ、macOS/Linux/WSLのマウントポイント、
+#   Workspace外のファイルへのアクセスを禁止する。
+# - Never承認、ライブWeb検索、未承認MCP、ユーザー管理Hooks、
+#   権限昇格、共有・マウント操作、外部ネットワーク通信を禁止する。
+#
+# 導入前提:
+# - 管理対象端末はCodex 0.138.0以降に統一すること。
+# - %USERPROFILE%\codex_work を事前に作成すること。
+#   requirements.toml自体にはフォルダ作成機能やNTFS ACL設定機能はない。
+# - "~" は現在ログイン中のOSユーザーのホーム/プロファイルへ展開される。
+#   通常のWindows構成では ~/codex_work は
+#   C:\Users\<ログインユーザー>\codex_work に対応する。
+# - 現行製品にはWorkspace登録UI自体を非表示・禁止する専用キーがない。
+#   このポリシーでは、別の場所をWorkspaceとして選択してもアクセスを
+#   拒否することで、実質的に利用できない状態にする。
+# - 旧クライアント向け設定はread-onlyのみである。厳格な一フォルダ制限は
+#   0.138.0以降の権限プロファイルで実施するため、旧版は端末管理でも拒否する。
+# ============================================================================
+
+# Appshotsを無効化し、画面・アプリ状態を経由した追加の情報取得面を減らす。
+allow_appshots = false
+
+# 端末のリモートコントロール機能を無効化する。
+# SSH等、Codex外のOS機能まではこのキーでは制御されない。
+allow_remote_control = false
+
+# 管理者がrequirements.tomlで定義したHooksだけを許可する。
+# ユーザー、プロジェクト、セッション、プラグイン由来のHooksは読み飛ばす。
+# このファイルでは管理Hooks本体を定義していないため、現状は何も実行しない。
+allow_managed_hooks_only = true
+
+# Neverを許可しない。境界越えや危険な操作で承認経路を残すモードだけを許可する。
+allowed_approval_policies = ["untrusted", "on-request"]
+
+# 承認が必要になった場合は、人間のユーザーだけがレビューできる。
+# 自動レビュー（auto_review）は許可しない。
+allowed_approvals_reviewers = ["user"]
+
+# OpenAI管理のキャッシュ検索だけを許可する。ライブWeb検索は許可しない。
+# disabledは仕様上、暗黙的に常に選択可能である。
+allowed_web_search_modes = ["cached"]
+
+# 現行クライアントで既定使用する、管理者定義の書込可能プロファイル。
+default_permissions = "company_workspace_only"
+
+# Codex 0.137.0以前向けの互換制約。
+# 旧クライアントに書込可能なworkspace-writeを与えず、read-onlyだけに限定する。
+allowed_sandbox_modes = ["read-only"]
+
+# 0.138.0以降で選択可能な権限プロファイルの完全な許可リスト。
+# 未記載のプロファイルおよび将来追加されるプロファイルも拒否される。
+# 組み込み:read-onlyは、ユーザーが選択した任意Workspaceを読める可能性があるため
+# 意図的に拒否し、代わりに下記のcompany_workspace_read_onlyを使用する。
+[allowed_permission_profiles]
+company_workspace_only = true
+company_workspace_read_only = true
+":read-only" = false
+":workspace" = false
+":danger-full-access" = false
+
+# ネイティブWindowsでは、指定どおりunelevated実装だけを許可する。
+# unelevatedで強制できない複雑な境界は、無保護で実行せず拒否される前提で運用する。
+[windows]
+allowed_sandbox_implementations = ["unelevated"]
+
+# Codexのローカル権限プロファイル外で動作し得る機能や、監査を複雑にする機能を
+# 管理者ポリシーで無効化する。Hooksだけは管理Hooks用に有効化する。
+[features]
+hooks = true
+apps = false
+browser_use = false
+browser_use_external = false
+browser_use_full_cdp_access = false
+in_app_browser = false
+computer_use = false
+network_proxy = false
+guardian_approval = false
+memories = false
+multi_agent = false
+plugins = false
+remote_plugin = false
+plugin_sharing = false
+shell_snapshot = false
+skill_mcp_dependency_install = false
+unified_exec = false
+workspace_dependencies = false
+
+# ---------------------------------------------------------------------------
+# 全プロファイル共通の追加読取拒否（多層防御）
+#
+# 主境界は後述のカスタム権限プロファイルである。
+# この一覧は、資格情報とmacOS/Linux/WSLの代表的マウントポイントを追加で拒否する。
+# ネイティブWindowsのmanaged deny_readは、直接ファイルツールには適用されるが、
+# シェル子プロセスの読取には適用されないため、この一覧だけに依存しないこと。
+# ---------------------------------------------------------------------------
+[permissions.filesystem]
+deny_read = [
+  "~/.ssh",
+  "~/.aws",
+  "~/.azure",
+  "~/.config/gcloud",
+  "~/.kube",
+  "~/.docker",
+  "~/.netrc",
+  "~/.npmrc",
+  "~/.pypirc",
+  '~\AppData\Roaming\Microsoft\Credentials',
+  '~\AppData\Local\Microsoft\Credentials',
+  '~\AppData\Roaming\Microsoft\Protect',
+  '~\AppData\Local\Microsoft\Edge\User Data',
+  '~\AppData\Local\Google\Chrome\User Data',
+  "/mnt/**",
+  "/media/**",
+  "/run/media/**",
+  "/Volumes/**",
+  "/Network/**",
+]
+
+# ---------------------------------------------------------------------------
+# 書込可能プロファイル
+# ~/codex_workだけを読み書き可能にし、それ以外のファイルシステムを拒否する。
+# ---------------------------------------------------------------------------
+[permissions.company_workspace_only]
+description = "会社管理Codex領域: ~/codex_work内のみ読取・書込可。コマンド通信不可。"
+
+[permissions.company_workspace_only.filesystem]
+# ディスク全体を最初に拒否し、後続のより具体的な許可だけを再度開く。
+":root" = "deny"
+
+# 実行ファイルや共有ライブラリなど、一般的な開発ツールの起動に必要な
+# Codex定義の最小ランタイムパスだけは読取可能にする。
+# これは「codex_work以外を一切読まない」という要件に対する必要最小限の例外である。
+":minimal" = "read"
+
+# システムの一時フォルダは許可しない。生成物・キャッシュはcodex_work内に置く。
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+
+# 以下の**を含む拒否パターンを、起動時に最大8階層まで展開する。
+glob_scan_max_depth = 8
+
+[permissions.company_workspace_only.filesystem."~/codex_work"]
+# このフォルダ配下だけ、作成、読取、編集、移動、名前変更、削除を許可する。
+"." = "write"
+
+# プロジェクト側からCodexポリシーや永続指示を書き換えられないようにする。
+".codex" = "read"
+"AGENTS.md" = "read"
+
+# 通常のGitメタデータ更新は可能にする一方、Git設定とHooksの改変を禁止する。
+".git/config" = "read"
+".git/hooks" = "read"
+
+# 許可フォルダ内に置かれた場合でも、代表的な資格情報・秘密ファイルは読取拒否する。
+# denyは上位のwrite許可より優先する。
+".env" = "deny"
+".env.*" = "deny"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+"**/*.pem" = "deny"
+"**/*.key" = "deny"
+"**/id_rsa" = "deny"
+"**/id_ed25519" = "deny"
+"**/.npmrc" = "deny"
+"**/.pypirc" = "deny"
+"**/.netrc" = "deny"
+"**/secrets" = "deny"
+"**/secrets/**" = "deny"
+
+[permissions.company_workspace_only.network]
+# コマンドおよびその子プロセスからの外部通信、ローカル/プライベート通信、
+# SOCKS、上位プロキシ利用を禁止する。
+# 要件どおりnetwork.unix_socketsテーブルは記載しない。
+enabled = false
+enable_socks5 = false
+enable_socks5_udp = false
+allow_upstream_proxy = false
+allow_local_binding = false
+dangerously_allow_non_loopback_proxy = false
+
+# ---------------------------------------------------------------------------
+# 読取専用プロファイル
+# 組み込み:read-onlyの代替であり、同じ一フォルダ境界を維持する。
+# ---------------------------------------------------------------------------
+[permissions.company_workspace_read_only]
+description = "会社管理Codex領域: ~/codex_work内のみ読取可。書込・コマンド通信不可。"
+
+[permissions.company_workspace_read_only.filesystem]
+":root" = "deny"
+":minimal" = "read"
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+glob_scan_max_depth = 8
+
+[permissions.company_workspace_read_only.filesystem."~/codex_work"]
+"." = "read"
+".env" = "deny"
+".env.*" = "deny"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+"**/*.pem" = "deny"
+"**/*.key" = "deny"
+"**/id_rsa" = "deny"
+"**/id_ed25519" = "deny"
+"**/.npmrc" = "deny"
+"**/.pypirc" = "deny"
+"**/.netrc" = "deny"
+"**/secrets" = "deny"
+"**/secrets/**" = "deny"
+
+[permissions.company_workspace_read_only.network]
+enabled = false
+enable_socks5 = false
+enable_socks5_udp = false
+allow_upstream_proxy = false
+allow_local_binding = false
+dangerously_allow_non_loopback_proxy = false
+
+# ---------------------------------------------------------------------------
+# コマンド承認・禁止ルール
+#
+# prefix_rulesは、既知のコマンド先頭一致に対して承認要求または禁止を強制する。
+# 現行仕様では、許可領域内の直接ファイル編集ツールを含む「全操作」を毎回承認に
+# 送ることはできない。この一覧は外部Hookスクリプトを使わずに設定できる範囲で、
+# シェルと一般的な開発コマンドに広い人手承認ゲートを設ける。
+# ---------------------------------------------------------------------------
+[rules]
+prefix_rules = [
+  # Windows、macOS、Linuxの代表的シェルを起動する前に人手承認を要求する。
+  { pattern = [{ any_of = ["powershell", "powershell.exe", "pwsh", "pwsh.exe", "cmd", "cmd.exe", 'C:\Windows\System32\cmd.exe', 'C:\Windows\SysWOW64\cmd.exe', 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', 'C:\Program Files\PowerShell\7\pwsh.exe', "bash", "sh", "zsh", "fish", "dash", "ksh", "/bin/bash", "/bin/sh", "/usr/bin/bash", "/usr/bin/sh"] }], decision = "prompt", justification = "会社ポリシーにより、シェル起動前にユーザー承認が必要です。" },
+
+  # Git、言語ランタイム、パッケージマネージャー、コンパイラー、ビルドツール等の
+  # 代表的な開発コマンドを実行する前に人手承認を要求する。
+  { pattern = [{ any_of = ["git", "git.exe", "hg", "svn", "python", "python.exe", "python3", "py", "py.exe", "node", "node.exe", "npm", "npm.cmd", "npx", "npx.cmd", "pnpm", "pnpm.cmd", "yarn", "yarn.cmd", "pip", "pip.exe", "pip3", "dotnet", "dotnet.exe", "msbuild", "msbuild.exe", "cargo", "rustc", "go", "go.exe", "java", "java.exe", "javac", "javac.exe", "gradle", "gradlew", "gradlew.bat", "mvn", "mvn.cmd", "cmake", "cmake.exe", "ninja", "ninja.exe", "make", "make.exe"] }], decision = "prompt", justification = "会社ポリシーにより、開発コマンド実行前にユーザー確認が必要です。" },
+
+  # 権限昇格、別ユーザーへの切替、管理者トークン取得を禁止する。
+  { pattern = [{ any_of = ["runas", "runas.exe", "sudo", "su", "doas", "pkexec"] }], decision = "forbidden", justification = "権限昇格および別アカウントへの切替は禁止されています。" },
+
+  # WSL起動、マウント、共有/ドライブ割当、リパースポイント作成、
+  # ACL・所有者の変更を禁止する。
+  { pattern = [{ any_of = ["wsl", "wsl.exe", "mount", "umount", "mountvol", "mountvol.exe", "subst", "subst.exe", "net", "net.exe", "mklink", "fsutil", "fsutil.exe", "icacls", "icacls.exe", "takeown", "takeown.exe", "cacls", "cacls.exe", "chmod", "chown", "setfacl"] }], decision = "forbidden", justification = "WSL、マウント、共有、リンク、ACLまたは所有者の変更は禁止されています。" },
+
+  # cmd.exe経由で共有割当・リンク作成等を行う代表的な形式を追加で禁止する。
+  { pattern = [{ any_of = ["cmd", "cmd.exe", 'C:\Windows\System32\cmd.exe', 'C:\Windows\SysWOW64\cmd.exe'] }, { any_of = ["/c", "/k"] }, { any_of = ["mklink", "net", "subst", "mountvol"] }], decision = "forbidden", justification = "cmd.exe経由の共有、リンク、ドライブまたはマウント操作は禁止されています。" },
+
+  # PowerShellの代表的な権限昇格・共有・ドライブ・ACL・外部通信コマンドを禁止する。
+  # PowerShellがスクリプト全体を単一引数で渡す場合は完全一致できないことがあるため、
+  # 上位のシェル承認、ファイル境界、ネットワーク拒否と組み合わせて防御する。
+  { pattern = [{ any_of = ["powershell", "powershell.exe", "pwsh", "pwsh.exe", 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe', 'C:\Program Files\PowerShell\7\pwsh.exe'] }, { any_of = ["-Command", "-command", "-c"] }, { any_of = ["Start-Process", "New-SmbMapping", "Remove-SmbMapping", "New-PSDrive", "Remove-PSDrive", "Set-Acl", "Invoke-WebRequest", "Invoke-RestMethod"] }], decision = "forbidden", justification = "PowerShellによる昇格、共有、ドライブ、ACLまたは外部通信操作は禁止されています。" },
+
+  # レジストリ、サービス、タスク、ブート、ディスク、OS全体のパッケージ管理等を禁止する。
+  { pattern = [{ any_of = ["reg", "reg.exe", "regedit", "regedit.exe", "sc", "sc.exe", "schtasks", "schtasks.exe", "bcdedit", "bcdedit.exe", "diskpart", "diskpart.exe", "msiexec", "msiexec.exe", "winget", "winget.exe", "choco", "choco.exe", "scoop", "apt", "apt-get", "dnf", "yum", "pacman", "brew", "launchctl", "systemctl", "service"] }], decision = "forbidden", justification = "OS設定変更およびシステム全体へのソフトウェア導入は禁止されています。" },
+
+  # 権限プロファイルでも通信を無効にしているが、代表的な転送、遠隔接続、
+  # クラウドCLI、トンネリング用コマンドを明示的に禁止する。
+  { pattern = [{ any_of = ["curl", "curl.exe", "wget", "wget.exe", "ssh", "ssh.exe", "scp", "scp.exe", "sftp", "sftp.exe", "ftp", "telnet", "nc", "ncat", "socat", "bitsadmin", "bitsadmin.exe", "certutil", "certutil.exe", "az", "az.exe", "aws", "aws.exe", "gcloud", "gcloud.exe", "gh", "gh.exe"] }], decision = "forbidden", justification = "直接通信、ファイル転送、遠隔接続およびクラウドCLIは禁止されています。" },
+
+  # コンテナーやクラスターツールは、ホストファイル、ソケット、外部環境へ
+  # 別の権限経路を作る可能性があるため禁止する。
+  { pattern = [{ any_of = ["docker", "docker.exe", "podman", "podman.exe", "kubectl", "kubectl.exe", "helm", "helm.exe", "vagrant", "vagrant.exe", "virsh"] }], decision = "forbidden", justification = "コンテナー、仮想化およびクラスターツールは禁止されています。" },
+]
+
+# 空のMCP許可リストを明示し、ユーザーが設定した全MCPサーバーを無効化する。
+# 管理者がMCPを利用させる場合は、サーバー名とidentityを完全一致でここに追加する。
+[mcp_servers]
+
+# プラグイン同梱MCPについても、許可対象を一件も定義しない。
+# features.plugins=falseとの多層防御で、未承認プラグイン/MCPを停止する。
+[plugins]
