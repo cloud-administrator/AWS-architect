@@ -517,3 +517,129 @@ OpenAIの現在の公開公式ドキュメントでは、クラウド管理requi
 [1]: https://developers.openai.com/codex/enterprise/managed-configuration "Managed configuration | ChatGPT Learn"
 [2]: https://developers.openai.com/codex/config-reference "Configuration Reference | ChatGPT Learn"
 [3]: https://developers.openai.com/codex/mcp "Model Context Protocol | ChatGPT Learn"
+
+
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+
+## 実施する画面と作業内容
+
+### 1. Webブラウザ：Codexのポリシー画面
+
+ブラウザで次を開きます。
+
+```text
+https://chatgpt.com/codex/cloud/settings/policies
+```
+
+組織に適用しているポリシーを開き、`Edit`または`編集`を押します。
+
+---
+
+### 2. 「Requirements TOML」欄
+
+この欄には、Snowflake MCPの**利用許可設定**を入力します。
+
+```toml
+# snowflake_companyという名前のMCPサーバーを許可します。
+[mcp_servers.snowflake_company]
+
+# 実際に使用を許可するSnowflake MCPのURLを指定します。
+identity = { url = "https://＜PrivateLinkホスト名＞/api/v2/databases/＜DB名＞/schemas/＜スキーマ名＞/mcp-servers/＜MCPサーバー名＞" }
+```
+
+`requirements.toml`では、MCPサーバーの名前とURLが許可内容に一致しない場合、そのMCPサーバーは無効になります。([OpenAI Developers][1])
+
+---
+
+### 3. 「Config TOML」または「Managed defaults」欄
+
+この欄には、Snowflake MCPへの**接続情報とPAT**を入力します。
+
+```toml
+# snowflake_companyという名前でMCP接続を登録します。
+[mcp_servers.snowflake_company]
+
+# Snowflake-managed MCPのPrivateLink URLを指定します。
+url = "https://＜PrivateLinkホスト名＞/api/v2/databases/＜DB名＞/schemas/＜スキーマ名＞/mcp-servers/＜MCPサーバー名＞"
+
+# このMCPサーバーを有効にします。
+enabled = true
+
+# 接続できなくてもCodexアプリ全体の起動は継続します。
+required = false
+
+# MCPツールを実行する前に利用者へ確認します。
+default_tools_approval_mode = "prompt"
+
+# 接続開始を最大20秒待ちます。
+startup_timeout_sec = 20
+
+# ツール実行を最大60秒待ちます。
+tool_timeout_sec = 60
+
+
+# Snowflakeへ送信する固定HTTPヘッダーを設定します。
+[mcp_servers.snowflake_company.http_headers]
+
+# ＜SnowflakeのPAT＞を実際のPATに置き換えます。
+"Authorization" = "Bearer ＜SnowflakeのPAT＞"
+
+# BearerトークンがSnowflake PATであることを明示します。
+"X-Snowflake-Authorization-Token-Type" = "PROGRAMMATIC_ACCESS_TOKEN"
+```
+
+CodexはStreamable HTTP形式のMCPサーバーに接続でき、`http_headers`に設定した固定ヘッダーを各リクエストへ送信できます。([OpenAI Developers][2])
+
+**Requirements TOMLとConfig TOMLでは、次を完全に一致させてください。**
+
+```text
+mcp_servers.snowflake_company
+```
+
+```text
+Snowflake MCPのURL全体
+```
+
+---
+
+### 4. 同じポリシー画面：保存と割り当て
+
+設定入力後、次を実施します。
+
+1. `Save`または`Publish`を押します。
+2. ポリシーの割り当て対象を開きます。
+3. `All members`または組織全体を選択します。
+4. 割り当てを保存します。
+
+---
+
+### 5. 各利用者のChatGPTデスクトップアプリ
+
+各利用者は次を実施します。
+
+1. 会社のネットワークまたはVPNへ接続します。
+2. ChatGPTデスクトップアプリを完全に終了します。
+3. アプリを再起動します。
+4. `Settings`を開きます。
+5. `MCP servers`を開きます。
+6. `snowflake_company`が表示されていることを確認します。
+7. 必要に応じて`Restart`を押します。
+
+チャット入力欄に次を入力しても確認できます。
+
+```text
+/mcp
+```
+
+デスクトップアプリでは、`Settings → MCP servers`からMCPを確認し、`/mcp`で接続中のサーバーを確認できます。([OpenAI Developers][2])
+
+## 注意
+
+ポリシー画面に**Requirements TOML欄しかない場合**、そこへPATや接続設定は入力できません。Requirementsは許可制御用であり、PATを含む接続設定にはConfig TOMLまたはManaged defaults相当の入力欄が必要です。([OpenAI Developers][1])
+
+[1]: https://developers.openai.com/codex/enterprise/managed-configuration "Managed configuration | ChatGPT Learn"
+[2]: https://developers.openai.com/codex/mcp "Model Context Protocol | ChatGPT Learn"
+
