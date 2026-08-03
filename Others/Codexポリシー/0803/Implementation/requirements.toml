@@ -1,0 +1,15 @@
+# ChatGPT/Codex cloud requirementsと同じ制約を、Windows端末側にも配置する例です。
+# 本番ではクラウドポリシーと内容を一致させてください。
+allowed_approval_policies = ["on-request"]
+default_permissions = ":workspace"
+allow_remote_control = false
+allow_appshots = false
+
+[allowed_permission_profiles]
+":read-only" = true
+":workspace" = true
+# ":danger-full-access" は記載しない（許可リスト外として拒否）
+
+[windows]
+allowed_sandbox_implementations = ["elevated"]
+sandbox_private_desktop = true

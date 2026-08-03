@@ -1,0 +1,35 @@
+﻿GPO経路:
+コンピューターの構成
+  > 基本設定
+    > コントロール パネルの設定
+      > スケジュールされたタスク
+
+全般:
+  アクション: 更新
+  名前: OpenAI Codex Elevated Sandbox Provisioning
+  実行するユーザー: NT AUTHORITY\SYSTEM
+  ユーザーがログオンしているかどうかにかかわらず実行: 有効
+  最上位の特権で実行: 有効
+
+トリガー:
+  1) スタートアップ時、3分遅延
+  2) 毎日 03:00（未実行・失敗・更新時の再試行用）
+  ※ログオン時トリガーは使用しない
+
+操作:
+  Program/script:
+    C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+
+  Add arguments:
+    -NoLogo -NoProfile -NonInteractive -ExecutionPolicy AllSigned -File "C:\Program Files\Company\CodexProvisioning\Provision-CodexSandbox.ps1" -ConfigPath "C:\Program Files\Company\CodexProvisioning\CodexDeploymentConfig.psd1" -ApprovedSignerThumbprint "<40_HEX_CODE_SIGNING_CERT_THUMBPRINT>"
+
+  Start in:
+    C:\Program Files\Company\CodexProvisioning
+
+条件/設定:
+  ネットワーク接続が使用可能な場合のみ開始: 有効
+  AC電源時のみ: 無効
+  予定時刻に開始できなかった場合はすぐ実行: 有効
+  失敗時: 15分間隔、3回
+  15分を超えたら停止: 有効（付属設定のsetup timeoutは720秒）
+  既に実行中の場合: 新しいインスタンスを開始しない

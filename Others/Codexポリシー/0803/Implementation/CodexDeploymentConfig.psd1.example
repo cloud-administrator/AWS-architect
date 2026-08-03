@@ -1,0 +1,38 @@
+﻿@{
+    SchemaVersion = 1
+    PolicyVersion = '2026-08-pilot-01'
+
+    # 自社環境の値へ置換
+    ExpectedDomainNetBIOS = 'TESTDOMAIN'
+    AuthorizedUserGroupDistinguishedName = 'CN=GG-Codex-Users,OU=Groups,DC=testdomain,DC=local'
+
+    # OpenAI公式パッケージを、公式構造のまま固定配置
+    CodexPackageRoot = 'C:\Program Files\OpenAI\CodexCLI'
+    CodexExeRelativePath = 'bin\codex.exe'
+    ApprovedCodexVersion = '<APPROVED_VERSION>'
+
+    # すべて64桁のSHA-256へ置換。codex.exeだけでなくhelperも固定する。
+    RequiredFiles = @{
+        'codex-package.json' = '<64_HEX_SHA256>'
+        'bin\codex.exe' = '<64_HEX_SHA256>'
+        'bin\codex-code-mode-host.exe' = '<64_HEX_SHA256>'
+        'codex-path\rg.exe' = '<64_HEX_SHA256>'
+        'codex-resources\codex-command-runner.exe' = '<64_HEX_SHA256>'
+        'codex-resources\codex-windows-sandbox-setup.exe' = '<64_HEX_SHA256>'
+    }
+
+    RequirementsPath = 'C:\ProgramData\OpenAI\Codex\requirements.toml'
+    RequirementsSha256 = '<64_HEX_SHA256>'
+
+    ScriptRoot = 'C:\Program Files\Company\CodexProvisioning'
+    StateRoot = 'C:\ProgramData\Company\CodexProvisioning'
+    TaskName = 'OpenAI Codex Elevated Sandbox Provisioning'
+
+    # Status=2（ローミング）を許容する場合だけtrue。Temp/Mandatory/Corruptは常に拒否。
+    AllowRoamingProfile = $false
+
+    # 端末再割当時は、旧利用者の利用停止とデータ処理を完了した管理変更でのみtrueにする。
+    AllowTargetChange = $false
+
+    SetupTimeoutSeconds = 720
+}
