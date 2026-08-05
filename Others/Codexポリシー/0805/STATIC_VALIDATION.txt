@@ -1,0 +1,51 @@
+Codex / ChatGPT SKYSEA導入パッケージ 静的検証結果
+
+検証日: 2026-08-04
+対象: /mnt/data/Codex_SKYSEA_完成版_20260804
+結果: 86 / 86 項目 合格、失敗 0
+
+1. 実施した検査
+
+- 全対象テキストファイルのUTF-8読込
+- PowerShell、CMD、CSVのWindows CRLF改行
+- PowerShell 3本のUTF-8 BOM
+- 制御文字混入の有無
+- PowerShellの文字列、行コメント、ブロックコメント、丸括弧、波括弧、角括弧の字句的な対応
+- SYSTEMスクリプトのLocalSystem SID S-1-5-18固定検査
+- 端末名、AD SID、ProfileList、Win32_UserProfile、NTUSER.DATの照合処理
+- SYSTEMジョブ実行前の管理領域ACL再保護
+- USERジョブが固定されたAuthorizedTarget.jsonだけを参照すること
+- USERジョブがCIM/WMI列挙に依存しないこと
+- USERジョブの製品ID 9PLM9XGG6VKSおよび発行元OpenAIの事前確認
+- Codexフルパッケージ、helper、PACKAGE_SHA256.csvの必須参照
+- 承認済みCodex 0.146.0のx64 / Arm64公式SHA-256固定値
+- config.tomlの旧キー、プロファイル配下sandbox設定、dotted key、inline table検出ロジック
+- SYSTEM / USER端末側スクリプトに外部ダウンロード処理がないこと
+- Invoke-Expression、IEX、Add-AppxProvisionedPackage、旧製品ID、C:\Users全走査がないこと
+- targets.csvの列がComputerName,Domain,SamAccountName,Enabledの4列だけであること
+- USER媒体作成処理にtargets.csvを含めないこと
+- CMDラッパーが64ビットWindows PowerShellを選択し終了コードを引き継ぐこと
+- Markdownコードフェンスの対応
+
+2. 静的検査で確認できない事項
+
+この作成環境にはWindows PowerShell実行系、Windows、Active Directory、SKYSEA Client View、Microsoft Store、WinGet、Codex Windows sandbox helperがありません。そのため、次は未実施です。
+
+- Microsoft.PowerShell.Language.ParserによるPowerShell AST検査
+- PowerShellスクリプトのWindows上での実行時検証
+- LocalSystem、対象ADユーザー、ユーザープロファイルACLを使った実機検証
+- SKYSEAの実際の画面、配布パック、終了コード回収の検証
+- GPO、EDR、Firewall、WFP、プロキシ、VPNとの統合試験
+- winget / Microsoft StoreによるChatGPTアプリの実インストール
+- Codex elevated sandboxのUAC非表示、marker、sandboxユーザー実行の実機確認
+
+3. 運用上の必須条件
+
+- 本番一斉展開の前に、異なる条件のWindows端末2台でパイロットを実施すること
+- SYSTEMジョブ、USERジョブ、アプリ起動、安全なwhoami、UAC非表示まで確認すること
+- その後、5～10台、残りの順に段階展開すること
+- SKYSEA登録媒体のSHA-256を準備スクリプトが生成するSKYSEA_MEDIA_SHA256.csvで管理すること
+
+4. パッケージZIP検査
+
+結果: 合格。完成版ZIPの中央ディレクトリと全エントリCRCに異常はなく、別フォルダーへ展開後、SHA256SUMS.csvに記載した全14ファイルのSHA-256とサイズが一致しました。

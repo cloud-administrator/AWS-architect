@@ -1,0 +1,4 @@
+﻿ComputerName,Domain,SamAccountName,Enabled
+PC-TANAKA-001,testdomain,tanaka-tarou,1
+PC-SUZUKI-002,testdomain,suzuki-hanako,1
+PC-OLD-003,testdomain,old-user,0
