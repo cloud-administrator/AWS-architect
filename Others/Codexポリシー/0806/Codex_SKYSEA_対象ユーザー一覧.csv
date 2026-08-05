@@ -1,0 +1,2 @@
+﻿管理番号,氏名,端末名,ADログオン名,AD SID,Win32_UserProfile.LocalPath,SKYSEA現在ログオンユーザー,ChatGPTアプリ結果,Codex CLIバージョン,Sandbox setup結果,UACなし動作確認,実施日時,実施者,備考
+001,田中 太郎（例）,＜対象端末名を記入＞,testdomain\tanaka-tarou,＜手順6で記入＞,＜手順6で記入＞,＜接続時に記入＞,未実施,未確認,未実施,未実施,＜実施時に記入＞,＜実施者を記入＞,例示行。実際の端末名へ置換
