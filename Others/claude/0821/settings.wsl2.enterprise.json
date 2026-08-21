@@ -1,0 +1,95 @@
+{
+  "forceLoginMethod": "claudeai",
+  "forceLoginOrgUUID": "00000000-0000-4000-8000-000000000000",
+  "forceRemoteSettingsRefresh": true,
+  "requiredMinimumVersion": "2.1.237",
+  "requiredMaximumVersion": "2.1.237",
+  "parentSettingsBehavior": "first-wins",
+  "allowManagedPermissionRulesOnly": true,
+  "allowManagedHooksOnly": true,
+  "allowManagedMcpServersOnly": true,
+  "allowedMcpServers": [],
+  "disableClaudeAiConnectors": true,
+  "disableSideloadFlags": true,
+  "strictPluginOnlyCustomization": true,
+  "strictKnownMarketplaces": [],
+  "disableCommandPluginSources": true,
+  "disableSkillShellExecution": true,
+  "disableBundledSkills": true,
+  "disableWorkflows": true,
+  "disableAllHooks": true,
+  "channelsEnabled": false,
+  "allowedChannelPlugins": [],
+  "disableRemoteControl": true,
+  "disableArtifact": true,
+  "disableAgentView": true,
+  "crossSessionInbound": "refuse",
+  "env": {
+    "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1"
+  },
+  "permissions": {
+    "defaultMode": "default",
+    "disableAutoMode": "disable",
+    "disableBypassPermissionsMode": "disable",
+    "allow": [
+      "Read(~/claude_work/**)",
+      "Cd(~/claude_work/**)"
+    ],
+    "ask": [
+      "Edit(~/claude_work/**)",
+      "Bash",
+      "mcp__*"
+    ],
+    "deny": [
+      "Read(//mnt/**)",
+      "Edit(//mnt/**)",
+      "PowerShell",
+      "WebFetch",
+      "WebSearch",
+      "Bash(dangerouslyDisableSandbox:true)",
+      "Bash(*.exe*)",
+      "Bash(*sudo *)",
+      "Bash(*su *)",
+      "Bash(*doas *)",
+      "Bash(*pkexec *)",
+      "Bash(*mount *)",
+      "Bash(*umount *)",
+      "Bash(*nsenter *)",
+      "Bash(*unshare *)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "autoAllowBashIfSandboxed": false,
+    "allowUnsandboxedCommands": false,
+    "excludedCommands": [],
+    "filesystem": {
+      "disabled": false,
+      "allowWrite": [
+        "~/claude_work"
+      ],
+      "denyWrite": [
+        "/mnt"
+      ],
+      "denyRead": [
+        "~/",
+        "/mnt"
+      ],
+      "allowRead": [
+        "~/claude_work"
+      ],
+      "allowManagedReadPathsOnly": true
+    },
+    "network": {
+      "allowedDomains": [
+        "example.com",
+        "api.example.com"
+      ],
+      "strictAllowlist": true,
+      "allowManagedDomainsOnly": true,
+      "allowAllUnixSockets": false
+    },
+    "enableWeakerNestedSandbox": false
+  }
+}
