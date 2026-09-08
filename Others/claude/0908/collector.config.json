@@ -1,0 +1,17 @@
+{
+  "OrganizationUuids": [
+    "REPLACE_WITH_ORGANIZATION_UUID"
+  ],
+  "KeyEnvironmentVariable": "ANTHROPIC_COMPLIANCE_ACCESS_KEY",
+  "KeyEnvironmentScope": "User",
+  "RequestsPerMinute": 120,
+  "ActivityPageSize": 1000,
+  "ChatPageSize": 100,
+  "MessagePageSize": 20,
+  "ProjectPageSize": 100,
+  "LagSeconds": 120,
+  "OverlapMinutes": 10,
+  "MaxRetries": 6,
+  "TimeoutSeconds": 120,
+  "MaxRunMinutes": 1200
+}
